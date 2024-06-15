@@ -10,8 +10,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: {
-    template: "%s - Rawr XD",
-    default: "We will make you pretty! >:3",
+    template: "%s - Gioia Beauty",
+    default: "Gioia Beauty",
   },
   description:
     "this is the sheesh of the sheesh, the best of the best, the cream of the crop, the top of the top",
