@@ -43,7 +43,7 @@ import {
 import { useRouter } from 'next/navigation' // or 'next/router' depending on your Next.js version
 import { auth } from '@/utils/firebase'
 import { getAuth, signOut } from 'firebase/auth'
-import { Dashy } from '@/components/dashy'
+import { Dashy } from '@/components/Dashy'
 
 export function Dashboard() {
   const [calendars, setCalendars] = useState([])
