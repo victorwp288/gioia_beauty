@@ -40,10 +40,9 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${bricolage.variable} ${dmSerif.variable} font-bricolage h-full scroll-smooth bg-white antialiased `}
     >
-      <Navbar />
-      <Cookiebanner />
-
       <body className="flex h-full flex-col">
+        <Navbar />
+        <Cookiebanner />
         {children}
         <Analytics />
         <SpeedInsights />
