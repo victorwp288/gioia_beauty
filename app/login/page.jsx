@@ -2,9 +2,8 @@
 import Link from 'next/link'
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/Button'
+import { Button } from "@/components/ui/Button";
 import { TextField } from '@/components/Fields'
-import { Logo } from '@/components/Logo'
 import { SlimLayout } from '@/components/SlimLayout'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '@/utils/firebase'
@@ -42,7 +41,7 @@ export default function Login() {
     <SlimLayout>
       <div className="flex">
         <Link href="/" aria-label="Home">
-          <Logo className="h-10 w-auto" />
+          <p>logo</p>
         </Link>
       </div>
       <h2 className="mt-20 text-lg font-semibold text-gray-900">

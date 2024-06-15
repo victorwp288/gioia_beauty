@@ -1,6 +1,7 @@
 // pages/gallery.js
 
 import React from 'react'
+import Image from 'next/image'
 
 const Gallery = () => {
   const images = [
@@ -17,7 +18,7 @@ const Gallery = () => {
     <div className=" grid grid-cols-1 gap-1 sm:grid-cols-2 md:grid-cols-3 md:pt-20 lg:grid-cols-4">
       {images.map((image, index) => (
         <div key={index} className="overflow-hidden ">
-          <img src={image} alt={`Image ${index}`} className="h-auto w-full" />
+          <Image src={image} alt={`Image ${index}`} className="h-auto w-full" />
         </div>
       ))}
     </div>

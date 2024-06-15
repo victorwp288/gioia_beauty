@@ -63,7 +63,7 @@ const BookAppointment = () => {
       email: '',
       timeSlot: '',
       selectedDate: new Date(),
-      appointmentType: 'type1',
+      appointmentType: '',
     },
   })
 
