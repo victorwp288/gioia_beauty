@@ -5,7 +5,6 @@ import Navbar from "@/components/Navbar";
 import "@/styles/tailwind.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Cookiebanner } from "@/components/Cookiebanner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -42,7 +41,6 @@ export default function RootLayout({ children }) {
     >
       <body className="flex h-full flex-col">
         <Navbar />
-        <Cookiebanner />
         {children}
         <Analytics />
         <SpeedInsights />
