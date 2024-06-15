@@ -2,7 +2,7 @@ import BookAppointment from "@/components/BookAppointment";
 import ServicesContainer from "@/components/ServicesContainer";
 import HeroSection from "@/components/HeroSection";
 import Technologies from "@/components/Technologies";
-import { Cookiesbanner } from "@/components/Cookiebanner";
+import { Cookiesbanner } from "@/components/Cookiesbanner";
 
 
 export default function Home() {
