@@ -1,10 +1,11 @@
-import { Inter } from "next/font/google";
+import { Cookie, Inter } from "next/font/google";
 import "./globals.css";
 import { Bricolage_Grotesque, DM_Serif_Display } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import "@/styles/tailwind.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Cookiebanner } from "@/components/Cookiebanner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -40,6 +41,8 @@ export default function RootLayout({ children }) {
       className={`${bricolage.variable} ${dmSerif.variable} font-bricolage h-full scroll-smooth bg-white antialiased `}
     >
       <Navbar />
+      <Cookiebanner />
+
       <body className="flex h-full flex-col">
         {children}
         <Analytics />
