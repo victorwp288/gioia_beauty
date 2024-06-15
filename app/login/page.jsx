@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import { TextField } from '@/components/Fields'
 import { SlimLayout } from '@/components/SlimLayout'
 import { signInWithEmailAndPassword } from 'firebase/auth'
