@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 
-export function Cookiebanner() {
+export function Cookiesbanner() {
   const [firstVisit, setFirstVisit] = useState(false);
 
   useEffect(() => {

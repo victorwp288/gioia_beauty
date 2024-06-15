@@ -2,13 +2,13 @@ import BookAppointment from "@/components/BookAppointment";
 import ServicesContainer from "@/components/ServicesContainer";
 import HeroSection from "@/components/HeroSection";
 import Technologies from "@/components/Technologies";
-import { Cookiebanner } from "@/components/Cookiebanner";
+import { Cookiesbanner } from "@/components/Cookiebanner";
 
 
 export default function Home() {
   return (
     <main className="fadeIn animate-fadeIn bg-white">
-      <Cookiebanner />
+      <Cookiesbanner />
 
       <HeroSection />
       <div id="technologies" className="scroll-mt-10 bg-[#b0c0ca]">
