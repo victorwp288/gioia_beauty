@@ -31,7 +31,7 @@ function Navbar() {
   const menuItems = [
     { id: 1, link: "/#services", label: "I NOSTRI SERVIZI" },
     { id: 2, link: "/gallery", label: "GALLERY" },
-    { id: 3, link: "/chisiamo", label: "CONTATTI" },
+    { id: 3, link: "/contacts", label: "CONTATTI" },
     { id: 4, link: "/#booking-section", label: "PRENOTA" },
   ];
 
@@ -42,8 +42,7 @@ function Navbar() {
         <li>
           <Link
             href="/#services"
-            className="link cursor-pointer"
-            activeClassName="active-link"
+            className="link cursor-pointer focus:font-bold focus:text-[#d2b5b8] active:decoration-[#d2b5b8]"
           >
             I NOSTRI SERVIZI
           </Link>
@@ -51,17 +50,15 @@ function Navbar() {
         <li>
           <Link
             href="/gallery"
-            className="link cursor-pointer"
-            activeClassName="active-link"
+            className="link cursor-pointer focus:font-bold focus:text-[#d2b5b8] active:decoration-[#d2b5b8]"
           >
             GALLERY
           </Link>
         </li>
         <li>
           <Link
-            href="/chisiamo"
-            className="link cursor-pointer"
-            activeClassName="active-link"
+            href="/contacts"
+            className="link cursor-pointer focus:font-bold focus:text-[#d2b5b8] active:decoration-[#cfcccc]"
           >
             CONTATTI
           </Link>
@@ -69,8 +66,7 @@ function Navbar() {
         <li>
           <Link
             href="/#booking-section"
-            className="link cursor-pointer font-semibold"
-            activeClassName="active-link"
+            className="link cursor-pointer font-semibold active:underline focus:text-[#d2b5b8] active:decoration-[#d2b5b8] focus:font-bold"
           >
             PRENOTA
           </Link>

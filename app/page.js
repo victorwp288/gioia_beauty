@@ -2,12 +2,12 @@ import BookAppointment from "@/components/BookAppointment";
 import ServicesContainer from "@/components/ServicesContainer";
 import HeroSection from "@/components/HeroSection";
 import Technologies from "@/components/Technologies";
-import Navbar from "@/components/Navbar";
+
 
 export default function Home() {
   return (
     <main className="fadeIn animate-fadeIn bg-white">
-      <Navbar />
+      
 
       <HeroSection />
       <div id="technologies" className="scroll-mt-10 bg-[#b0c0ca]">

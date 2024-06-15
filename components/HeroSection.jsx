@@ -1,7 +1,7 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import rituale from '@/images/rituale.jpg'
-import downArrow from '@/images/down-arrow.svg'
+import Link from "next/link";
+import Image from "next/image";
+import rituale from "@/images/rituale.jpg";
+import downArrow from "@/images/down-arrow.svg";
 
 function HeroSection() {
   return (
@@ -24,7 +24,6 @@ function HeroSection() {
               href="#booking-section"
               offset={-80}
               className="w-fit cursor-pointer border border-white p-4 text-base font-medium text-white "
-              activeclass="active-link"
             >
               PRENOTA
             </Link>
@@ -32,7 +31,6 @@ function HeroSection() {
               <Link
                 href="#services"
                 className="w-fit cursor-pointer   text-sm font-medium text-white "
-                activeclass="active-link"
               >
                 Scopri i nostri servizi
               </Link>
@@ -42,7 +40,7 @@ function HeroSection() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default HeroSection
+export default HeroSection;

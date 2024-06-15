@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --font-sans: var(--font-poppins);
+    --font-sans: var(--font-bricolage);
     --font-serif: var(--font-serif);
 
     --background: 0 0% 100%;
@@ -89,7 +89,7 @@
   }
 
   .link::before {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -2px;
     left: 0;
@@ -101,7 +101,7 @@
   }
 
   .link:hover::before {
-    background-color: #000; /* Color of the hover effect */
+    background-color: #d2b5b8; /* Color of the hover effect */
   }
 
   .active-link:hover(.link:hover::before) {
