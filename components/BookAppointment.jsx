@@ -1,33 +1,28 @@
-'use client'
-import React, { useEffect, useState, useCallback } from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
-import { CalendarDays, Clock } from 'lucide-react'
+"use client";
+import React, { useEffect, useState, useCallback } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { CalendarDays, Clock } from "lucide-react";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  query,
-  where,
-  getDocs,
-} from 'firebase/firestore'
-import { ToastContainer, toast } from 'react-toastify'
-import { db } from '@/utils/firebase'
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import { ToastContainer, toast } from "react-toastify";
+import { db } from "@/utils/firebase";
 
-const toasty = () => toast('Appointment Booked!')
+// Import appointment types from JSON file
+import appointmentTypes from "@/data/appointmentTypes.json";
+
+const toasty = () => toast("Appointment Booked!");
 
 const formSchema = z.object({
   date: z.date(),
@@ -38,93 +33,94 @@ const formSchema = z.object({
   timeSlot: z.string(),
   selectedDate: z.date(),
   appointmentType: z.string(),
-})
-
-const appointmentTypes = [
-  { type: 'Hair treatment', duration: 30 },
-  { type: 'Nail treatment', duration: 60 },
-  { type: 'Hair cut', duration: 90 },
-  // Add more types as needed
-]
+  variant: z.string().optional(),
+});
 
 const BookAppointment = () => {
-  const [timeSlot, setTimeSlot] = useState([])
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState()
-  const [selectedDate, setSelectedDate] = useState(new Date())
-  const [appointmentType, setAppointmentType] = useState(appointmentTypes[0])
+  const [timeSlot, setTimeSlot] = useState([]);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState();
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [appointmentType, setAppointmentType] = useState(appointmentTypes[0]);
+  const [selectedVariant, setSelectedVariant] = useState(null);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       date: new Date(),
-      note: '',
-      name: '',
-      number: '',
-      email: '',
-      timeSlot: '',
+      note: "",
+      name: "",
+      number: "",
+      email: "",
+      timeSlot: "",
       selectedDate: new Date(),
-      appointmentType: '',
+      appointmentType: "",
+      variant: "",
     },
-  })
+  });
 
   const fetchTimeSlots = useCallback(
     async (date) => {
-      if (!date) return
+      if (!date) return;
 
-      const formattedDate = date.toISOString().split('T')[0]
+      const formattedDate = date.toISOString().split("T")[0];
       const q = query(
-        collection(db, 'customers'),
-        where('selectedDate', '==', formattedDate),
-      )
-      const querySnapshot = await getDocs(q)
-      const data = querySnapshot.docs.map((doc) => doc.data())
+        collection(db, "customers"),
+        where("selectedDate", "==", formattedDate)
+      );
+      const querySnapshot = await getDocs(q);
+      const data = querySnapshot.docs.map((doc) => doc.data());
+
+      const duration = selectedVariant
+        ? parseInt(selectedVariant)
+        : appointmentType.durations[0];
 
       const allTimeSlots = Array.from(
-        { length: Math.floor(((17 - 8) * 60) / appointmentType.duration) },
+        { length: Math.floor(((17 - 8) * 60) / duration) },
         (_, i) => {
-          const time = 8 * 60 + i * appointmentType.duration
-          const hours = Math.floor(time / 60)
-          const minutes = time % 60
-          return `${hours < 10 ? '0' : ''}${hours}:${
-            minutes < 10 ? '0' : ''
-          }${minutes}`
-        },
-      )
-      const occupiedTimeSlots = data.map((item) => item.timeSlot)
+          const time = 8 * 60 + i * duration;
+          const hours = Math.floor(time / 60);
+          const minutes = time % 60;
+          return `${hours < 10 ? "0" : ""}${hours}:${
+            minutes < 10 ? "0" : ""
+          }${minutes}`;
+        }
+      );
+      const occupiedTimeSlots = data.map((item) => item.timeSlot);
       const availableTimeSlots = allTimeSlots.filter(
-        (slot) => !occupiedTimeSlots.includes(slot),
-      )
+        (slot) => !occupiedTimeSlots.includes(slot)
+      );
 
-      setTimeSlot(availableTimeSlots)
+      setTimeSlot(availableTimeSlots);
       if (availableTimeSlots.length > 0) {
-        const firstAvailableTimeSlot = availableTimeSlots[0]
-        setSelectedTimeSlot(firstAvailableTimeSlot)
-        form.setValue('timeSlot', firstAvailableTimeSlot)
+        const firstAvailableTimeSlot = availableTimeSlots[0];
+        setSelectedTimeSlot(firstAvailableTimeSlot);
+        form.setValue("timeSlot", firstAvailableTimeSlot);
       }
     },
-    [appointmentType.duration, form],
-  )
+    [appointmentType, selectedVariant, form]
+  );
 
   useEffect(() => {
-    fetchTimeSlots(selectedDate)
-  }, [selectedDate, appointmentType, fetchTimeSlots])
+    fetchTimeSlots(selectedDate);
+  }, [selectedDate, appointmentType, selectedVariant, fetchTimeSlots]);
 
   const handleSubmit = async (data) => {
     try {
-      const docRef = await addDoc(collection(db, 'customers'), {
+      const docRef = await addDoc(collection(db, "customers"), {
         ...data,
-        selectedDate: data.selectedDate.toISOString().split('T')[0],
+        selectedDate: data.selectedDate.toISOString().split("T")[0],
         appointmentType: data.appointmentType,
-      })
-      console.log('Appointment booked with ID:', docRef.id)
-      toasty()
+        variant: selectedVariant,
+      });
+      console.log("Appointment booked with ID:", docRef.id);
+      toasty();
     } catch (error) {
-      console.error('Error booking appointment:', error)
+      console.error("Error booking appointment:", error);
     }
-  }
+  };
 
   const isPastDay = (day) =>
-    day <= new Date() || day.getDay() === 0 || day.getDay() === 6
+    day <= new Date() || day.getDay() === 0 || day.getDay() === 6;
 
   return (
     <div className=" m-auto mt-12 w-[90vw] space-y-4  md:w-[70vw]">
@@ -151,9 +147,9 @@ const BookAppointment = () => {
                       mode="single"
                       selected={field.value}
                       onSelect={(date) => {
-                        field.onChange(date)
-                        setSelectedDate(date)
-                        form.setValue('selectedDate', date)
+                        field.onChange(date);
+                        setSelectedDate(date);
+                        form.setValue("selectedDate", date);
                       }}
                       disabled={isPastDay}
                       className="w-full rounded-md border"
@@ -179,11 +175,11 @@ const BookAppointment = () => {
                         <h2
                           key={index}
                           onClick={() => {
-                            setSelectedTimeSlot(time)
-                            field.onChange(time)
+                            setSelectedTimeSlot(time);
+                            field.onChange(time);
                           }}
                           className={`cursor-pointer rounded-full border p-2 text-center hover:bg-primary hover:text-white ${
-                            time === selectedTimeSlot && 'bg-primary text-white'
+                            time === selectedTimeSlot && "bg-primary text-white"
                           }`}
                         >
                           {time}
@@ -208,19 +204,20 @@ const BookAppointment = () => {
                       {...field}
                       onChange={(e) => {
                         const selectedType = appointmentTypes.find(
-                          (type) => type.type === e.target.value,
-                        )
-                        setAppointmentType(selectedType)
-                        field.onChange(e)
+                          (type) => type.type === e.target.value
+                        );
+                        setAppointmentType(selectedType);
+                        setSelectedVariant(null);
+                        form.setValue("variant", "");
+                        field.onChange(e);
                       }}
                     >
                       {appointmentTypes.map((appointmentType) => (
                         <option
-                          key={appointmentType.type}
+                          key={appointmentType.id}
                           value={appointmentType.type}
                         >
-                          {appointmentType.type} - {appointmentType.duration}{' '}
-                          minutes
+                          {appointmentType.type}
                         </option>
                       ))}
                     </select>
@@ -229,6 +226,36 @@ const BookAppointment = () => {
                 </FormItem>
               )}
             />
+            {/* Variant Selection */}
+            {appointmentType.durations.length > 1 && (
+              <FormField
+                control={form.control}
+                name="variant"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Duration Variant</FormLabel>
+                    <FormControl>
+                      <select
+                        className=" rounded-lg border border-[#e5e7eb] px-3 py-2 text-sm"
+                        {...field}
+                        onChange={(e) => {
+                          setSelectedVariant(e.target.value);
+                          field.onChange(e);
+                        }}
+                      >
+                        <option value="">Select Duration</option>
+                        {appointmentType.durations.map((duration, index) => (
+                          <option key={index} value={duration}>
+                            {duration} minutes
+                          </option>
+                        ))}
+                      </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             {/* Note */}
             <FormField
               control={form.control}
@@ -293,7 +320,7 @@ const BookAppointment = () => {
         <ToastContainer />
       </Form>
     </div>
-  )
-}
+  );
+};
 
-export default BookAppointment
+export default BookAppointment;
