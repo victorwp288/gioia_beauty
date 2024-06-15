@@ -3,6 +3,7 @@ import "./globals.css";
 import { Bricolage_Grotesque, DM_Serif_Display } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import "@/styles/tailwind.css";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,7 +39,10 @@ export default function RootLayout({ children }) {
       className={`${bricolage.variable} ${dmSerif.variable} font-bricolage h-full scroll-smooth bg-white antialiased `}
     >
       <Navbar />
-      <body className="flex h-full flex-col">{children}</body>
+      <body className="flex h-full flex-col">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
