@@ -4,6 +4,7 @@ import { Bricolage_Grotesque, DM_Serif_Display } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import "@/styles/tailwind.css";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -42,6 +43,7 @@ export default function RootLayout({ children }) {
       <body className="flex h-full flex-col">
         {children}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
