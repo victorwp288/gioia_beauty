@@ -43,6 +43,7 @@ import {
 import { useRouter } from 'next/navigation' // or 'next/router' depending on your Next.js version
 import { auth } from '@/utils/firebase'
 import { getAuth, signOut } from 'firebase/auth'
+import { Dashy } from '@/components/dashy'
 
 export function Dashboard() {
   const [calendars, setCalendars] = useState([])
@@ -328,25 +329,8 @@ export function Dashboard() {
               Share
             </Button>
           </header>
-          <main className="grid flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3">
-            {calendars.map((calendar) => (
-              <div key={calendar.id}>
-                <h3>{calendar.summary}</h3>
-                <p>{calendar.description}</p>
-              </div>
-            ))}
-            <div>
-              <main className="flex-1 overflow-auto">
-                <iframe
-                  src="https://calendar.google.com/calendar/embed?src=your_calendar_id%40group.calendar.google.com&ctz=America%2FNew_York"
-                  style={{ border: 0 }}
-                  width="100%"
-                  height="600"
-                  frameborder="0"
-                  scrolling="no"
-                ></iframe>
-              </main>
-            </div>
+          <main className="flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3">
+            <Dashy />
           </main>
         </div>
       </div>
