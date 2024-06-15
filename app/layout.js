@@ -39,6 +39,7 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${bricolage.variable} ${dmSerif.variable} font-bricolage h-full scroll-smooth bg-white antialiased `}
     >
+
       <body className="flex h-full flex-col">
         <Navbar />
         {children}
