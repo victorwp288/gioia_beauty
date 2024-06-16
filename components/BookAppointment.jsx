@@ -19,7 +19,6 @@ import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import { ToastContainer, toast } from "react-toastify";
 import { db } from "@/utils/firebase";
 
-// Import appointment types from JSON file
 import appointmentTypes from "@/data/appointmentTypes.json";
 
 const toasty = () => toast("Appointment Booked!");
@@ -55,6 +54,7 @@ const BookAppointment = () => {
       selectedDate: new Date(),
       appointmentType: "",
       variant: "",
+      duration: appointmentTypes[0].durations[0],
     },
   });
 
@@ -106,8 +106,21 @@ const BookAppointment = () => {
 
   const handleSubmit = async (data) => {
     try {
+      const startTime = data.timeSlot;
+      const duration = parseInt(data.duration); // Use duration from form data
+      const [hours, minutes] = startTime.split(":").map(Number);
+      const endTime = new Date(selectedDate);
+      endTime.setHours(hours, minutes + duration);
+
+      const formattedEndTime = `${endTime.getHours()}:${
+        endTime.getMinutes() < 10 ? "0" : ""
+      }${endTime.getMinutes()}`;
+
       const docRef = await addDoc(collection(db, "customers"), {
         ...data,
+        startTime,
+        endTime: formattedEndTime,
+        duration, // Include duration in the data
         selectedDate: data.selectedDate.toISOString().split("T")[0],
         appointmentType: data.appointmentType,
         variant: selectedVariant,
