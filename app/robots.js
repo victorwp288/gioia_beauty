@@ -7,6 +7,6 @@ export default function robots() {
         disallow: ["/login", "/dashboard"],
       },
     ],
-    sitemap: "https://gioia-beauty.vercel.app/sitemap.xml",
+    sitemap: "https://www.gioiabeauty.net/sitemap.xml",
   };
 }
