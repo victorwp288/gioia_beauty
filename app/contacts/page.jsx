@@ -2,8 +2,16 @@
 
 import React from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 
 const Contacts = () => {
+  const Map = dynamic(() => import("@/components/Map"), {
+    ssr: false,
+  });
+
+  const latitude = 55.6761; // Example latitude for Copenhagen
+  const longitude = 12.5683; // Example longitude for Copenhagen
+
   return (
     <div className=" m-auto mt-2 w-[90vw] md:mt-32 md:w-[70vw] ">
       <h2 className="font-serif text-2xl font-bold tracking-tight md:text-3xl">
@@ -51,6 +59,7 @@ const Contacts = () => {
         </div>
       </div>
       {/* Here you put the map */}
+      <Map latitude={latitude} longitude={longitude} />
     </div>
   );
 };
