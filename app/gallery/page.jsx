@@ -2,15 +2,19 @@
 
 import React from "react";
 import Image from "next/image";
+import { victor } from "@/components/ServicesImages";
 
 const Gallery = () => {
   const images = [
-    "https://via.placeholder.com/300",
-    "https://via.placeholder.com/300",
-    "https://via.placeholder.com/300",
-    "https://via.placeholder.com/300",
-    "https://via.placeholder.com/300",
-    "https://via.placeholder.com/300",
+    victor,
+    victor,
+    victor,
+    victor,
+    victor,
+    victor,
+    victor,
+    victor,
+
     // Add more image URLs as needed
   ];
 
