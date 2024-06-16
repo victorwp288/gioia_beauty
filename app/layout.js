@@ -39,6 +39,9 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${bricolage.variable} ${dmSerif.variable} font-bricolage h-full scroll-smooth bg-white antialiased `}
     >
+      <head>
+        <meta name="msvalidate.01" content="80C0DA0047C69C3845952ED707A5C88C" />
+      </head>
 
       <body className="flex h-full flex-col">
         <Navbar />
