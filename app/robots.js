@@ -1,14 +1,12 @@
-import { MetadataRoute } from "next";
-
 export default function robots() {
   return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-      allow: "/gallery",
-      disallow: "/login",
-      disallow: "/dashboard",
-    },
+    rules: [
+      {
+        userAgent: "*",
+        allow: ["/", "/gallery", "/contacts"],
+        disallow: ["/login", "/dashboard"],
+      },
+    ],
     sitemap: "https://gioia-beauty.vercel.app/sitemap.xml",
   };
 }

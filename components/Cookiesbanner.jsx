@@ -21,7 +21,7 @@ export function Cookiesbanner() {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-gray-900 py-4 px-6 text-white md:py-6 md:px-8">
+    <div className="fixed bottom-0 left-0 right-0 bg-gray-900 py-4 px-6 text-white md:py-6 md:px-8" style={{zIndex: 9999}}>
       <div className="container mx-auto flex flex-col items-center justify-between gap-4 md:flex-row">
         <div className="space-y-2">
           <h3 className="text-lg font-semibold">We use cookies</h3>

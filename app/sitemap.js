@@ -7,6 +7,12 @@ export default function sitemap() {
       priority: 1,
     },
     {
+      url: "https://gioia-beauty.vercel.app/contacts",
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.9,
+    },
+    {
       url: "https://gioia-beauty.vercel.app/gallery",
       lastModified: new Date(),
       changeFrequency: "monthly",
