@@ -12,6 +12,10 @@ export function Cookiesbanner() {
     }
   }, []);
 
+  const handleAcceptCookies = () => {
+    setFirstVisit(false);
+  };
+
   if (!firstVisit) {
     return null;
   }
@@ -27,8 +31,9 @@ export function Cookiesbanner() {
           </p>
         </div>
         <div className="flex flex-col items-center gap-2 sm:flex-row">
-          <Button className="w-full sm:w-auto">Accept Cookies</Button>
-          <Button className="w-full sm:w-auto">Decline Cookies</Button>
+          <Button className="w-full sm:w-auto" onClick={handleAcceptCookies}>
+            Accept Cookies
+          </Button>
         </div>
       </div>
     </div>
