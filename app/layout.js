@@ -44,7 +44,7 @@ export default function RootLayout({ children }) {
         <meta name="msvalidate.01" content="80C0DA0047C69C3845952ED707A5C88C" />
       </head>
 
-      <body className="bg-[#fafaf9] flex h-full flex-col">
+      <body className="bg-white flex h-full flex-col">
         <Navbar />
         {children}
         <Analytics />

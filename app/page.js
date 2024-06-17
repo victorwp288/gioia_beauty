@@ -2,8 +2,8 @@ import BookAppointment from "@/components/BookAppointment";
 import ServicesContainer from "@/components/ServicesContainer";
 import HeroSection from "@/components/HeroSection";
 import Technologies from "@/components/Technologies";
+import AboutUs from "@/components/AboutUs";
 import { Cookiesbanner } from "@/components/Cookiesbanner";
-
 
 export default function Home() {
   return (
@@ -11,6 +11,9 @@ export default function Home() {
       <Cookiesbanner />
 
       <HeroSection />
+      <div id="about-us" className="scroll-mt-10 bg-white">
+        <AboutUs />
+      </div>
       <div id="technologies" className="scroll-mt-10 bg-[#b0c0ca]">
         <Technologies />
       </div>
