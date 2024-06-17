@@ -15,7 +15,7 @@ export const metadata = {
     default: "Gioia Beauty",
   },
   description:
-    "this is the sheesh of the sheesh, the best of the best, the cream of the crop, the top of the top",
+    "Scopri Gioia Beauty, il nuovo centro estetico a Roveleto di Cadeo",
 };
 
 export const bricolage = Bricolage_Grotesque({
@@ -38,13 +38,13 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${bricolage.variable} ${dmSerif.variable} font-bricolage h-full scroll-smooth bg-white antialiased `}
+      className={`${bricolage.variable} ${dmSerif.variable} font-bricolage h-full scroll-smooth  antialiased `}
     >
       <head>
         <meta name="msvalidate.01" content="80C0DA0047C69C3845952ED707A5C88C" />
       </head>
 
-      <body className="flex h-full flex-col">
+      <body className="bg-[#fafaf9] flex h-full flex-col">
         <Navbar />
         {children}
         <Analytics />

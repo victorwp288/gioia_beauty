@@ -54,6 +54,12 @@ const Contacts = () => {
             <Link href="tel:+393914213634">
               <p>+39 391 421 3634</p>
             </Link>
+            <Link
+              target="_blank"
+              href="https://www.instagram.com/gioiabeautyy/"
+            >
+              <p>@gioiabeautyy</p>
+            </Link>
           </div>
         </div>
       </div>

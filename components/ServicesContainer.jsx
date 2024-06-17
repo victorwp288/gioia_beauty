@@ -42,7 +42,7 @@ function ServicesContainer() {
   }, []);
 
   return (
-    <div className="m-auto mt-2 w-[90vw] md:mt-12 md:w-[70vw]">
+    <div className="m-auto mt-2 w-[90vw] md:mt-12 md:w-[70vw] ">
       <div className="flex flex-col gap-2 py-8 pb-6 md:gap-4 md:py-4">
         <h4 className="text-xs font-extrabold text-primary ">ESPLORA</h4>
         <h2 className="font-serif text-2xl font-bold tracking-tight md:text-3xl">
