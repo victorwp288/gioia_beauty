@@ -12,12 +12,12 @@ const Contacts = () => {
   const latitude = 44.96556;
   const longitude = 9.8514;
   return (
-    <div className=" m-auto mt-2 w-[90vw] md:mt-32 md:w-[70vw] ">
-      <h2 className="font-serif text-2xl font-bold tracking-tight md:text-3xl">
+    <div className=" m-auto mt-24 w-[90vw] md:mt-32 md:w-[70vw]">
+      <h2 className="font-serif text-3xl font-bold tracking-tight md:text-3xl">
         I nostri contatti
       </h2>
-      <div className="grid md:grid-cols-2 md:pt-8">
-        <div className="flex flex-col gap-4">
+      <div className="grid md:grid-cols-2 pt-8 md:gap-0 gap-8">
+        <div className="flex flex-col gap-2 md:gap-4">
           <h2 className=" text-xl font-bold tracking-tight md:text-xl">
             Orari di apertura
           </h2>
@@ -37,7 +37,7 @@ const Contacts = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2 md:gap-4">
           <h2 className=" text-xl font-bold tracking-tight md:text-xl">
             Contatti
           </h2>
@@ -57,7 +57,7 @@ const Contacts = () => {
           </div>
         </div>
       </div>
-      {/* Here you put the map */}
+
       <Map latitude={latitude} longitude={longitude} />
     </div>
   );

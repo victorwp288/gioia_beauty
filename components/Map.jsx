@@ -17,16 +17,14 @@ const Map = ({ latitude, longitude }) => {
     <MapContainer
       center={[latitude, longitude]}
       zoom={16}
-      style={{ height: "100%", width: "100%" }}
+      style={{ height: "100%", width: "100%", marginTop: "2rem", zIndex: 5 }}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
       <Marker position={[latitude, longitude]}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
+        <Popup>Ci trovi qui. </Popup>
       </Marker>
     </MapContainer>
   );

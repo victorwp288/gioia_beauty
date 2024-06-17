@@ -29,10 +29,10 @@ function Navbar() {
   };
 
   const menuItems = [
-    { id: 1, link: "/#services", label: "I NOSTRI SERVIZI" },
-    { id: 2, link: "/gallery", label: "GALLERY" },
-    { id: 3, link: "/contacts", label: "CONTATTI" },
-    { id: 4, link: "/#booking-section", label: "PRENOTA" },
+    { id: 1, link: "/#services", label: "I nostri servizi" },
+    { id: 2, link: "/gallery", label: "Gallery" },
+    { id: 3, link: "/contacts", label: "Contatti" },
+    { id: 4, link: "/#booking-section", label: "Prenota" },
   ];
 
   return (
