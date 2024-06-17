@@ -25,7 +25,7 @@ const toasty = () => toast("Appointment Booked!");
 
 const formSchema = z.object({
   date: z.date(),
-  note: z.string(),
+  note: z.string().optional(),
   name: z.string(),
   number: z.string(),
   email: z.string().email(),
@@ -33,6 +33,7 @@ const formSchema = z.object({
   selectedDate: z.date(),
   appointmentType: z.string(),
   variant: z.string().optional(),
+  duration: z.number(), // Ensure duration is included in the schema as a number
 });
 
 const BookAppointment = () => {
@@ -104,13 +105,39 @@ const BookAppointment = () => {
     fetchTimeSlots(selectedDate);
   }, [selectedDate, appointmentType, selectedVariant, fetchTimeSlots]);
 
+  const handleAppointmentTypeChange = (e) => {
+    const selectedType = appointmentTypes.find(
+      (type) => type.type === e.target.value
+    );
+    setAppointmentType(selectedType);
+    setSelectedVariant(null);
+    form.setValue("appointmentType", selectedType.type);
+    form.setValue("variant", "");
+    form.setValue("duration", selectedType.durations[0]);
+  };
+  const handleVariantChange = (e) => {
+    const selectedDuration = parseInt(e.target.value);
+    setSelectedVariant(selectedDuration);
+    form.setValue("variant", e.target.value);
+    form.setValue("duration", selectedDuration);
+  };
+
   const handleSubmit = async (data) => {
     try {
       const startTime = data.timeSlot;
-      const duration = parseInt(data.duration); // Use duration from form data
-      const [hours, minutes] = startTime.split(":").map(Number);
+      const duration = data.duration;
+      const [startHours, startMinutes] = startTime.split(":").map(Number);
+
+      let endMinutes = startMinutes + duration;
+      let endHours = startHours;
+
+      if (endMinutes >= 60) {
+        endHours += Math.floor(endMinutes / 60);
+        endMinutes = endMinutes % 60;
+      }
+
       const endTime = new Date(selectedDate);
-      endTime.setHours(hours, minutes + duration);
+      endTime.setHours(endHours, endMinutes, 0, 0);
 
       const formattedEndTime = `${endTime.getHours()}:${
         endTime.getMinutes() < 10 ? "0" : ""
@@ -215,15 +242,7 @@ const BookAppointment = () => {
                     <select
                       className=" rounded-lg border border-[#e5e7eb] px-3 py-2 text-sm"
                       {...field}
-                      onChange={(e) => {
-                        const selectedType = appointmentTypes.find(
-                          (type) => type.type === e.target.value
-                        );
-                        setAppointmentType(selectedType);
-                        setSelectedVariant(null);
-                        form.setValue("variant", "");
-                        field.onChange(e);
-                      }}
+                      onChange={handleAppointmentTypeChange}
                     >
                       {appointmentTypes.map((appointmentType) => (
                         <option
@@ -239,6 +258,34 @@ const BookAppointment = () => {
                 </FormItem>
               )}
             />
+
+            {appointmentType.durations.length > 1 && (
+              <FormField
+                control={form.control}
+                name="variant"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Duration Variant</FormLabel>
+                    <FormControl>
+                      <select
+                        className=" rounded-lg border border-[#e5e7eb] px-3 py-2 text-sm"
+                        {...field}
+                        onChange={handleVariantChange}
+                      >
+                        <option value="">Select Duration</option>
+                        {appointmentType.durations.map((duration, index) => (
+                          <option key={index} value={duration}>
+                            {duration} minutes
+                          </option>
+                        ))}
+                      </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
             {/* Variant Selection */}
             {appointmentType.durations.length > 1 && (
               <FormField
