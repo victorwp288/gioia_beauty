@@ -33,7 +33,7 @@ const Accordion = ({ title, description, image, children, imagePosition }) => {
           <p className="w-full text-sm md:w-[85%]">{description}</p>
           <button
             type="button"
-            className="border-0 bg-white text-xs font-bold text-[#dec3c5] no-underline"
+            className="border-0 bg-white text-xs font-bold text-primary no-underline"
           >
             {isOpen ? "Chiudi ⋀" : "Scopri di più →"}
           </button>

@@ -1,7 +1,7 @@
-'use client'
-import React, { useState, useRef, useEffect } from 'react'
-import Accordion from '@/components/Accordion'
-import Image from 'next/image'
+"use client";
+import React, { useState, useRef, useEffect } from "react";
+import Accordion from "@/components/Accordion";
+import Image from "next/image";
 import {
   maniPiedi,
   rituale,
@@ -11,40 +11,40 @@ import {
   makeupPic,
   massaggiPic,
   clock,
-} from '@/components/ServicesImages'
-import manicure from '@/data/manicureData'
-import pedicure from '@/data/pedicureData'
-import cigliaSopracciglia from '@/data/cigliaSopraccigliaData'
-import massaggi from '@/data/massaggiData'
-import ceretta from '@/data/cerettaData'
-import rituali from '@/data/ritualiData'
-import makeup from '@/data/makeupData'
-import trattamentiViso from '@/data/trattamentiVisoData'
+} from "@/components/ServicesImages";
+import manicure from "@/data/manicureData";
+import pedicure from "@/data/pedicureData";
+import cigliaSopracciglia from "@/data/cigliaSopraccigliaData";
+import massaggi from "@/data/massaggiData";
+import ceretta from "@/data/cerettaData";
+import rituali from "@/data/ritualiData";
+import makeup from "@/data/makeupData";
+import trattamentiViso from "@/data/trattamentiVisoData";
 
 function ServicesContainer() {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const scrollContainerRef = useRef(null)
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollContainerRef = useRef(null);
 
   const handleScroll = () => {
-    const scrollPosition = scrollContainerRef.current.scrollLeft
-    const containerWidth = scrollContainerRef.current.offsetWidth
-    const newIndex = Math.round(scrollPosition / containerWidth)
-    setCurrentIndex(newIndex)
-  }
+    const scrollPosition = scrollContainerRef.current.scrollLeft;
+    const containerWidth = scrollContainerRef.current.offsetWidth;
+    const newIndex = Math.round(scrollPosition / containerWidth);
+    setCurrentIndex(newIndex);
+  };
 
   useEffect(() => {
-    const scrollContainer = scrollContainerRef.current
-    scrollContainer.addEventListener('scroll', handleScroll)
+    const scrollContainer = scrollContainerRef.current;
+    scrollContainer.addEventListener("scroll", handleScroll);
 
     return () => {
-      scrollContainer.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
+      scrollContainer.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <div className="m-auto mt-2 w-[90vw] md:mt-12 md:w-[70vw]">
       <div className="flex flex-col gap-2 py-8 pb-6 md:gap-4 md:py-4">
-        <h4 className="text-xs font-extrabold text-[#dec3c5] ">ESPLORA</h4>
+        <h4 className="text-xs font-extrabold text-primary ">ESPLORA</h4>
         <h2 className="font-serif text-2xl font-bold tracking-tight md:text-3xl">
           I nostri trattamenti
         </h2>
@@ -475,13 +475,13 @@ function ServicesContainer() {
           <div
             key={index}
             className={`mx-1 h-1 w-1 rounded-full ${
-              currentIndex === index ? 'bg-[#d3b7ba]' : 'bg-gray-200'
+              currentIndex === index ? "bg-primary" : "bg-gray-200"
             }`}
           ></div>
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-export default ServicesContainer
+export default ServicesContainer;

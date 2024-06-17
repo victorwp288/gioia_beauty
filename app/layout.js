@@ -2,6 +2,7 @@ import { Cookie, Inter } from "next/font/google";
 import "./globals.css";
 import { Bricolage_Grotesque, DM_Serif_Display } from "next/font/google";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import "@/styles/tailwind.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -48,6 +49,7 @@ export default function RootLayout({ children }) {
         {children}
         <Analytics />
         <SpeedInsights />
+        <Footer />
       </body>
     </html>
   );

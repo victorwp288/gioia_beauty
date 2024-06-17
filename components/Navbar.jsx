@@ -37,12 +37,14 @@ function Navbar() {
 
   return (
     <div className="fixed top-0 z-50 flex w-full items-center justify-between bg-white px-4 py-4 text-sm transition duration-300 ease-in-out md:px-28 lg:px-64">
-      <Image src={logo} className=" w-16 lg:w-20" alt="Logo" />
+      <Link href="/">
+        <Image src={logo} className=" w-16 lg:w-20" alt="Logo" />
+      </Link>
       <ul className="hidden gap-10 md:flex">
         <li>
           <Link
             href="/#services"
-            className="link cursor-pointer focus:font-bold focus:text-[#d2b5b8] active:decoration-[#d2b5b8]"
+            className="link cursor-pointer focus:font-bold focus:text-primary active:decoration-primary"
           >
             I NOSTRI SERVIZI
           </Link>
@@ -50,7 +52,7 @@ function Navbar() {
         <li>
           <Link
             href="/gallery"
-            className="link cursor-pointer focus:font-bold focus:text-[#d2b5b8] active:decoration-[#d2b5b8]"
+            className="link cursor-pointer focus:font-bold focus:text-primary active:decoration-primary"
           >
             GALLERY
           </Link>
@@ -58,7 +60,7 @@ function Navbar() {
         <li>
           <Link
             href="/contacts"
-            className="link cursor-pointer focus:font-bold focus:text-[#d2b5b8] active:decoration-[#cfcccc]"
+            className="link cursor-pointer focus:font-bold focus:text-primary active:decoration-[#cfcccc]"
           >
             CONTATTI
           </Link>
@@ -66,7 +68,7 @@ function Navbar() {
         <li>
           <Link
             href="/#booking-section"
-            className="link cursor-pointer font-semibold active:underline focus:text-[#d2b5b8] active:decoration-[#d2b5b8] focus:font-bold"
+            className="link cursor-pointer font-semibold active:underline focus:text-primary active:decoration-primary focus:font-bold"
           >
             PRENOTA
           </Link>

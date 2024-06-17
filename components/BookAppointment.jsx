@@ -165,7 +165,7 @@ const BookAppointment = () => {
   return (
     <div className=" m-auto mt-12 w-[90vw] space-y-4  md:w-[70vw]">
       <div className="flex flex-col gap-2 py-1 md:gap-4 md:py-4">
-        <h4 className="text-xs font-extrabold text-[#dec3c5] ">
+        <h4 className="text-xs font-extrabold text-primary ">
           CONCEDITI UN MOMENTO DI RELAX
         </h4>
         <h2 className="font-serif text-2xl font-bold tracking-tight md:text-3xl">
@@ -174,7 +174,7 @@ const BookAppointment = () => {
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 items-end">
             {/* Calendar */}
             <FormField
               control={form.control}
