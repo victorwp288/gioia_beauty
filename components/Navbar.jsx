@@ -42,7 +42,7 @@ function Navbar() {
         <li>
           <Link
             href="/#services"
-            className="link cursor-pointer focus:font-bold focus:text-[#d2b5b8] active:decoration-[#d2b5b8]"
+            className="link cursor-pointer focus:font-bold focus:text-[#c9a6b0] active:decoration-[#c9a6b0]"
           >
             I NOSTRI SERVIZI
           </Link>
@@ -50,7 +50,7 @@ function Navbar() {
         <li>
           <Link
             href="/gallery"
-            className="link cursor-pointer focus:font-bold focus:text-[#d2b5b8] active:decoration-[#d2b5b8]"
+            className="link cursor-pointer focus:font-bold focus:text-[#c9a6b0] active:decoration-[#c9a6b0]"
           >
             GALLERY
           </Link>
@@ -58,7 +58,7 @@ function Navbar() {
         <li>
           <Link
             href="/contacts"
-            className="link cursor-pointer focus:font-bold focus:text-[#d2b5b8] active:decoration-[#cfcccc]"
+            className="link cursor-pointer focus:font-bold focus:text-[#c9a6b0] active:decoration-[#cfcccc]"
           >
             CONTATTI
           </Link>
@@ -66,7 +66,7 @@ function Navbar() {
         <li>
           <Link
             href="/#booking-section"
-            className="link cursor-pointer font-semibold active:underline focus:text-[#d2b5b8] active:decoration-[#d2b5b8] focus:font-bold"
+            className="link cursor-pointer font-semibold active:underline focus:text-[#c9a6b0] active:decoration-[#c9a6b0] focus:font-bold"
           >
             PRENOTA
           </Link>

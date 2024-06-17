@@ -75,10 +75,10 @@
   }
 
   .active-link {
-    color: #d2b5b8;
+    color: #c9a6b0;
     font-weight: 600;
     text-decoration: underline;
-    text-decoration-color: #d2b5b8;
+    text-decoration-color: #c9a6b0;
     text-underline-offset: 5.5px;
     text-decoration-thickness: 1.5px;
     letter-spacing: -0.2px;
@@ -101,7 +101,7 @@
   }
 
   .link:hover::before {
-    background-color: #d2b5b8; /* Color of the hover effect */
+    background-color: #c9a6b0; /* Color of the hover effect */
   }
 
   .active-link:hover(.link:hover::before) {

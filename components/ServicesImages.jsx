@@ -7,7 +7,10 @@ import makeupPic from "@/images/makeup.jpg";
 import massaggiPic from "@/images/massaggi.jpg";
 import clock from "@/images/clock.svg";
 import elettroporatore from "@/images/elettroporazione.jpg";
-import victor from "@/images/victor.jpeg";
+import demo1 from "@/images/demo_1.jpg";
+import demo2 from "@/images/demo_2.jpg";
+import demo3 from "@/images/demo_3.jpg";
+import demo4 from "@/images/demo_4.jpg";
 
 export {
   maniPiedi,
@@ -19,5 +22,8 @@ export {
   massaggiPic,
   clock,
   elettroporatore,
-  victor,
+  demo1,
+  demo2,
+  demo3,
+  demo4,
 };
