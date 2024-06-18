@@ -17,10 +17,15 @@ export function Dashy() {
 
   const fetchAppointments = async () => {
     const querySnapshot = await getDocs(collection(db, "customers"));
-    const appointmentsData = querySnapshot.docs.map((doc) => doc.data());
+    let appointmentsData = querySnapshot.docs.map((doc) => doc.data());
+
+    // Sort appointments by createdAt in descending order
+    appointmentsData = appointmentsData.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+
     setAppointments(appointmentsData);
   };
-
   useEffect(() => {
     fetchAppointments();
   }, []);
