@@ -65,19 +65,19 @@ const Gallery = () => {
         overlayClassName="fixed inset-0 bg-black bg-opacity-75"
       >
         <button
-          className="absolute md:top-20 top-2 right-0 m-2 p-2 bg-white rounded-full"
+          className=" z-20 absolute md:top-20 top-20 right-0 m-2 p-2 bg-white rounded-full"
           onClick={closeModal}
         >
           <FaTimes />
         </button>
         <button
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 p-2 bg-white rounded-full"
+          className="z-20 absolute top-1/2 left-4 transform -translate-y-1/2 p-2 bg-white rounded-full"
           onClick={goToPrevious}
         >
           <FaArrowLeft />
         </button>
         <button
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 p-2 bg-white rounded-full"
+          className="z-20 absolute top-1/2 right-4 transform -translate-y-1/2 p-2 bg-white rounded-full"
           onClick={goToNext}
         >
           <FaArrowRight />

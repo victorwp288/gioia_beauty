@@ -17,7 +17,14 @@ const Map = ({ latitude, longitude }) => {
     <MapContainer
       center={[latitude, longitude]}
       zoom={16}
-      style={{ height: "100%", width: "100%", marginTop: "2rem", zIndex: 5 }}
+      style={{
+        height: "100%",
+        width: "100%",
+        marginTop: "2rem",
+        paddingBottom: "15rem",
+        zIndex: 5,
+        position: "relative",
+      }}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
