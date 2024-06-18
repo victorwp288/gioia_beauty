@@ -1,47 +1,48 @@
-'use client'
-import Link from 'next/link'
-import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+"use client";
+import Link from "next/link";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { TextField } from '@/components/Fields'
-import { SlimLayout } from '@/components/SlimLayout'
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '@/utils/firebase'
+import { TextField } from "@/components/Fields";
+import { SlimLayout } from "@/components/SlimLayout";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/utils/firebase";
+import logo from "@/images/logo.svg";
+import Image from "next/image";
 
 export default function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
 
   async function handleAuth(event) {
-    event.preventDefault()
+    event.preventDefault();
     //what do i do here?
     //i need to sign in with email and password
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in successfully, you can use userCredential if needed
         // For example, redirect the user or display a success message
-        console.log('Signed in successfully:', userCredential.user)
-        router.push('/dashboard')
+        console.log("Signed in successfully:", userCredential.user);
+        router.push("/dashboard");
       })
       .catch((error) => {
         // Handle Errors here.
-        const errorCode = error.code
-        const errorMessage = error.message
+        const errorCode = error.code;
+        const errorMessage = error.message;
         // Display the error message to your user, log it, etc.
-        console.error('Error signing in:', errorCode, errorMessage)
-      })
+        console.error("Error signing in:", errorCode, errorMessage);
+      });
 
-    setEmail('')
-    setPassword('')
-
+    setEmail("");
+    setPassword("");
   }
 
   return (
     <SlimLayout>
       <div className="flex">
         <Link href="/" aria-label="Home">
-          <p>logo</p>
+          <Image alt="logo" width={150} src={logo} />
         </Link>
       </div>
       <h2 className="mt-20 text-lg font-semibold text-gray-900">
@@ -74,5 +75,5 @@ export default function Login() {
         </div>
       </form>
     </SlimLayout>
-  )
+  );
 }

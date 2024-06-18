@@ -10,8 +10,11 @@ const customStyles = {
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
-    padding: "6rem",
     border: "1px solid #e2ecf9",
+    paddingLeft: "2rem",
+    paddingRight: "2rem",
+    paddingTop: "4rem",
+    paddingBottom: "4rem",
   },
 };
 
@@ -23,7 +26,7 @@ const BookingConfirmation = ({ isOpen, onRequestClose }) => {
       style={customStyles}
       contentLabel="Appointment Booked"
     >
-      <h2 className="font-serif text-2xl text-primary font-semibold">
+      <h2 className="font-serif md:text-2xl text-primary font-semibold">
         L’appuntamento è stato prenotato
       </h2>
 

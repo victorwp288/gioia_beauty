@@ -4,14 +4,14 @@ import { whiteTick } from "./ServicesImages";
 
 function Technologies() {
   return (
-    <div className=" m-auto w-[90vw] md:w-[70vw] md:py-12">
-      <div className="flex flex-col gap-2 py-8 pb-6 md:gap-4 md:py-4">
+    <div className=" m-auto w-[90vw] md:w-[70vw] md:py-12 py-6">
+      <div className="flex flex-col gap-2 py-4 pb-6 md:gap-4 md:py-4">
         <h4 className="text-xs font-extrabold text-white ">SCOPRI</h4>
         <h2 className="font-serif text-2xl font-bold tracking-tight text-white md:text-3xl">
           Le tecnologie
         </h2>
       </div>
-      <div className="grid md:grid-cols-3 gap-14 py-10 md:py-0">
+      <div className="grid md:grid-cols-3 md:gap-14 gap-10 md:py-0">
         <div className=" text-white flex-col gap-2 flex">
           <div className="flex flex-col gap-2">
             <Image

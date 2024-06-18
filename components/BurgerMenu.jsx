@@ -17,9 +17,9 @@ const BurgerMenu = ({ isOpen, setIsOpen, menuItems }) => {
   }, [isOpen]);
 
   return (
-    <div className={`relative ${isOpen ? "z-50" : ""}`}>
+    <div className={`relative ${isOpen ? "z-40" : ""}`}>
       <button
-        className="relative z-50 flex h-8 w-8 flex-col items-center justify-center space-y-1"
+        className="relative z-40 flex h-8 w-8 flex-col items-center justify-center space-y-1"
         onClick={() => setIsOpen(!isOpen)}
       >
         <span
@@ -47,7 +47,7 @@ const BurgerMenu = ({ isOpen, setIsOpen, menuItems }) => {
       >
         <Image
           src={logo}
-          className=" absolute left-4 top-4 z-50 w-16 lg:w-20"
+          className=" absolute left-4 top-4 z-40 w-16 lg:w-20"
           alt="Logo"
         />
 
