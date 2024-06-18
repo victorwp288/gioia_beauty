@@ -14,7 +14,7 @@ export default function Home() {
       <div id="about-us" className="scroll-mt-10 bg-white">
         <AboutUs />
       </div>
-      <div id="technologies" className="scroll-mt-10 bg-[#b0c0ca]">
+      <div id="technologies" className="scroll-mt-10 bg-[#97a6af]">
         <Technologies />
       </div>
 

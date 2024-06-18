@@ -7,7 +7,7 @@ import makeupPic from "@/images/makeup.jpg";
 import massaggiPic from "@/images/massaggi.jpg";
 import clock from "@/images/clock.svg";
 import elettroporatore from "@/images/elettroporazione.jpg";
-import victor from "@/images/victor.jpeg";
+import whiteTick from "@/images/tick-white.svg";
 
 export {
   maniPiedi,
@@ -19,5 +19,5 @@ export {
   massaggiPic,
   clock,
   elettroporatore,
-  victor,
+  whiteTick,
 };
