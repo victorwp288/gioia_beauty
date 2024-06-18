@@ -68,7 +68,7 @@ function Navbar() {
         <li>
           <Link
             href="/#booking-section"
-            className="link cursor-pointer font-semibold active:underline focus:text-primary active:decoration-primary focus:font-bold"
+            className="link cursor-pointer font-semibold focus:text-primary active:decoration-primary focus:font-bold"
           >
             PRENOTA
           </Link>

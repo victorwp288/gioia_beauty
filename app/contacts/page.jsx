@@ -64,7 +64,9 @@ const Contacts = () => {
         </div>
       </div>
 
-      <Map latitude={latitude} longitude={longitude} />
+      <div>
+        <Map latitude={latitude} longitude={longitude} />
+      </div>
     </div>
   );
 };
