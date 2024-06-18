@@ -154,6 +154,7 @@ const BookAppointment = () => {
         selectedDate: data.selectedDate.toISOString().split("T")[0],
         appointmentType: data.appointmentType,
         variant: selectedVariant,
+        createdAt: new Date().toISOString(),
       });
       console.log("Appointment booked with ID:", docRef.id);
       openModal();
