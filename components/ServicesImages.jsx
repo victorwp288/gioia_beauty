@@ -8,6 +8,10 @@ import massaggiPic from "@/images/massaggi.jpg";
 import clock from "@/images/clock.svg";
 import elettroporatore from "@/images/elettroporazione.jpg";
 import whiteTick from "@/images/tick-white.svg";
+import demo1 from "@/images/demo_1.jpg";
+import demo2 from "@/images/demo_2.jpg";
+import demo3 from "@/images/demo_3.jpg";
+import demo4 from "@/images/demo_4.jpg";
 
 export {
   maniPiedi,
@@ -20,4 +24,8 @@ export {
   clock,
   elettroporatore,
   whiteTick,
+  demo1,
+  demo2,
+  demo3,
+  demo4,
 };
