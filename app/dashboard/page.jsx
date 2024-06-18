@@ -1,5 +1,5 @@
-'use client'
-import React, { useState, useEffect } from 'react'
+"use client";
+import React, { useState, useEffect } from "react";
 import {
   Bird,
   Book,
@@ -14,8 +14,8 @@ import {
   SquareUser,
   Triangle,
   Turtle,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerContent,
@@ -23,61 +23,61 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@/components/ui/drawer'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+} from "@/components/ui/drawer";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import {
   TooltipProvider,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@/components/ui/tooltip'
-import { useRouter } from 'next/navigation' // or 'next/router' depending on your Next.js version
-import { auth } from '@/utils/firebase'
-import { getAuth, signOut } from 'firebase/auth'
-import { Dashy } from '@/components/Dashy'
+} from "@/components/ui/tooltip";
+import { useRouter } from "next/navigation"; // or 'next/router' depending on your Next.js version
+import { auth } from "@/utils/firebase";
+import { getAuth, signOut } from "firebase/auth";
+import { Dashy } from "@/components/Dashy";
 
 export function Dashboard() {
-  const [calendars, setCalendars] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [calendars, setCalendars] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const router = useRouter()
-  const auth = getAuth()
+  const router = useRouter();
+  const auth = getAuth();
   const handleSignOut = async () => {
     try {
-      await signOut(auth)
-      console.log('User signed out successfully')
-      router.push('/') // Redirect user to login page after sign out
+      await signOut(auth);
+      console.log("User signed out successfully");
+      router.push("/"); // Redirect user to login page after sign out
     } catch (error) {
-      console.error('Error signing out:', error)
+      console.error("Error signing out:", error);
     }
-  }
+  };
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (!user) {
         // User not logged in, redirect them to login page
-        router.push('/')
+        router.push("/");
       } else {
-        setLoading(false) // Authenticated, stop showing loading state
+        setLoading(false); // Authenticated, stop showing loading state
       }
-    })
-  }, [auth, router])
+    });
+  }, [auth, router]);
 
   if (loading) {
-    return <div>Loading...</div> // Or a more styled loading spinner/component
+    return <div>Loading...</div>; // Or a more styled loading spinner/component
   }
 
   return (
     <TooltipProvider>
-      <div className="grid h-screen w-full pl-[56px]">
+      <div className=" z-50 grid h-screen w-full pl-[56px]">
         <aside className="inset-y fixed  left-0 z-20 flex h-full flex-col border-r">
           <div className="border-b p-2">
             <Button variant="outline" size="icon" aria-label="Home">
@@ -196,7 +196,9 @@ export function Dashboard() {
         </aside>
         <div className="flex flex-col">
           <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4">
-            <h1 className="text-xl font-semibold">Playground</h1>
+            <h1 className="text-xl font-semibold">
+              Gioia Castignoli’s dashboard
+            </h1>
             <Drawer>
               <DrawerTrigger asChild>
                 <Button variant="ghost" size="icon" className="md:hidden">
@@ -231,7 +233,7 @@ export function Dashboard() {
                               <Rabbit className="size-5" />
                               <div className="grid gap-0.5">
                                 <p>
-                                  Neural{' '}
+                                  Neural{" "}
                                   <span className="font-medium text-foreground">
                                     Genesis
                                   </span>
@@ -247,7 +249,7 @@ export function Dashboard() {
                               <Bird className="size-5" />
                               <div className="grid gap-0.5">
                                 <p>
-                                  Neural{' '}
+                                  Neural{" "}
                                   <span className="font-medium text-foreground">
                                     Explorer
                                   </span>
@@ -263,7 +265,7 @@ export function Dashboard() {
                               <Turtle className="size-5" />
                               <div className="grid gap-0.5">
                                 <p>
-                                  Neural{' '}
+                                  Neural{" "}
                                   <span className="font-medium text-foreground">
                                     Quantum
                                   </span>
@@ -335,7 +337,7 @@ export function Dashboard() {
         </div>
       </div>
     </TooltipProvider>
-  )
+  );
 }
 
-export default Dashboard
+export default Dashboard;

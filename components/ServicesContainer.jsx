@@ -58,7 +58,7 @@ function ServicesContainer() {
           <Accordion
             className="w-full flex-shrink-0 md:w-auto"
             title="Mani e piedi"
-            description="Discover personalized treatments tailored to enhance your natural radiance and rejuvenate your skin. Step into a world of indulgence and refinement, where every visit leaves you feeling confident, refreshed, and revitalized."
+            description="Rivitalizza le tue mani e i tuoi piedi con i nostri trattamenti specializzati. Offriamo manicure e pedicure di alta qualità, scrub esfolianti e massaggi rilassanti per donare morbidezza e bellezza alla tua pelle."
             image={maniPiedi}
             imagePosition="left"
           >
@@ -156,7 +156,7 @@ function ServicesContainer() {
           <Accordion
             className="w-full flex-shrink-0 md:w-auto"
             title="Ciglia e sopracciglia"
-            description="Discover personalized treatments tailored to enhance your natural radiance and rejuvenate your skin. Step into a world of indulgence and refinement, where every visit leaves you feeling confident, refreshed, and revitalized."
+            description="Definisci il tuo sguardo con i nostri trattamenti per ciglia e sopracciglia. Offriamo laminazione, extension e design delle sopracciglia per uno sguardo intenso e affascinante."
             image={sopracciglia}
             imagePosition="right"
           >
@@ -188,7 +188,7 @@ function ServicesContainer() {
           <Accordion
             className="w-full flex-shrink-0 md:w-auto"
             title="Massaggi viso e corpo"
-            description="Discover personalized treatments tailored to enhance your natural radiance and rejuvenate your skin. Step into a world of indulgence and refinement, where every visit leaves you feeling confident, refreshed, and revitalized."
+            description="Concediti un momento di relax con i nostri massaggi viso e corpo. Tecniche personalizzate per alleviare lo stress, migliorare la circolazione e tonificare la pelle, per un benessere completo."
             image={massaggiPic}
             imagePosition="left"
           >
@@ -222,7 +222,7 @@ function ServicesContainer() {
           <Accordion
             className="w-full flex-shrink-0 md:w-auto"
             title="Ceretta"
-            description="Discover personalized treatments tailored to enhance your natural radiance and rejuvenate your skin. Step into a world of indulgence and refinement, where every visit leaves you feeling confident, refreshed, and revitalized."
+            description="Dimentica la rasatura quotidiana con i nostri servizi di ceretta professionale. Offriamo trattamenti per tutte le aree del corpo, utilizzando prodotti di alta qualità per una pelle liscia e setosa a lungo."
             image={cerettaPic}
             imagePosition="right"
           >
@@ -362,7 +362,7 @@ function ServicesContainer() {
           <Accordion
             className="w-full flex-shrink-0 md:w-auto"
             title="Make-up e acconciature"
-            description="Discover personalized treatments tailored to enhance your natural radiance and rejuvenate your skin. Step into a world of indulgence and refinement, where every visit leaves you feeling confident, refreshed, and revitalized."
+            description="Esalta la tua bellezza naturale con i nostri servizi di make-up e acconciature. Dai look quotidiani alle occasioni speciali, i nostri esperti ti aiuteranno a trovare lo stile perfetto per te."
             image={makeupPic}
             imagePosition="right"
           >
@@ -418,7 +418,7 @@ function ServicesContainer() {
           <Accordion
             className="w-full flex-shrink-0 md:w-auto"
             title="Trattamenti viso"
-            description="Discover personalized treatments tailored to enhance your natural radiance and rejuvenate your skin. Step into a world of indulgence and refinement, where every visit leaves you feeling confident, refreshed, and revitalized."
+            description="Riscopri la luminosità della tua pelle con i nostri trattamenti viso. Da pulizie profonde a trattamenti anti-età, personalizziamo ogni servizio per rispondere alle esigenze specifiche della tua pelle."
             image={maniPiedi}
             imagePosition="left"
           >

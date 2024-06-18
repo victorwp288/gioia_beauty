@@ -30,7 +30,7 @@ export function Dashy() {
       <div className="grid gap-6 p-6 sm:p-10">
         <Card>
           <CardHeader>
-            <CardTitle>Todays Appointments</CardTitle>
+            <CardTitle>Gli appuntamenti di oggi</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
@@ -76,7 +76,7 @@ export function Dashy() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Calendar View</CardTitle>
+            <CardTitle>Calendario</CardTitle>
           </CardHeader>
           <CardContent>
             <Calendar

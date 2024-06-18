@@ -21,6 +21,8 @@ import { db } from "@/utils/firebase";
 
 import appointmentTypes from "@/data/appointmentTypes.json";
 
+import BookingConfirmation from "./BookingConfirmation";
+
 const toasty = () => toast("Appointment Booked!");
 
 const formSchema = z.object({
@@ -121,6 +123,7 @@ const BookAppointment = () => {
     form.setValue("variant", e.target.value);
     form.setValue("duration", selectedDuration);
   };
+  const [modalIsOpen, setIsOpen] = useState(false);
 
   const handleSubmit = async (data) => {
     try {
@@ -153,11 +156,14 @@ const BookAppointment = () => {
         variant: selectedVariant,
       });
       console.log("Appointment booked with ID:", docRef.id);
-      toasty();
+      openModal();
     } catch (error) {
       console.error("Error booking appointment:", error);
     }
   };
+
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
 
   const isPastDay = (day) =>
     day <= new Date() || day.getDay() === 0 || day.getDay() === 6;
@@ -377,7 +383,7 @@ const BookAppointment = () => {
             </Button>
           </div>
         </form>
-        <ToastContainer />
+        <BookingConfirmation isOpen={modalIsOpen} onRequestClose={closeModal} />
       </Form>
     </div>
   );
