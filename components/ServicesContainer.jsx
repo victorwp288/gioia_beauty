@@ -279,7 +279,7 @@ function ServicesContainer() {
           <Accordion
             className="w-full flex-shrink-0 md:w-auto"
             title="Rituali dal mondo"
-            description="I rituali dal mondo ripropongono un’esperienza multisensoriale profondamente immersiva, a partire dagli aromi. Gli ingredienti e le pratiche proposte provengono direttamente dalle millenarie tradizioni di bellezza."
+            description="I rituali dal mondo propongono un’esperienza multisensoriale profondamente immersiva, a partire dagli aromi. Gli ingredienti e le pratiche proposte provengono direttamente dalle millenarie tradizioni di bellezza."
             image={rituale}
             imagePosition="left"
           >
@@ -470,7 +470,7 @@ function ServicesContainer() {
           </Accordion>
         </div>
       </div>
-      <div className=" flex justify-center lg:hidden">
+      <div className=" flex justify-center p-1 lg:hidden">
         {[...Array(7).keys()].map((_, index) => (
           <div
             key={index}

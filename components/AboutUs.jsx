@@ -7,12 +7,12 @@ function AboutUs() {
     <div className="  m-auto w-[90vw] md:w-[70vw] md:py-12 py-10 ">
       <div className="flex flex-col gap-2 py-2 pb-6 md:gap-4 md:py-4">
         <h4 className="text-xs font-extrabold text-primary ">SCOPRI</h4>
-        <h2 className="font-serif text-2xl font-bold tracking-tight  md:text-3xl">
-          Come nasce Gioia beauty
+        <h2 className="font-serif text-3xl font-bold tracking-tight  md:text-3xl">
+          Come nasce Gioia Beauty
         </h2>
       </div>
 
-      <p className=" md:w-[40vw]">
+      <p className="text-sm md:w-[40vw]">
         Ciao! sono Gioia, nata nel 2003 e sin da bambina sono appassionata del
         mondo dell’estetica. Ho coltivato questa mia passione fino a quando, nel
         2019, ho deciso di iscrivermi all’Enaip di Piacenza, frequentando il
