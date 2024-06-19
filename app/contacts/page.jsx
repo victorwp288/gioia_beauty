@@ -12,7 +12,7 @@ const Contacts = () => {
   const latitude = 44.96556;
   const longitude = 9.8514;
   return (
-    <div className=" m-auto mt-24 w-[90vw] md:mt-32 md:w-[70vw]">
+    <div className="animate-fadeIn m-auto mt-24 w-[90vw] md:mt-32 md:w-[70vw]">
       <h2 className="font-serif text-3xl font-bold tracking-tight md:text-3xl">
         I nostri contatti
       </h2>

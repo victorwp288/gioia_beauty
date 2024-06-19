@@ -45,7 +45,7 @@ function ServicesContainer() {
     <div className="m-auto mt-2 w-[90vw] md:mt-12 md:w-[70vw] ">
       <div className="flex flex-col gap-2 py-8 pb-6 md:gap-4 md:py-4">
         <h4 className="text-xs font-extrabold text-primary ">ESPLORA</h4>
-        <h2 className="font-serif text-2xl font-bold tracking-tight md:text-3xl">
+        <h2 className="font-serif text-3xl font-bold tracking-tight md:text-3xl">
           I nostri trattamenti
         </h2>
       </div>
@@ -279,7 +279,7 @@ function ServicesContainer() {
           <Accordion
             className="w-full flex-shrink-0 md:w-auto"
             title="Rituali dal mondo"
-            description="I rituali dal mondo sono un’esperienza personale e completa, ripropongono un’esperienza multisensoriale profondamente immersiva, a partire dagli aromi. Gli ingredienti e le pratiche proposte provengono direttamente dalle millenarie tradizioni di bellezza."
+            description="I rituali dal mondo ripropongono un’esperienza multisensoriale profondamente immersiva, a partire dagli aromi. Gli ingredienti e le pratiche proposte provengono direttamente dalle millenarie tradizioni di bellezza."
             image={rituale}
             imagePosition="left"
           >
@@ -470,7 +470,7 @@ function ServicesContainer() {
           </Accordion>
         </div>
       </div>
-      <div className=" flex justify-center p-4 lg:hidden">
+      <div className=" flex justify-center lg:hidden">
         {[...Array(7).keys()].map((_, index) => (
           <div
             key={index}

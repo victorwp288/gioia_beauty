@@ -28,7 +28,7 @@ const Accordion = ({ title, description, image, children, imagePosition }) => {
             />
           </div>
         </div>
-        <div className="flex flex-col items-start gap-4 p-6 py-10 text-left md:basis-[50%] md:px-0 md:py-8 md:pl-9">
+        <div className="flex flex-col items-start gap-4 p-6 py-6 text-left md:basis-[50%] md:px-0 md:py-8 md:pl-9">
           <h2 className="font-serif text-2xl font-bold">{title}</h2>
           <p className="w-full text-sm md:w-[85%]">{description}</p>
           <button

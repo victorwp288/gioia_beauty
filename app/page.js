@@ -7,7 +7,7 @@ import { Cookiesbanner } from "@/components/Cookiesbanner";
 
 export default function Home() {
   return (
-    <main className="fadeIn animate-fadeIn bg-white">
+    <main className="animate-fadeIn bg-white">
       <Cookiesbanner />
 
       <HeroSection />

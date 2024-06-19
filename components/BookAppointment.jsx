@@ -175,7 +175,7 @@ const BookAppointment = () => {
         <h4 className="text-xs font-extrabold text-primary ">
           CONCEDITI UN MOMENTO DI RELAX
         </h4>
-        <h2 className="font-serif text-2xl font-bold tracking-tight md:text-3xl">
+        <h2 className="font-serif text-3xl font-bold tracking-tight md:text-3xl">
           Prenota un appuntamento
         </h2>
       </div>

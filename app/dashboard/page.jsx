@@ -77,7 +77,7 @@ export function Dashboard() {
 
   return (
     <TooltipProvider>
-      <div className=" z-50 grid h-screen w-full pl-[56px]">
+      <div className="animate-fadeIn z-50 grid h-screen w-full pl-[56px]">
         <aside className="inset-y fixed  left-0 z-20 flex h-full flex-col border-r">
           <div className="border-b p-2">
             <Button variant="outline" size="icon" aria-label="Home">
