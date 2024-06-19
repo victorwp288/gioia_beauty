@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import Modal from "react-modal";
 
 const customStyles = {
@@ -19,10 +20,38 @@ const customStyles = {
 };
 
 const BookingConfirmation = ({ isOpen, onRequestClose }) => {
+  const handleClose = () => {
+    onRequestClose();
+    window.location.reload();
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      // If the modal is open, set a timeout to refresh the page after 10 seconds
+      const timeoutId = setTimeout(() => {
+        window.location.reload();
+      }, 10000);
+
+      // Return a cleanup function to clear the timeout if the modal is closed before the 10 seconds are up
+      return () => clearTimeout(timeoutId);
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen) {
+      // If the modal is open, set a timeout to refresh the page after 10 seconds
+      const timeoutId = setTimeout(() => {
+        window.location.reload();
+      }, 10000);
+
+      // Return a cleanup function to clear the timeout if the modal is closed before the 10 seconds are up
+      return () => clearTimeout(timeoutId);
+    }
+  }, [isOpen]);
   return (
     <Modal
       isOpen={isOpen}
-      onRequestClose={onRequestClose}
+      onRequestClose={handleClose}
       style={customStyles}
       contentLabel="Appointment Booked"
     >
@@ -30,7 +59,7 @@ const BookingConfirmation = ({ isOpen, onRequestClose }) => {
         L’appuntamento è stato prenotato
       </h2>
 
-      <button className="absolute top-4 right-4" onClick={onRequestClose}>
+      <button className="absolute top-4 right-4" onClick={handleClose}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
