@@ -62,7 +62,7 @@ function ServicesContainer() {
             image={maniPiedi}
             imagePosition="left"
           >
-            <div className="grid gap-12 border-t-2  border-dashed border-gray-100  px-6 pb-4 md:grid-cols-2 md:px-12 md:py-12  lg:border-none">
+            <div className="grid gap-12 px-6 pb-4 md:grid-cols-2 md:px-12 md:py-12">
               <div className=" flex flex-col gap-10  pt-8">
                 {manicure.map((service, index) => (
                   <div className="flex flex-col gap-2" key={index}>
@@ -96,7 +96,7 @@ function ServicesContainer() {
                                 +{subcategory.duration}m
                               </p>
                             </div>
-                            <h4 className="w-[85%] text-xs">
+                            <h4 className="w-[85%] text-xs font-medium text-gray-600">
                               {subcategory.title}
                             </h4>
                           </div>
@@ -139,7 +139,7 @@ function ServicesContainer() {
                                 +{subcategory.duration}m
                               </p>
                             </div>
-                            <h4 className="w-[85%] text-xs">
+                            <h4 className="w-[85%] text-xs font-medium text-gray-600">
                               {subcategory.title}
                             </h4>
                           </div>
@@ -263,7 +263,7 @@ function ServicesContainer() {
                               {subcategory.duration}m
                             </p>
                           </div>
-                          <h4 className="w-[85%] text-sm">
+                          <h4 className="w-[85%] text-sm font-medium text-gray-600">
                             {subcategory.title}
                           </h4>
                         </div>
@@ -344,7 +344,7 @@ function ServicesContainer() {
                                 {subcategory.duration}m
                               </p>
                             </div>
-                            <h4 className="w-[85%] text-xs">
+                            <h4 className="w-[85%] text-xs font-medium text-gray-600">
                               {subcategory.title}
                             </h4>
                           </div>
@@ -401,7 +401,7 @@ function ServicesContainer() {
                               {subcategory.duration}m
                             </p>
                           </div>
-                          <h4 className="w-[85%] text-xs">
+                          <h4 className="w-[85%] text-xs font-medium text-gray-600">
                             {subcategory.title}
                           </h4>
                         </div>
@@ -457,7 +457,7 @@ function ServicesContainer() {
                               {subcategory.duration}m
                             </p>
                           </div>
-                          <h4 className="w-[85%] text-xs">
+                          <h4 className="w-[85%] text-xs font-medium text-gray-600">
                             {subcategory.title}
                           </h4>
                         </div>

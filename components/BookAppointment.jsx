@@ -188,7 +188,7 @@ const BookAppointment = () => {
               name="date"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Select Date</FormLabel>
+                  <FormLabel>Seleziona data</FormLabel>
                   <FormControl>
                     <Calendar
                       mode="single"
@@ -199,7 +199,7 @@ const BookAppointment = () => {
                         form.setValue("selectedDate", date);
                       }}
                       disabled={isPastDay}
-                      className="w-full rounded-md border"
+                      className=" w-fit rounded-md border"
                     />
                   </FormControl>
                   <FormMessage />
@@ -214,7 +214,7 @@ const BookAppointment = () => {
                 <FormItem className="mt-3 md:mt-0">
                   <FormLabel className="mb-3 flex items-center gap-2">
                     <Clock className="h-5 w-5 text-primary" />
-                    Select Time Slot
+                    Seleziona orario
                   </FormLabel>
                   <FormControl>
                     <div className="grid grid-cols-3 gap-2 rounded-lg border p-5">
@@ -244,7 +244,7 @@ const BookAppointment = () => {
               name="appointmentType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Appointment Type</FormLabel>
+                  <FormLabel>Trattamento</FormLabel>
                   <FormControl>
                     <select
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -272,7 +272,7 @@ const BookAppointment = () => {
                 name="variant"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Duration Variant</FormLabel>
+                    <FormLabel>Durata del trattamento</FormLabel>
                     <FormControl>
                       <select
                         className=" flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -282,7 +282,7 @@ const BookAppointment = () => {
                         <option value="">Select Duration</option>
                         {appointmentType.durations.map((duration, index) => (
                           <option key={index} value={duration}>
-                            {duration} minutes
+                            {duration} minuti
                           </option>
                         ))}
                       </select>
@@ -300,7 +300,7 @@ const BookAppointment = () => {
                 name="variant"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Duration Variant</FormLabel>
+                    <FormLabel>Durata del trattamento</FormLabel>
                     <FormControl>
                       <select
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -313,7 +313,7 @@ const BookAppointment = () => {
                         <option value="">Select Duration</option>
                         {appointmentType.durations.map((duration, index) => (
                           <option key={index} value={duration}>
-                            {duration} minutes
+                            {duration} minuti
                           </option>
                         ))}
                       </select>
@@ -343,7 +343,7 @@ const BookAppointment = () => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Nome e Cognome</FormLabel>
                   <FormControl>
                     <Input type="text" {...field} />
                   </FormControl>
@@ -357,7 +357,7 @@ const BookAppointment = () => {
               name="number"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
+                  <FormLabel>Telefono</FormLabel>
                   <FormControl>
                     <Input type="text" {...field} />
                   </FormControl>
@@ -380,7 +380,7 @@ const BookAppointment = () => {
               )}
             />
             <Button className="mt-3" color="primary" type="submit">
-              Book Appointment
+              Prenota appuntamento
             </Button>
           </div>
         </form>
