@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import logo from "@/images/logo.svg";
+import logo from "@/images/logo.png";
 
 const BurgerMenu = ({ isOpen, setIsOpen, menuItems }) => {
   const linksRef = useRef(null);

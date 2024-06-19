@@ -7,7 +7,7 @@ import { TextField } from "@/components/Fields";
 import { SlimLayout } from "@/components/SlimLayout";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/utils/firebase";
-import logo from "@/images/logo.svg";
+import logo from "@/images/logo.png";
 import Image from "next/image";
 
 export default function Login() {
