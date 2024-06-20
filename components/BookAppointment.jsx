@@ -75,6 +75,10 @@ const BookAppointment = () => {
     async (date) => {
       if (!date) return;
 
+      const now = new Date();
+      const isToday = date.toDateString() === now.toDateString();
+      const currentTime = isToday ? now.getHours() * 60 + now.getMinutes() : 0;
+
       const dayOfWeek = date.getDay();
       const hours = openCloseHours[dayOfWeek];
 
@@ -102,6 +106,8 @@ const BookAppointment = () => {
 
       const allTimeSlots = [];
       for (let time = openingTime; time < closingTime; time += 30) {
+        if (isToday && time <= currentTime) continue; // Skip past times on the same day
+
         const hours = Math.floor(time / 60);
         const minutes = time % 60;
         allTimeSlots.push(
@@ -214,8 +220,10 @@ const BookAppointment = () => {
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
-  const isPastDay = (day) =>
-    day <= new Date() || day.getDay() === 0 || day.getDay() === 6;
+  const isPastDay = (day) => {
+    const now = new Date();
+    return day < new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  };
 
   return (
     <div className=" m-auto mt-12 w-[90vw] space-y-4  md:w-[70vw]">
