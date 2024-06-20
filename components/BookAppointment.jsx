@@ -61,9 +61,27 @@ const BookAppointment = () => {
     },
   });
 
+  const openCloseHours = {
+    1: { open: "09:00", close: "19:00" }, // Monday
+    2: { open: "10:00", close: "20:00" }, // Tuesday
+    3: { open: "09:00", close: "19:00" }, // Wednesday
+    4: { open: "10:00", close: "20:00" }, // Thursday
+    5: { open: "09:00", close: "18:30" }, // Friday
+    6: null, // Saturday Closed
+    0: null, // Sunday Closed
+  };
+
   const fetchTimeSlots = useCallback(
     async (date) => {
       if (!date) return;
+
+      const dayOfWeek = date.getDay();
+      const hours = openCloseHours[dayOfWeek];
+
+      if (!hours) {
+        setTimeSlot([]);
+        return; // Closed day, no available slots
+      }
 
       const formattedDate = date.toISOString().split("T")[0];
       const q = query(
@@ -77,20 +95,50 @@ const BookAppointment = () => {
         ? parseInt(selectedVariant)
         : appointmentType.durations[0];
 
-      const allTimeSlots = Array.from(
-        { length: Math.floor(((17 - 8) * 60) / duration) },
-        (_, i) => {
-          const time = 8 * 60 + i * duration;
-          const hours = Math.floor(time / 60);
-          const minutes = time % 60;
-          return `${hours < 10 ? "0" : ""}${hours}:${
+      const [openHours, openMinutes] = hours.open.split(":").map(Number);
+      const [closeHours, closeMinutes] = hours.close.split(":").map(Number);
+      const openingTime = openHours * 60 + openMinutes;
+      const closingTime = closeHours * 60 + closeMinutes;
+
+      const allTimeSlots = [];
+      for (let time = openingTime; time < closingTime; time += 30) {
+        const hours = Math.floor(time / 60);
+        const minutes = time % 60;
+        allTimeSlots.push(
+          `${hours < 10 ? "0" : ""}${hours}:${
             minutes < 10 ? "0" : ""
-          }${minutes}`;
-        }
-      );
-      const occupiedTimeSlots = data.map((item) => item.timeSlot);
-      const availableTimeSlots = allTimeSlots.filter(
-        (slot) => !occupiedTimeSlots.includes(slot)
+          }${minutes}`
+        );
+      }
+
+      const isSlotAvailable = (slot, duration) => {
+        const [startHours, startMinutes] = slot.split(":").map(Number);
+        const startTime = startHours * 60 + startMinutes;
+        const endTime = startTime + duration;
+
+        if (endTime > closingTime) return false;
+
+        return !data.some((item) => {
+          const [itemStartHours, itemStartMinutes] = item.startTime
+            .split(":")
+            .map(Number);
+          const [itemEndHours, itemEndMinutes] = item.endTime
+            .split(":")
+            .map(Number);
+
+          const itemStartTime = itemStartHours * 60 + itemStartMinutes;
+          const itemEndTime = itemEndHours * 60 + itemEndMinutes;
+
+          return (
+            (startTime >= itemStartTime && startTime < itemEndTime) ||
+            (endTime > itemStartTime && endTime <= itemEndTime) ||
+            (startTime <= itemStartTime && endTime >= itemEndTime)
+          );
+        });
+      };
+
+      const availableTimeSlots = allTimeSlots.filter((slot) =>
+        isSlotAvailable(slot, duration)
       );
 
       setTimeSlot(availableTimeSlots);
@@ -100,7 +148,7 @@ const BookAppointment = () => {
         form.setValue("timeSlot", firstAvailableTimeSlot);
       }
     },
-    [appointmentType, selectedVariant, form]
+    [selectedVariant, appointmentType, form]
   );
 
   useEffect(() => {
