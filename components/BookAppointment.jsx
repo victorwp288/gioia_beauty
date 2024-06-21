@@ -211,6 +211,36 @@ const BookAppointment = () => {
         createdAt: new Date().toISOString(),
       });
       console.log("Appointment booked with ID:", docRef.id);
+
+      const emailResponse = await fetch("/api/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: data.email,
+          name: data.name,
+          startTime: startTime,
+          endTime: formattedEndTime,
+          duration: duration,
+        }),
+      });
+
+      console.log("Email data:", {
+        email: data.email,
+        name: data.name,
+        startTime: startTime,
+        endTime: formattedEndTime,
+        duration: duration,
+      });
+
+      const emailResult = await emailResponse.json();
+      console.log("Email response:", emailResult);
+
+      if (!emailResponse.ok) {
+        console.error("Error sending email:", emailResult);
+      }
+
       openModal();
     } catch (error) {
       console.error("Error booking appointment:", error);
