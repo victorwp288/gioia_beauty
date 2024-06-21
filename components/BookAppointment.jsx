@@ -252,7 +252,15 @@ const BookAppointment = () => {
 
   const isPastDay = (day) => {
     const now = new Date();
-    return day < new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const dayOfWeek = day.getDay();
+
+    // Check if the day is Saturday or Sunday
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+    return (
+      day < new Date(now.getFullYear(), now.getMonth(), now.getDate()) ||
+      isWeekend
+    );
   };
 
   return (
