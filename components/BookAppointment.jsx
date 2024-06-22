@@ -55,7 +55,7 @@ const BookAppointment = () => {
       email: "",
       timeSlot: "",
       selectedDate: new Date(),
-      appointmentType: "",
+      appointmentType: appointmentTypes[0].type,
       variant: "",
       duration: appointmentTypes[0].durations[0],
     },
@@ -214,7 +214,7 @@ const BookAppointment = () => {
         endTime: formattedEndTime,
         duration,
         selectedDate: data.selectedDate.toISOString().split("T")[0],
-        appointmentType: data.appointmentType,
+        appointmentType: data.appointmentType || appointmentTypes[0].type, // Ensure default if empty
         variant: selectedVariant,
         createdAt: new Date().toISOString(),
       });
