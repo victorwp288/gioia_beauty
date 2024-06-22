@@ -161,6 +161,13 @@ const BookAppointment = () => {
     fetchTimeSlots(selectedDate);
   }, [selectedDate, appointmentType, selectedVariant, fetchTimeSlots]);
 
+  const formatDate = (date) => {
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   const handleAppointmentTypeChange = (e) => {
     const selectedType = appointmentTypes.find(
       (type) => type.type === e.target.value
@@ -197,14 +204,15 @@ const BookAppointment = () => {
       endTime.setHours(endHours, endMinutes, 0, 0);
 
       const formattedEndTime = `${endTime.getHours()}:${
-        endTime.getMinutes() < 10 ? "0" : ""
-      }${endTime.getMinutes()}`;
+        endMinutes < 10 ? "0" : ""
+      }${endMinutes}`;
+      const formattedSelectedDate = formatDate(data.selectedDate);
 
       const docRef = await addDoc(collection(db, "customers"), {
         ...data,
         startTime,
         endTime: formattedEndTime,
-        duration, // Include duration in the data
+        duration,
         selectedDate: data.selectedDate.toISOString().split("T")[0],
         appointmentType: data.appointmentType,
         variant: selectedVariant,
@@ -212,26 +220,23 @@ const BookAppointment = () => {
       });
       console.log("Appointment booked with ID:", docRef.id);
 
-      const emailResponse = await fetch("/api/send", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: data.email,
-          name: data.name,
-          startTime: startTime,
-          endTime: formattedEndTime,
-          duration: duration,
-        }),
-      });
-
-      console.log("Email data:", {
+      const emailData = {
         email: data.email,
         name: data.name,
         startTime: startTime,
         endTime: formattedEndTime,
         duration: duration,
+        date: formattedSelectedDate,
+      };
+
+      console.log("Email data:", emailData);
+
+      const emailResponse = await fetch("/api/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(emailData),
       });
 
       const emailResult = await emailResponse.json();
@@ -293,7 +298,7 @@ const BookAppointment = () => {
                         form.setValue("selectedDate", date);
                       }}
                       disabled={isPastDay}
-                      className=" w-fit rounded-md border"
+                      className="w-fit rounded-md border"
                     />
                   </FormControl>
                   <FormMessage />

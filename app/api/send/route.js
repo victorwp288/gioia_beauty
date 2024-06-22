@@ -1,4 +1,3 @@
-// app/api/send/route.js
 import { EmailTemplate } from "@/components/EmailTemplate";
 import { Resend } from "resend";
 
@@ -6,13 +5,23 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request) {
   try {
-    const { email, name, startTime, endTime, duration } = await request.json();
+    const { email, name, startTime, endTime, duration, date } =
+      await request.json();
+
+    console.log("Received data:", {
+      email,
+      name,
+      startTime,
+      endTime,
+      duration,
+      date,
+    });
 
     const { data, error } = await resend.emails.send({
       from: "Gioia Beauty <noreply@gioiabeauty.net>",
       to: [email],
       subject: "Booking Confirmed! 🎉",
-      react: EmailTemplate({ name, startTime, endTime, duration }),
+      react: EmailTemplate({ name, startTime, endTime, duration, date }),
     });
 
     if (error) {
