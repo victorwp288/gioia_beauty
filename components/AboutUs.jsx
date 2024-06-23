@@ -13,25 +13,25 @@ function AboutUs() {
       </div>
 
       <p className="text-sm md:w-[40vw]">
-        Ciao! sono Gioia, nata nel 2003 e sin da bambina sono appassionata del
-        mondo dell’estetica. Ho coltivato questa mia passione fino a quando, nel
-        2019, ho deciso di iscrivermi all’Enaip di Piacenza, frequentando il
-        biennio di estetica.
-        <br /> <br />A 18 anni, terminato il biennio, mi sono iscritta presso{" "}
-        <i>Diadema Academy</i>, l’accademia d’eccellenza italiana nel settore
-        dell’estetica. Ho frequentato il secondo e il terzo anno. <br />
-        Nel mentre ho arricchito la mia esperienza lavorativa prima presso un
-        centro a Milano, successivamente presso un centro estetico in provincia
-        di Parma. <br /> Dopo i due anni di studio, mi sono diplomata con valore
-        di specializzazione con il massimo dei voti. Ho proseguito la mia
-        formazione ottenendo l’attestato da make-up artist e hairstylist all’
-        <i>Accademia MUD</i> di Milano, scuola nata nel 1997 a Los Angeles ed
-        arrivata a Milano nel 2016. <br />
+        Ciao! Sono Gioia, nata nel 2003 e da sempre appassionata del mondo
+        dell’estetica. <br /> <br /> Questa mia passione mi ha accompagnato fin
+        da bambina, portandomi nel 2019 a iscrivermi all’Enaip di Piacenza, dove
+        ho frequentato il biennio di estetica. <br /> A 18 anni, completato il
+        biennio, ho deciso di continuare la mia formazione presso la Diadema
+        Academy, l’accademia italiana di eccellenza nel settore dell’estetica.
+        Ho frequentato il secondo e il terzo anno, arricchendo
+        contemporaneamente la mia esperienza lavorativa prima in un centro a
+        Milano e successivamente in un centro estetico nella provincia di Parma.
         <br />
-        Grazie alla mia esperienza e alla mia continua formazione, ho realizzato
-        un ambiente accogliente con servizi di alta qualità, che si uniscono
-        all’impegno per la sostenibilità; utilizzando prodotti biologici, vegani
-        e strumenti riutilizzabili e riciclabili.
+        Dopo due anni di studi, mi sono diplomata con una specializzazione e il
+        massimo dei voti. Ho proseguito la mia formazione ottenendo l’attestato
+        da make-up artist e hairstylist presso l’Accademia MUD di Milano, scuola
+        fondata nel 1997 a Los Angeles e arrivata a Milano nel 2016. <br />
+        <br />
+        Grazie alla mia esperienza e alla continua formazione, ho creato un
+        ambiente accogliente con servizi di alta qualità, unendo l’impegno per
+        la sostenibilità attraverso l’uso di prodotti biologici, vegani e
+        strumenti riutilizzabili e riciclabili.
       </p>
     </div>
   );

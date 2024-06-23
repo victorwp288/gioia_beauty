@@ -53,17 +53,17 @@ function Technologies() {
     {
       title: "Elettroporatore",
       description:
-        "L’elettroporatore è un dispositivo medico utilizzato per facilitare l’ingresso di sostanze terapeutiche all’interno delle cellule attraverso l’applicazione di impulsi elettrici. Questi impulsi creano temporaneamente pori nella membrana cellulare, permettendo a molecole di vario tipo, come farmaci o DNA, di penetrare efficacemente nelle cellule.",
+        "L’elettroporatore è un macchinario perfetto per trattare gli inestetismi di viso e corpo. Tramite piccoli impulsi elettrici rende le cellule più permeabili, facendo penetrare i cosmetici applicati in profondità. Perfetto per contrastare l'invecchiamento cutaneo, per pelli con rughe e macchie, per inestetismi come la perdita di tono e la cellulite.",
     },
     {
       title: "Ossigeno dermo infusione",
       description:
-        "L’ossigeno dermo infusione è una tecnica estetica che utilizza ossigeno ad alta concentrazione per veicolare nutrienti nella pelle. Migliora l’idratazione, stimola il collagene e favorisce la rigenerazione cellulare, rendendo la pelle più luminosa e compatta. È particolarmente apprezzato per i suoi effetti immediati e senza tempi di recupero.",
+        "L’ossigeno dermo infusione è una tecnologia estetica che, tramite ossigeno puro in combinazione con acido iarulonico, migliora l'idratazione, rende la pelle liftata, contrasta le rughe, drena e ossigena i tessuti. Dona alla pelle un immediato effetto di compattezza, rendendola fin da subito più liscia e luminosa.",
     },
     {
       title: "Pressoterapia",
       description:
-        "La pressoterapia utilizza la pressione dell’aria per stimolare il sistema linfatico migliorando la circolazione sanguigna. Attraverso appositi applicatori che avvolgono le gambe, le braccia o altre parti del corpo, aiuta a ridurre gonfiori, eliminare tossine e migliorare la tonicità della pelle. È frequentemente utilizzata per trattare linfedemi, cellulite e per favorire il recupero muscolare post-allenamento.",
+        "Attraverso compressioni e decompressioni graduali di specifici gambali, la pressoterapia simula un massaggio drenante manuale. Favorisce le naturali funzioni del corpo, il ritorno venoso e l'eliminazione di sostanze di scarto dell'organismo. È particolarmente indicata per chi soffre di ritenzione idrica, cellulite, gambe gonfie e adiposità.",
     },
   ];
 
