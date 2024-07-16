@@ -20,6 +20,7 @@ import ceretta from "@/data/cerettaData";
 import rituali from "@/data/ritualiData";
 import makeup from "@/data/makeupData";
 import trattamentiViso from "@/data/trattamentiVisoData";
+import bagnoTurco from "@/data/bagnoTurcoData";
 
 function ServicesContainer() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -54,6 +55,37 @@ function ServicesContainer() {
         ref={scrollContainerRef}
         className="flex snap-x snap-mandatory gap-4 overflow-x-auto md:flex-col md:overflow-x-visible"
       >
+        <div className="min-w-full snap-center">
+          <Accordion
+            className="w-full flex-shrink-0 md:w-auto"
+            title="Bagno Turco"
+            description="Seduta di bagno turco con aromaterapia e cromoterapia: ideale per purificare l'organismo attraverso la sudorazione, beneficiando il sistema nervoso, la pelle, e migliorando la circolazione sanguigna e linfatica."
+            image={sopracciglia}
+            imagePosition="right"
+          >
+            <div className="grid gap-8 px-6 py-8 md:grid-cols-3 md:px-12 md:py-12">
+              {bagnoTurco.map((service, index) => (
+                <div className="flex flex-col gap-2" key={index}>
+                  <h3 className="font-serif text-[1.3rem] font-bold">
+                    {service.title}
+                  </h3>
+                  <div className="flex items-center gap-1">
+                    <Image
+                      src={clock}
+                      width={18}
+                      height={18}
+                      alt="duration of the service"
+                    />
+                    <p className="text-sm font-normal text-gray-500">
+                      {service.duration}m
+                    </p>
+                  </div>
+                  <p className="text-sm font-light">{service.description}</p>
+                </div>
+              ))}
+            </div>
+          </Accordion>
+        </div>
         <div className="min-w-full snap-center">
           <Accordion
             className="w-full flex-shrink-0 md:w-auto"
@@ -470,7 +502,7 @@ function ServicesContainer() {
           </Accordion>
         </div>
       </div>
-      <div className=" flex justify-center p-1 lg:hidden">
+      <div className=" flex justify-center p-2 lg:hidden">
         {[...Array(7).keys()].map((_, index) => (
           <div
             key={index}
