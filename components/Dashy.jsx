@@ -13,6 +13,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
+import { AppointmentCalendar } from "./AppointmentCalendar";
 
 export function Dashy() {
   const [appointments, setAppointments] = useState([]);
@@ -138,18 +139,7 @@ export function Dashy() {
             </Table>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Calendario</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Calendar
-              className="w-full [&_td]:w-16 [&_td]:h-16 [&_th]:w-16 [&_[name=day]]:w-16 [&_[name=day]]:h-16 [&>div]:space-x-0 [&>div]:gap-6"
-              mode="single"
-              numberOfMonths={1}
-            />
-          </CardContent>
-        </Card>
+        <AppointmentCalendar appointments={appointments} />
       </div>
     </div>
   );
