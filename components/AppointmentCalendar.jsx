@@ -81,6 +81,9 @@ export function AppointmentCalendar({ appointments }) {
                 <p className="text-sm text-muted-foreground">
                   {appointment.name} - {appointment.email}
                 </p>
+                <p className="text-sm text-muted-foreground">
+                  {appointment.duration} minutes
+                </p>
               </div>
             </div>
           ))}
