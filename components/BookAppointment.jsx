@@ -208,6 +208,13 @@ const BookAppointment = () => {
       }${endMinutes}`;
       const formattedSelectedDate = formatDate(data.selectedDate);
 
+      const q = query(
+        collection(db, "newsletter_subscribers"),
+        where("email", "==", data.email)
+      );
+      const querySnapshot = await getDocs(q);
+      const isSubscribed = !querySnapshot.empty;
+
       const docRef = await addDoc(collection(db, "customers"), {
         ...data,
         startTime,
@@ -217,6 +224,7 @@ const BookAppointment = () => {
         appointmentType: data.appointmentType || appointmentTypes[0].type, // Ensure default if empty
         variant: selectedVariant,
         createdAt: new Date().toISOString(),
+        isSubscribedToNewsletter: isSubscribed, // Add this field
       });
       console.log("Appointment booked with ID:", docRef.id);
 

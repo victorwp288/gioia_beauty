@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
@@ -82,7 +83,7 @@ export function Dashy() {
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full">
       <div className="grid gap-6 p-6 sm:p-10">
         <Card>
           <CardHeader>
