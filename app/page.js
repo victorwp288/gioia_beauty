@@ -4,7 +4,11 @@ import HeroSection from "@/components/HeroSection";
 import Technologies from "@/components/Technologies";
 import AboutUs from "@/components/AboutUs";
 import { Cookiesbanner } from "@/components/Cookiesbanner";
+<<<<<<< HEAD
 import NewsletterSignup from "@/components/NewsletterSignup";
+=======
+import SubscribeForm from "@/components/SubscribeForm";
+>>>>>>> 7858160d33b9f278f0630999f106851b4ce949ca
 
 export default function Home() {
   return (
@@ -27,8 +31,13 @@ export default function Home() {
         <BookAppointment />
       </div>
 
+<<<<<<< HEAD
       <div className="scroll-mt-10" id="newletter-section">
         <NewsletterSignup />
+=======
+      <div className="scroll-mt-10 pt-16" id="subscribe-section">
+        <SubscribeForm />
+>>>>>>> 7858160d33b9f278f0630999f106851b4ce949ca
       </div>
     </main>
   );

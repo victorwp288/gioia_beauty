@@ -5,12 +5,14 @@ import Image from "next/image";
 import {
   maniPiedi,
   rituale,
-  sopracciglia,
+  ciglia,
   tick,
   cerettaPic,
   makeupPic,
   massaggiPic,
   clock,
+  bagnoTurcoPic,
+  viso,
 } from "@/components/ServicesImages";
 import manicure from "@/data/manicureData";
 import pedicure from "@/data/pedicureData";
@@ -21,6 +23,7 @@ import rituali from "@/data/ritualiData";
 import makeup from "@/data/makeupData";
 import trattamentiViso from "@/data/trattamentiVisoData";
 import bagnoTurco from "@/data/bagnoTurcoData";
+import Link from "next/link";
 
 function ServicesContainer() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -60,7 +63,7 @@ function ServicesContainer() {
             className="w-full flex-shrink-0 md:w-auto"
             title="Bagno Turco"
             description="Seduta di bagno turco con aromaterapia e cromoterapia: ideale per purificare l'organismo attraverso la sudorazione, beneficiando il sistema nervoso, la pelle, e migliorando la circolazione sanguigna e linfatica."
-            image={sopracciglia}
+            image={bagnoTurcoPic}
             imagePosition="right"
           >
             <div className="grid gap-8 px-6 py-8 md:grid-cols-3 md:px-12 md:py-12">
@@ -189,7 +192,7 @@ function ServicesContainer() {
             className="w-full flex-shrink-0 md:w-auto"
             title="Ciglia e sopracciglia"
             description="Definisci il tuo sguardo con i nostri trattamenti per ciglia e sopracciglia. Offriamo laminazione, extension e design delle sopracciglia per uno sguardo intenso e affascinante."
-            image={sopracciglia}
+            image={ciglia}
             imagePosition="right"
           >
             <div className="grid gap-8 px-6 py-8 md:grid-cols-3 md:px-12 md:py-12">
@@ -451,7 +454,7 @@ function ServicesContainer() {
             className="w-full flex-shrink-0 md:w-auto"
             title="Trattamenti viso"
             description="Riscopri la luminosità della tua pelle con i nostri trattamenti viso. Da pulizie profonde a trattamenti anti-età, personalizziamo ogni servizio per rispondere alle esigenze specifiche della tua pelle."
-            image={maniPiedi}
+            image={viso}
             imagePosition="left"
           >
             <div className="grid grid-cols-1 gap-8 px-6 py-8 md:grid-cols-2 md:px-12 md:py-12">
@@ -485,9 +488,11 @@ function ServicesContainer() {
                               height={18}
                               alt="subcategory indicator"
                             />
-                            <p className="text-sm font-normal text-gray-500">
-                              {subcategory.duration}m
-                            </p>
+                            {subcategory.duration && (
+                              <p className="text-sm font-normal text-gray-500">
+                                {subcategory.duration}m
+                              </p>
+                            )}
                           </div>
                           <h4 className="w-[85%] text-xs font-medium text-gray-600">
                             {subcategory.title}
@@ -511,6 +516,15 @@ function ServicesContainer() {
             }`}
           ></div>
         ))}
+      </div>
+      <div className="text-center p-6">
+        <Link
+          className="underline text-zinc-400 w-fit cursor-pointer text-center  text-sm font-semibold"
+          target="_blank"
+          href={"https://maps.app.goo.gl/Vg7QqpUBStAnfnzV7"}
+        >
+          SCOPRI IL LISTINO PREZZI →
+        </Link>
       </div>
     </div>
   );
