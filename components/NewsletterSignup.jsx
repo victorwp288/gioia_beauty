@@ -33,7 +33,7 @@ const NewsletterSignup = () => {
         placeholder="Enter your email"
         required
       />
-      <Button type="submit">Subscribe to our Newsletter</Button>
+      <Button type="submit">Subscribe to Newsletter</Button>
     </form>
   );
 };
