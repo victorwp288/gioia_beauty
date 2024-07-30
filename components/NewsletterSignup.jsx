@@ -25,7 +25,7 @@ const NewsletterSignup = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-2 container mt-12">
       <Input
         type="email"
         value={email}
@@ -33,7 +33,7 @@ const NewsletterSignup = () => {
         placeholder="Enter your email"
         required
       />
-      <Button type="submit">Subscribe to Newsletter</Button>
+      <Button type="submit">Subscribe to our Newsletter</Button>
     </form>
   );
 };
