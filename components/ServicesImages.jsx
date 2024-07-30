@@ -16,6 +16,7 @@ import demo3 from "@/images/demo_3.jpg";
 import demo4 from "@/images/demo_4.jpg";
 import portrait from "@/images/gioia-portrait.jpg";
 import portraitSquare from "@/images/gioia-portrait-square.jpg";
+import heart from "@/images/heart.svg";
 
 export {
   maniPiedi,
@@ -36,4 +37,5 @@ export {
   portraitSquare,
   bagnoTurcoPic,
   viso,
+  heart,
 };

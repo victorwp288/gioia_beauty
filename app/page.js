@@ -4,6 +4,7 @@ import HeroSection from "@/components/HeroSection";
 import Technologies from "@/components/Technologies";
 import AboutUs from "@/components/AboutUs";
 import { Cookiesbanner } from "@/components/Cookiesbanner";
+import SubscribeForm from "@/components/SubscribeForm";
 
 export default function Home() {
   return (
@@ -24,6 +25,10 @@ export default function Home() {
 
       <div className="scroll-mt-10" id="booking-section">
         <BookAppointment />
+      </div>
+
+      <div className="scroll-mt-10 pt-16" id="subscribe-section">
+        <SubscribeForm />
       </div>
     </main>
   );
