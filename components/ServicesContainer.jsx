@@ -11,6 +11,7 @@ import {
   makeupPic,
   massaggiPic,
   clock,
+  bagnoTurcoPic,
 } from "@/components/ServicesImages";
 import manicure from "@/data/manicureData";
 import pedicure from "@/data/pedicureData";
@@ -60,7 +61,7 @@ function ServicesContainer() {
             className="w-full flex-shrink-0 md:w-auto"
             title="Bagno Turco"
             description="Seduta di bagno turco con aromaterapia e cromoterapia: ideale per purificare l'organismo attraverso la sudorazione, beneficiando il sistema nervoso, la pelle, e migliorando la circolazione sanguigna e linfatica."
-            image={sopracciglia}
+            image={bagnoTurcoPic}
             imagePosition="right"
           >
             <div className="grid gap-8 px-6 py-8 md:grid-cols-3 md:px-12 md:py-12">
