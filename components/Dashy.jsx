@@ -1,6 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc,
+  addDoc,
+} from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card";
 import {
@@ -11,13 +17,33 @@ import {
   TableBody,
   Table,
 } from "@/components/ui/table";
-import { Calendar } from "@/components/ui/calendar";
-import { X } from "lucide-react";
+import { X, Plus } from "lucide-react";
 import { toast } from "react-toastify";
 import { AppointmentCalendar } from "./AppointmentCalendar";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function Dashy() {
   const [appointments, setAppointments] = useState([]);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [newAppointment, setNewAppointment] = useState({
+    name: "",
+    email: "",
+    number: "",
+    appointmentType: "",
+    startTime: "",
+    endTime: "",
+    duration: "",
+    selectedDate: "",
+    note: "",
+  });
 
   const fetchAppointments = async () => {
     const querySnapshot = await getDocs(collection(db, "customers"));
@@ -46,10 +72,7 @@ export function Dashy() {
 
   const deleteAppointment = async (appointment) => {
     try {
-      // Delete from Firestore
       await deleteDoc(doc(db, "customers", appointment.id));
-
-      // Prepare email data
       const emailData = {
         email: appointment.email,
         name: appointment.name,
@@ -58,8 +81,6 @@ export function Dashy() {
         duration: appointment.duration,
         date: formatDate(new Date(appointment.selectedDate)),
       };
-
-      // Send cancellation email
       const emailResponse = await fetch("/api/cancel", {
         method: "POST",
         headers: {
@@ -67,14 +88,10 @@ export function Dashy() {
         },
         body: JSON.stringify(emailData),
       });
-
       if (!emailResponse.ok) {
         throw new Error("Failed to send cancellation email");
       }
-
-      // Update local state
       setAppointments(appointments.filter((a) => a.id !== appointment.id));
-
       toast.success("Appointment cancelled and email sent");
     } catch (error) {
       console.error("Error cancelling appointment or sending email: ", error);
@@ -82,12 +99,40 @@ export function Dashy() {
     }
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewAppointment((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddAppointment = async () => {
+    try {
+      const docRef = await addDoc(collection(db, "customers"), {
+        ...newAppointment,
+        createdAt: new Date().toISOString(),
+      });
+      console.log("Appointment added with ID:", docRef.id);
+      setIsAddModalOpen(false);
+      fetchAppointments();
+      toast.success("Appointment added successfully");
+    } catch (error) {
+      console.error("Error adding appointment:", error);
+      toast.error("Failed to add appointment. Please try again.");
+    }
+  };
+
   return (
     <div className="w-full">
       <div className="grid gap-6 p-6 sm:p-10">
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Gli appuntamenti di oggi</CardTitle>
+            <Button
+              onClick={() => setIsAddModalOpen(true)}
+              className="flex items-center gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Add Appointment
+            </Button>
           </CardHeader>
           <CardContent>
             <Table>
@@ -142,6 +187,129 @@ export function Dashy() {
         </Card>
         <AppointmentCalendar appointments={appointments} />
       </div>
+
+      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Appointment</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="text-right">
+                Clients name
+              </Label>
+              <Input
+                id="name"
+                name="name"
+                value={newAppointment.name}
+                onChange={handleInputChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="email" className="text-right">
+                Clients email
+              </Label>
+              <Input
+                id="email"
+                name="email"
+                value={newAppointment.email}
+                onChange={handleInputChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="number" className="text-right">
+                Clients phone number
+              </Label>
+              <Input
+                id="number"
+                name="number"
+                value={newAppointment.number}
+                onChange={handleInputChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="appointmentType" className="text-right">
+                Appointment type
+              </Label>
+              <Input
+                id="appointmentType"
+                name="appointmentType"
+                value={newAppointment.appointmentType}
+                onChange={handleInputChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="startTime" className="text-right">
+                Start Time
+              </Label>
+              <Input
+                id="startTime"
+                name="startTime"
+                type="time"
+                value={newAppointment.startTime}
+                onChange={handleInputChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="endTime" className="text-right">
+                End Time
+              </Label>
+              <Input
+                id="endTime"
+                name="endTime"
+                type="time"
+                value={newAppointment.endTime}
+                onChange={handleInputChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="duration" className="text-right">
+                Duration (min)
+              </Label>
+              <Input
+                id="duration"
+                name="duration"
+                type="number"
+                value={newAppointment.duration}
+                onChange={handleInputChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="selectedDate" className="text-right">
+                Date
+              </Label>
+              <Input
+                id="selectedDate"
+                name="selectedDate"
+                type="date"
+                value={newAppointment.selectedDate}
+                onChange={handleInputChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="note" className="text-right">
+                Note
+              </Label>
+              <Input
+                id="note"
+                name="note"
+                value={newAppointment.note}
+                onChange={handleInputChange}
+                className="col-span-3"
+              />
+            </div>
+          </div>
+          <Button onClick={handleAddAppointment}>Add Appointment</Button>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
