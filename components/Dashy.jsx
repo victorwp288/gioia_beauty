@@ -122,10 +122,10 @@ export function Dashy() {
 
   return (
     <div className="w-full">
-      <div className="grid gap-6 p-6 sm:p-10">
+      <div className="flex flex-col gap-6 p-1 lg:p-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Gli appuntamenti di oggi</CardTitle>
+            <CardTitle>Oggi</CardTitle>
             <Button
               onClick={() => setIsAddModalOpen(true)}
               className="flex items-center gap-2"

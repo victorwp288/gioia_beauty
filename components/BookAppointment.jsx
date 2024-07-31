@@ -154,7 +154,7 @@ const BookAppointment = () => {
         form.setValue("timeSlot", firstAvailableTimeSlot);
       }
     },
-    [selectedVariant, appointmentType, form]
+    [selectedVariant, appointmentType, form, openCloseHours]
   );
 
   useEffect(() => {

@@ -21,7 +21,7 @@ export function AppointmentCalendar({ appointments }) {
   };
 
   return (
-    <div className="flex h-full w-full max-w-6xl flex-col gap-6 p-6 md:flex-row md:gap-8">
+    <div className="flex h-full w-full max-w-6xl flex-col gap-6 md:flex-row md:gap-8">
       <div className="flex-1 rounded-lg border bg-background">
         <div className="flex items-center justify-between border-b p-4">
           <div className="text-lg font-medium">

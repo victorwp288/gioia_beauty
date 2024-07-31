@@ -26,7 +26,7 @@ const SubscriberList = () => {
 
   return (
     <div className="space-y-4">
-      <Button onClick={copyAllEmails}>Copy All Emails</Button>
+      <Button onClick={copyAllEmails}>Copia le email</Button>
       <div className="bg-gray-100 p-4 rounded-md">
         <h3 className="font-semibold mb-2">Subscriber Emails:</h3>
         <ul className="list-disc pl-5">
