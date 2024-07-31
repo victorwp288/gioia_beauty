@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { demo1, demo2, demo3, demo4 } from "@/components/ServicesImages";
+import { demo1, demo2, demo3, demo4 } from "@/components/ImagesExports";
 import GalleryClient from "@/components/GalleryClient";
 
 const Gallery = () => {

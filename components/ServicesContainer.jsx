@@ -13,7 +13,7 @@ import {
   clock,
   bagnoTurcoPic,
   viso,
-} from "@/components/ServicesImages";
+} from "@/components/ImagesExports";
 import manicure from "@/data/manicureData";
 import pedicure from "@/data/pedicureData";
 import cigliaSopracciglia from "@/data/cigliaSopraccigliaData";

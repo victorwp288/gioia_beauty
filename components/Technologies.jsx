@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { whiteTick } from "./ServicesImages";
+import { whiteTick } from "./ImagesExports";
 import rightArrow from "@/images/chevron-right.svg";
 import leftArrow from "@/images/chevron-left.svg";
 

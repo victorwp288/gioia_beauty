@@ -1,6 +1,6 @@
-import Image from 'next/image'
+import Image from "next/image";
 
-import backgroundImage from '@/images/background-auth.jpg'
+import { loginPhoto } from "./ImagesExports";
 
 export function SlimLayout({ children }) {
   return (
@@ -14,12 +14,12 @@ export function SlimLayout({ children }) {
         <div className="hidden sm:contents lg:relative lg:block lg:flex-1">
           <Image
             className="absolute inset-0 h-full w-full object-cover"
-            src={backgroundImage}
+            src={loginPhoto}
             alt=""
             unoptimized
           />
         </div>
       </div>
     </>
-  )
+  );
 }

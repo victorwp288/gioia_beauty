@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { portraitSquare } from "./ServicesImages";
+import { portraitSquare } from "./ImagesExports";
 
 function AboutUs() {
   return (

@@ -50,7 +50,7 @@ const SubscribeForm = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="text-white bg-primary flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="text-white bg-primary flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-white focus-visible:outline-none focus-visible:shadow disabled:cursor-not-allowed disabled:opacity-50"
               placeholder="Inserisci la tua mail"
               required
             />
@@ -58,7 +58,7 @@ const SubscribeForm = () => {
           <div className="flex items-center justify-center text-center">
             <button
               type="submit"
-              className=" text-primary inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white hover:bg-primary/90 h-10 px-4 py-2 mt-3"
+              className=" text-primary inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:shadow disabled:pointer-events-none disabled:opacity-50 bg-white hover:bg-slate-200 h-10 px-4 py-2 mt-3"
             >
               Iscriviti
             </button>
