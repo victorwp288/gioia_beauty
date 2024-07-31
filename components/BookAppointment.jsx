@@ -75,6 +75,16 @@ const BookAppointment = () => {
     async (date) => {
       if (!date) return;
 
+      const openCloseHours = {
+        1: { open: "09:00", close: "19:00" }, // Monday
+        2: { open: "10:00", close: "20:00" }, // Tuesday
+        3: { open: "09:00", close: "19:00" }, // Wednesday
+        4: { open: "10:00", close: "20:00" }, // Thursday
+        5: { open: "09:00", close: "18:30" }, // Friday
+        6: null, // Saturday Closed
+        0: null, // Sunday Closed
+      };
+
       const now = new Date();
       const isToday = date.toDateString() === now.toDateString();
       const currentTime = isToday ? now.getHours() * 60 + now.getMinutes() : 0;
@@ -154,7 +164,7 @@ const BookAppointment = () => {
         form.setValue("timeSlot", firstAvailableTimeSlot);
       }
     },
-    [selectedVariant, appointmentType, form, openCloseHours]
+    [selectedVariant, appointmentType, form]
   );
 
   useEffect(() => {
