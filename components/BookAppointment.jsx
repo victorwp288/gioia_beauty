@@ -264,26 +264,6 @@ const BookAppointment = () => {
         console.error("Error sending email:", emailResult);
       }
 
-      const smsData = await fetch("/api/twillioSms", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          number: data.number,
-          name: data.name,
-          startTime: startTime,
-          selectedDate: formattedSelectedDate,
-        }),
-      });
-
-      const smsResult = await smsData.json();
-      console.log("SMS response:", smsResult);
-
-      if (!smsData.ok) {
-        console.error("Error sending SMS:", smsResult);
-      }
-
       const whatsappData = await fetch("/api/whatsapp", {
         method: "POST",
         headers: {
