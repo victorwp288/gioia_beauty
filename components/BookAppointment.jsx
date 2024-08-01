@@ -272,7 +272,7 @@ const BookAppointment = () => {
 		body: JSON.stringify({
 		  number: data.number,
 		  name: data.name,
-		  time: startTime,
+		  time: data.startTime,
 		}),
       });
       const whatsappResult = await whatsappData.json();
