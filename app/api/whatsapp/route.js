@@ -6,34 +6,34 @@ const client = twilio(accountSid, authToken);
 
 export async function POST(request) {
   try {
-    const { number, name, time } = await request.json();
+    const { number, name, time, date } = await request.json();
+    console.log("Received request data:", { number, name, time });
 
-    if (!number || !name || !time) {
-      return new Response(
-        JSON.stringify({ error: "Missing required fields" }),
-        { status: 400 }
-      );
-    }
+    // Find time til appointment in minutes
+    const now = new Date();
+    const appointmentTime = new Date(time);
+    const timeUntilAppointment = appointmentTime.getTime() - now.getTime();
+    const minutesUntilAppointment = Math.floor(
+      timeUntilAppointment / (60 * 1000)
+    );
 
-	//find time til appointment in minutes
-	const now = new Date();
-	const appointmentTime = new Date(time);
-	const timeUntilAppointment = appointmentTime.getTime() - now.getTime();
-	const minutesUntilAppointment = Math.floor(timeUntilAppointment / (60 * 1000));
+    // Prepare content variables as a JSON string
+    const contentVariables = JSON.stringify({
+      1: name,
+      2: time,
+	  3: date,
+    });
 
+    console.log("Content variables being sent to Twilio:", contentVariables);
 
     const message = await client.messages.create({
       from: "MGec1ec7d85883d27a8a009067f340cd5d",
       to: `whatsapp:${number}`,
-      body: `Hello`,
-      contentSid: "HXd4917d1b6eff98dfce235843a43f8335",
-      contentVariables: JSON.stringify({
-        1: name,
-        2: minutesUntilAppointment,
-      }),
+      contentSid: "HXe5b02d400ea04af7720f1fe0f3fb65f6",
+      contentVariables: contentVariables, // Pass the JSON string directly
     });
 
-
+    console.log("Twilio API response:", message);
 
     return new Response(
       JSON.stringify({ success: true, messageSid: message.sid }),

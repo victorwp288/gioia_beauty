@@ -273,8 +273,10 @@ const BookAppointment = () => {
 		  number: data.number,
 		  name: data.name,
 		  time: data.startTime,
+		  date: formattedSelectedDate,
 		}),
       });
+	  console.log("Whatsapp data:", whatsappData);
       const whatsappResult = await whatsappData.json();
       console.log("Whatsapp response:", whatsappResult);
 
