@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -18,6 +18,8 @@ import { Input } from "@/components/ui/input";
 import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import { ToastContainer, toast } from "react-toastify";
 import { db } from "@/utils/firebase";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 import appointmentTypes from "@/data/appointmentTypes.json";
 
@@ -269,17 +271,16 @@ const BookAppointment = () => {
         headers: {
           "Content-Type": "application/json",
         },
-		body: JSON.stringify({
-		  number: data.number,
-		  name: data.name,
-		  time: data.startTime,
-		  date: formattedSelectedDate,
-		}),
+        body: JSON.stringify({
+          number: data.number,
+          name: data.name,
+          time: data.startTime,
+          date: formattedSelectedDate,
+        }),
       });
-	  console.log("Whatsapp data:", whatsappData);
+      console.log("Whatsapp data:", whatsappData);
       const whatsappResult = await whatsappData.json();
       console.log("Whatsapp response:", whatsappResult);
-
 
       openModal();
     } catch (error) {
@@ -399,7 +400,6 @@ const BookAppointment = () => {
                 </FormItem>
               )}
             />
-
             {appointmentType.durations.length > 1 && (
               <FormField
                 control={form.control}
@@ -426,7 +426,6 @@ const BookAppointment = () => {
                 )}
               />
             )}
-
             {/* Variant Selection */}
             {appointmentType.durations.length > 1 && (
               <FormField
@@ -486,17 +485,19 @@ const BookAppointment = () => {
               )}
             />
             {/* Phone Number */}
-            <FormField
-              control={form.control}
+            <Controller
               name="number"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Telefono</FormLabel>
-                  <FormControl>
-                    <Input type="text" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+              control={form.control}
+              render={({ field: { onChange, value } }) => (
+                <PhoneInput
+                  country={"it"}
+                  value={value}
+                  onChange={(phone, country, e, formattedValue) => {
+                    onChange(formattedValue); // This will include the "+"
+                  }}
+                  inputClass="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:shadow disabled:cursor-not-allowed disabled:opacity-50"
+                  buttonClass="h-10 border border-input bg-background"
+                />
               )}
             />
             {/* Email */}
