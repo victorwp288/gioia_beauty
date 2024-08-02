@@ -26,6 +26,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,7 +34,9 @@ import { Label } from "@/components/ui/label";
 export function Dashy() {
   const [appointments, setAppointments] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [appointmentToDelete, setAppointmentToDelete] = useState(null);
   const [newAppointment, setNewAppointment] = useState({
     name: "",
     email: "",
@@ -85,17 +88,9 @@ export function Dashy() {
     return `${day}/${month}/${year}`;
   };
 
-  const deleteAppointment = async (appointment) => {
-    // ... (keep existing deleteAppointment logic)
-  };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewAppointment((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleAddAppointment = async () => {
-    // ... (keep existing handleAddAppointment logic)
   };
 
   const filteredAppointments = appointments.filter(
@@ -103,6 +98,62 @@ export function Dashy() {
       new Date(appointment.selectedDate).toDateString() ===
       selectedDate.toDateString()
   );
+
+  const handleDeleteClick = (appointment) => {
+    setAppointmentToDelete(appointment);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (appointmentToDelete) {
+      try {
+        await deleteDoc(doc(db, "customers", appointmentToDelete.id));
+        const emailData = {
+          email: appointmentToDelete.email,
+          name: appointmentToDelete.name,
+          startTime: appointmentToDelete.startTime,
+          endTime: appointmentToDelete.endTime,
+          duration: appointmentToDelete.duration,
+          date: formatDate(new Date(appointmentToDelete.selectedDate)),
+        };
+        const emailResponse = await fetch("/api/cancel", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(emailData),
+        });
+        if (!emailResponse.ok) {
+          throw new Error("Failed to send cancellation email");
+        }
+        setAppointments(
+          appointments.filter((a) => a.id !== appointmentToDelete.id)
+        );
+        toast.success("Appointment cancelled and email sent");
+      } catch (error) {
+        console.error("Error cancelling appointment or sending email: ", error);
+        toast.error("Failed to cancel appointment. Please try again.");
+      }
+    }
+    setIsDeleteModalOpen(false);
+    setAppointmentToDelete(null);
+  };
+
+  const handleAddAppointment = async () => {
+    try {
+      const docRef = await addDoc(collection(db, "customers"), {
+        ...newAppointment,
+        createdAt: new Date().toISOString(),
+      });
+      console.log("Appointment added with ID:", docRef.id);
+      setIsAddModalOpen(false);
+      fetchAppointments();
+      toast.success("Appointment added successfully");
+    } catch (error) {
+      console.error("Error adding appointment:", error);
+      toast.error("Failed to add appointment. Please try again.");
+    }
+  };
 
   return (
     <div className="w-full">
@@ -157,7 +208,7 @@ export function Dashy() {
                     </TableCell>
                     <TableCell>
                       <button
-                        onClick={() => deleteAppointment(appointment)}
+                        onClick={() => handleDeleteClick(appointment)}
                         className="p-2 hover:bg-red-100 rounded-full"
                       >
                         <X size={20} className="text-red-500" />
@@ -295,7 +346,28 @@ export function Dashy() {
               />
             </div>
           </div>
-          <Button onClick={handleAddAppointment}>Add Appointment</Button>
+          <DialogFooter>
+            <Button onClick={handleAddAppointment}>Add Appointment</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+          </DialogHeader>
+          <p>Are you sure you want to delete this appointment?</p>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleConfirmDelete}>
+              Delete
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

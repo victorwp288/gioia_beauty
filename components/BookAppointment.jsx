@@ -27,8 +27,6 @@ import BookingConfirmation from "./BookingConfirmation";
 
 const toasty = () => toast("Appointment Booked!");
 
-
-
 const formSchema = z.object({
   date: z.date(),
   note: z.string().optional(),
@@ -64,8 +62,6 @@ const BookAppointment = () => {
       duration: appointmentTypes[0].durations[0],
     },
   });
-
-  
 
   const openCloseHours = {
     1: { open: "09:00", close: "19:00" }, // Monday
@@ -236,7 +232,7 @@ const BookAppointment = () => {
         startTime,
         endTime: formattedEndTime,
         duration,
-        selectedDate: data.selectedDate.toISOString().split("T")[0],
+        selectedDate: data.selectedDate.toISOString(),
         appointmentType: data.appointmentType || appointmentTypes[0].type, // Ensure default if empty
         variant: selectedVariant,
         createdAt: new Date().toISOString(),
