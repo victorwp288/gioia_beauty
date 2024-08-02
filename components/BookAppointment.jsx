@@ -27,17 +27,19 @@ import BookingConfirmation from "./BookingConfirmation";
 
 const toasty = () => toast("Appointment Booked!");
 
+
+
 const formSchema = z.object({
   date: z.date(),
   note: z.string().optional(),
-  name: z.string(),
-  number: z.string(),
-  email: z.string().email(),
-  timeSlot: z.string(),
+  name: z.string().min(1, "Name is required"),
+  number: z.string().min(1, "Phone number is required"),
+  email: z.string().email("Invalid email address"),
+  timeSlot: z.string().min(1, "Time slot is required"),
   selectedDate: z.date(),
-  appointmentType: z.string(),
+  appointmentType: z.string().min(1, "Appointment type is required"),
   variant: z.string().optional(),
-  duration: z.number(), // Ensure duration is included in the schema as a number
+  duration: z.number().min(1, "Duration is required"),
 });
 
 const BookAppointment = () => {
@@ -62,6 +64,8 @@ const BookAppointment = () => {
       duration: appointmentTypes[0].durations[0],
     },
   });
+
+  
 
   const openCloseHours = {
     1: { open: "09:00", close: "19:00" }, // Monday
