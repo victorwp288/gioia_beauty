@@ -34,7 +34,7 @@ const formSchema = z.object({
   number: z.string().min(1, "Phone number is required"),
   email: z.string().email("Invalid email address"),
   timeSlot: z.string().min(1, "Time slot is required"),
-  selectedDate: z.date(),
+  selectedDate: z.date().min(new Date(), "Date is required"),
   appointmentType: z.string().min(1, "Appointment type is required"),
   variant: z.string().optional(),
   duration: z.number().min(1, "Duration is required"),
