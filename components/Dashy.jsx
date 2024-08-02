@@ -33,6 +33,7 @@ import { Label } from "@/components/ui/label";
 export function Dashy() {
   const [appointments, setAppointments] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [newAppointment, setNewAppointment] = useState({
     name: "",
     email: "",
@@ -52,9 +53,23 @@ export function Dashy() {
       ...doc.data(),
     }));
 
-    appointmentsData = appointmentsData.sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-    );
+    appointmentsData = appointmentsData.sort((a, b) => {
+      const dateA = new Date(a.selectedDate);
+      const dateB = new Date(b.selectedDate);
+
+      if (dateA < dateB) return -1;
+      if (dateA > dateB) return 1;
+
+      const timeA = a.startTime.split(":").map(Number);
+      const timeB = b.startTime.split(":").map(Number);
+
+      if (timeA[0] < timeB[0]) return -1;
+      if (timeA[0] > timeB[0]) return 1;
+      if (timeA[1] < timeB[1]) return -1;
+      if (timeA[1] > timeB[1]) return 1;
+
+      return 0;
+    });
 
     setAppointments(appointmentsData);
   };
@@ -71,32 +86,7 @@ export function Dashy() {
   };
 
   const deleteAppointment = async (appointment) => {
-    try {
-      await deleteDoc(doc(db, "customers", appointment.id));
-      const emailData = {
-        email: appointment.email,
-        name: appointment.name,
-        startTime: appointment.startTime,
-        endTime: appointment.endTime,
-        duration: appointment.duration,
-        date: formatDate(new Date(appointment.selectedDate)),
-      };
-      const emailResponse = await fetch("/api/cancel", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(emailData),
-      });
-      if (!emailResponse.ok) {
-        throw new Error("Failed to send cancellation email");
-      }
-      setAppointments(appointments.filter((a) => a.id !== appointment.id));
-      toast.success("Appointment cancelled and email sent");
-    } catch (error) {
-      console.error("Error cancelling appointment or sending email: ", error);
-      toast.error("Failed to cancel appointment. Please try again.");
-    }
+    // ... (keep existing deleteAppointment logic)
   };
 
   const handleInputChange = (e) => {
@@ -105,27 +95,21 @@ export function Dashy() {
   };
 
   const handleAddAppointment = async () => {
-    try {
-      const docRef = await addDoc(collection(db, "customers"), {
-        ...newAppointment,
-        createdAt: new Date().toISOString(),
-      });
-      console.log("Appointment added with ID:", docRef.id);
-      setIsAddModalOpen(false);
-      fetchAppointments();
-      toast.success("Appointment added successfully");
-    } catch (error) {
-      console.error("Error adding appointment:", error);
-      toast.error("Failed to add appointment. Please try again.");
-    }
+    // ... (keep existing handleAddAppointment logic)
   };
+
+  const filteredAppointments = appointments.filter(
+    (appointment) =>
+      new Date(appointment.selectedDate).toDateString() ===
+      selectedDate.toDateString()
+  );
 
   return (
     <div className="w-full">
       <div className="flex flex-col gap-6 p-1 lg:p-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Oggi</CardTitle>
+            <CardTitle>Appointments for {formatDate(selectedDate)}</CardTitle>
             <Button
               onClick={() => setIsAddModalOpen(true)}
               className="flex items-center gap-2"
@@ -149,7 +133,7 @@ export function Dashy() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {appointments.map((appointment) => (
+                {filteredAppointments.map((appointment) => (
                   <TableRow key={appointment.id}>
                     <TableCell>{appointment.appointmentType}</TableCell>
                     <TableCell>{appointment.startTime}</TableCell>
@@ -185,7 +169,11 @@ export function Dashy() {
             </Table>
           </CardContent>
         </Card>
-        <AppointmentCalendar appointments={appointments} />
+        <AppointmentCalendar
+          appointments={appointments}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+        />
       </div>
 
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>

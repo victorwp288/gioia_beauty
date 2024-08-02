@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
-export function AppointmentCalendar({ appointments }) {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
+export function AppointmentCalendar({
+  appointments,
+  selectedDate,
+  setSelectedDate,
+}) {
   const filteredAppointments = appointments.filter(
     (appointment) =>
       new Date(appointment.selectedDate).toDateString() ===
