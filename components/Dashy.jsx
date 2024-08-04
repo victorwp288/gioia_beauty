@@ -30,6 +30,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 export function Dashy() {
   const [appointments, setAppointments] = useState([]);
@@ -91,6 +93,11 @@ export function Dashy() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewAppointment((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handlePhoneChange = (value, country, e, formattedValue) => {
+    // formattedValue includes the "+" sign
+    setNewAppointment((prev) => ({ ...prev, number: formattedValue }));
   };
 
   const filteredAppointments = appointments.filter(
@@ -278,13 +285,15 @@ export function Dashy() {
               <Label htmlFor="number" className="text-right">
                 Clients phone number
               </Label>
-              <Input
-                id="number"
-                name="number"
-                value={newAppointment.number}
-                onChange={handleInputChange}
-                className="col-span-3"
-              />
+              <div className="col-span-3">
+                <PhoneInput
+                  country={"it"}
+                  value={newAppointment.number}
+                  onChange={handlePhoneChange}
+                  inputClass="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:shadow disabled:cursor-not-allowed disabled:opacity-50"
+                  buttonClass="h-10 border border-input bg-background"
+                />
+              </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="appointmentType" className="text-right">
