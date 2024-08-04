@@ -22,6 +22,13 @@ export function AppointmentCalendar({
     });
   };
 
+  const handleDateSelect = (date) => {
+    // Only update the selectedDate if a valid date is provided
+    if (date) {
+      setSelectedDate(date);
+    }
+  };
+
   return (
     <div className="flex h-full w-full max-w-6xl flex-col gap-6 md:flex-row md:gap-8">
       <div className="flex-1 rounded-lg border bg-background">
@@ -61,7 +68,7 @@ export function AppointmentCalendar({
           <Calendar
             mode="single"
             selected={selectedDate}
-            onSelect={(date) => setSelectedDate(date)}
+            onSelect={handleDateSelect}
             initialFocus
           />
         </div>
