@@ -30,8 +30,17 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+
+import appointmentTypes from "@/data/appointmentTypes.json";
 
 export function Dashy() {
   const [appointments, setAppointments] = useState([]);
@@ -50,6 +59,22 @@ export function Dashy() {
     selectedDate: "",
     note: "",
   });
+
+  useEffect(() => {
+    fetchAppointments();
+    // Set initial values when the modal opens
+    if (isAddModalOpen) {
+      const now = new Date();
+      const currentTime = now.toTimeString().slice(0, 5); // HH:MM format
+      const formattedDate = now.toISOString().split("T")[0]; // YYYY-MM-DD format
+
+      setNewAppointment((prev) => ({
+        ...prev,
+        startTime: currentTime,
+        selectedDate: formattedDate,
+      }));
+    }
+  }, [isAddModalOpen]);
 
   const fetchAppointments = async () => {
     const querySnapshot = await getDocs(collection(db, "customers"));
@@ -79,10 +104,6 @@ export function Dashy() {
     setAppointments(appointmentsData);
   };
 
-  useEffect(() => {
-    fetchAppointments();
-  }, []);
-
   const formatDate = (date) => {
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -93,10 +114,46 @@ export function Dashy() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewAppointment((prev) => ({ ...prev, [name]: value }));
+
+    // Recalculate end time if start time or duration changes
+    if (name === "startTime" || name === "duration") {
+      const endTime = calculateEndTime(
+        name === "startTime" ? value : newAppointment.startTime,
+        name === "duration" ? value : newAppointment.duration
+      );
+      setNewAppointment((prev) => ({ ...prev, endTime }));
+    }
+  };
+
+  const handleAppointmentTypeChange = (value) => {
+    const selectedType = appointmentTypes.find((type) => type.type === value);
+    const duration = selectedType ? selectedType.durations[0] : "";
+    const startTime = newAppointment.startTime;
+    const endTime = calculateEndTime(startTime, duration);
+
+    setNewAppointment((prev) => ({
+      ...prev,
+      appointmentType: value,
+      duration: duration,
+      endTime: endTime,
+    }));
+  };
+
+  const calculateEndTime = (startTime, durationMinutes) => {
+    if (!startTime || !durationMinutes) return "";
+
+    const [hours, minutes] = startTime.split(":").map(Number);
+    const totalMinutes = hours * 60 + minutes + Number(durationMinutes);
+    const endHours = Math.floor(totalMinutes / 60) % 24;
+    const endMinutes = totalMinutes % 60;
+
+    return `${String(endHours).padStart(2, "0")}:${String(endMinutes).padStart(
+      2,
+      "0"
+    )}`;
   };
 
   const handlePhoneChange = (value, country, e, formattedValue) => {
-    // formattedValue includes the "+" sign
     setNewAppointment((prev) => ({ ...prev, number: formattedValue }));
   };
 
@@ -146,7 +203,6 @@ export function Dashy() {
     setAppointmentToDelete(null);
   };
 
-  //get method
   const testApi = async () => {
     try {
       const response = await fetch("/api/reminder", {
@@ -299,13 +355,21 @@ export function Dashy() {
               <Label htmlFor="appointmentType" className="text-right">
                 Appointment type
               </Label>
-              <Input
-                id="appointmentType"
-                name="appointmentType"
+              <Select
                 value={newAppointment.appointmentType}
-                onChange={handleInputChange}
-                className="col-span-3"
-              />
+                onValueChange={handleAppointmentTypeChange}
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Select appointment type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {appointmentTypes.map((type) => (
+                    <SelectItem key={type.id} value={type.type}>
+                      {type.type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="startTime" className="text-right">
