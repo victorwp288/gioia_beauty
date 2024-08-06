@@ -99,7 +99,7 @@ const BookAppointment = () => {
         return; // Closed day, no available slots
       }
 
-      const formattedDate = date.toISOString().split("T")[0];
+      const formattedDate = date.toISOString();
       const q = query(
         collection(db, "customers"),
         where("selectedDate", "==", formattedDate)
