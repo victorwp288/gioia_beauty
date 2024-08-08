@@ -266,6 +266,8 @@ const BookAppointment = () => {
         console.error("Error sending email:", emailResult);
       }
 
+
+
       const whatsappData = await fetch("/api/whatsapp", {
         method: "POST",
         headers: {
@@ -274,13 +276,14 @@ const BookAppointment = () => {
         body: JSON.stringify({
           number: data.number,
           name: data.name,
-          time: data.startTime,
+          time: data.timeSlot,
           date: formattedSelectedDate,
         }),
       });
       console.log("Whatsapp data:", whatsappData);
       const whatsappResult = await whatsappData.json();
       console.log("Whatsapp response:", whatsappResult);
+	  console.log("Whatsapp response:", whatsappResult.body);
 
       openModal();
     } catch (error) {
