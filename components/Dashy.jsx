@@ -240,27 +240,29 @@ export function Dashy() {
       <div className="flex flex-col gap-6 p-1 lg:p-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Appointments for {formatDate(selectedDate)}</CardTitle>
+            <CardTitle>
+              Gli appuntamenti di oggi - {formatDate(selectedDate)}
+            </CardTitle>
             <Button
               onClick={() => setIsAddModalOpen(true)}
               className="flex items-center gap-2"
             >
               <Plus className="h-4 w-4" />
-              Add Appointment
+              Aggiungi appuntamento
             </Button>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Appointment</TableHead>
-                  <TableHead>Start Time</TableHead>
-                  <TableHead>End Time</TableHead>
-                  <TableHead>Duration</TableHead>
-                  <TableHead>Client</TableHead>
-                  <TableHead>Contact</TableHead>
-                  <TableHead>Notes</TableHead>
-                  <TableHead>Delete</TableHead>
+                  <TableHead>Appuntamento</TableHead>
+                  <TableHead>Inizio</TableHead>
+                  <TableHead>Fine</TableHead>
+                  <TableHead>Durata</TableHead>
+                  <TableHead>Cliente</TableHead>
+                  <TableHead>Contatto</TableHead>
+                  <TableHead>Note</TableHead>
+                  <TableHead>Cancella</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -310,12 +312,12 @@ export function Dashy() {
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add New Appointment</DialogTitle>
+            <DialogTitle>Aggiungi nuovo appuntamento</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">
-                Clients name
+                Nome del cliente
               </Label>
               <Input
                 id="name"
@@ -327,7 +329,7 @@ export function Dashy() {
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="email" className="text-right">
-                Clients email
+                Email
               </Label>
               <Input
                 id="email"
@@ -339,7 +341,7 @@ export function Dashy() {
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="number" className="text-right">
-                Clients phone number
+                Numero di telefono
               </Label>
               <div className="col-span-3">
                 <PhoneInput
@@ -353,7 +355,7 @@ export function Dashy() {
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="appointmentType" className="text-right">
-                Appointment type
+                Tipo di appuntamento
               </Label>
               <Select
                 value={newAppointment.appointmentType}
@@ -373,7 +375,7 @@ export function Dashy() {
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="startTime" className="text-right">
-                Start Time
+                Inizio appuntamento
               </Label>
               <Input
                 id="startTime"
@@ -386,7 +388,7 @@ export function Dashy() {
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="endTime" className="text-right">
-                End Time
+                Fine appuntamento
               </Label>
               <Input
                 id="endTime"
@@ -399,7 +401,7 @@ export function Dashy() {
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="duration" className="text-right">
-                Duration (min)
+                Durata (min)
               </Label>
               <Input
                 id="duration"
@@ -412,7 +414,7 @@ export function Dashy() {
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="selectedDate" className="text-right">
-                Date
+                Data
               </Label>
               <Input
                 id="selectedDate"
@@ -444,9 +446,9 @@ export function Dashy() {
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogTitle>Conferma cancellazione</DialogTitle>
           </DialogHeader>
-          <p>Are you sure you want to delete this appointment?</p>
+          <p>Sei sicuro di voler cancellare l′appuntamento?</p>
           <DialogFooter>
             <Button
               variant="outline"

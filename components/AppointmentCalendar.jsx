@@ -75,7 +75,7 @@ export function AppointmentCalendar({
       </div>
       <div className="flex-1 rounded-lg border bg-background p-6">
         <h2 className="text-lg font-medium">
-          Appointments for {formatDate(selectedDate)}
+          Appuntamenti per {formatDate(selectedDate)}
         </h2>
         <div className="mt-4 grid gap-4">
           {filteredAppointments.map((appointment) => (
@@ -91,14 +91,14 @@ export function AppointmentCalendar({
                   {appointment.name} - {appointment.email}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {appointment.duration} minutes
+                  {appointment.duration} minuti
                 </p>
               </div>
             </div>
           ))}
           {filteredAppointments.length === 0 && (
             <p className="text-sm text-muted-foreground">
-              No appointments for this date.
+              Nessun appuntamento per questa data
             </p>
           )}
         </div>

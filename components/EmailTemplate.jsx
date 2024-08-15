@@ -3,18 +3,24 @@ import * as React from "react";
 
 export const EmailTemplate = ({ name, startTime, endTime, duration, date }) => (
   <div>
-    <h1>Welcome, {name}!</h1>
-    <p>Your appointment is confirmed for {date}</p>
+    <h1>Ciao, {name}!</h1>
     <p>
-      <strong>Start Time:</strong> {startTime}
+      Il tuo appuntamento nel centro estetico Gioia Beauty è stato confermato
+      per il giorno {date}
     </p>
     <p>
-      <strong>End Time:</strong> {endTime}
+      <strong>Inizio appuntamento:</strong> {startTime}
     </p>
     <p>
-      <strong>Duration:</strong> {duration} minutes
+      <strong>Fine appuntamento:</strong> {endTime}
     </p>
-    <p>Thank you for booking with us!</p>
-    <p>This email cant be responded to!</p>
+    <p>
+      <strong>Durata:</strong> {duration} minutes
+    </p>
+    <p>Grazie per la prenotazione.</p>
+    <p>
+      Non puoi rispondere a questa email.{" "}
+      <i>This email cant be responded to.</i>
+    </p>
   </div>
 );
