@@ -5,7 +5,7 @@ import Image from "next/image";
 import Modal from "react-modal";
 import { FaArrowLeft, FaArrowRight, FaTimes } from "react-icons/fa";
 
-const GalleryClient = ({ images, index }) => {
+const GalleryClient = ({ imagesWithDescriptions, index }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(index);
 
@@ -20,18 +20,22 @@ const GalleryClient = ({ images, index }) => {
 
   const goToPrevious = () => {
     setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+      (prevIndex) =>
+        (prevIndex - 1 + imagesWithDescriptions.length) %
+        imagesWithDescriptions.length
     );
   };
 
   const goToNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    setCurrentIndex(
+      (prevIndex) => (prevIndex + 1) % imagesWithDescriptions.length
+    );
   };
 
   return (
     <>
       <Image
-        src={images[index]}
+        src={imagesWithDescriptions[index].src}
         width={300}
         height={300}
         alt={`Image ${index}`}
@@ -66,13 +70,16 @@ const GalleryClient = ({ images, index }) => {
         <div className="relative max-w-3xl mx-auto">
           <div className="flex justify-center items-center">
             <Image
-              src={images[currentIndex]}
+              src={imagesWithDescriptions[currentIndex].src}
               width={800}
               height={800}
               alt={`Image ${currentIndex}`}
               className="max-h-screen h-auto w-auto"
             />
           </div>
+          <p className="text-white text-xl font-semibold z-100 bottom-2 left-4 absolute">
+            {imagesWithDescriptions[currentIndex].description}
+          </p>
         </div>
       </Modal>
     </>
