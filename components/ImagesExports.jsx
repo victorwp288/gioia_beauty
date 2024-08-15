@@ -15,6 +15,7 @@ import bed from "@/images/bed.jpg";
 import rituali1 from "@/images/rituali1.jpg";
 import loginPhoto from "@/images/login-photo.jpg";
 import heroPicture from "@/images/hero-picture.jpg";
+import portraitSquare from "@/images/gioia-portrait-square.jpg";
 
 export {
   whiteTick,
