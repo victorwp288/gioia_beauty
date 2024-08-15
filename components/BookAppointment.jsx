@@ -15,7 +15,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { collection, addDoc, query, where, getDocs, Timestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+  Timestamp,
+} from "firebase/firestore";
 import { ToastContainer, toast } from "react-toastify";
 import { db } from "@/utils/firebase";
 import PhoneInput from "react-phone-input-2";
@@ -46,6 +53,8 @@ const BookAppointment = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [appointmentType, setAppointmentType] = useState(appointmentTypes[0]);
   const [selectedVariant, setSelectedVariant] = useState(null);
+  const [showAllTimeSlots, setShowAllTimeSlots] = useState(false);
+  const initialVisibleSlots = 12; // You can adjust this number
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -77,18 +86,14 @@ const BookAppointment = () => {
     async (date) => {
       if (!date) return;
 
-      const openCloseHours = {
-        1: { open: "09:00", close: "19:00" }, // Monday
-        2: { open: "10:00", close: "20:00" }, // Tuesday
-        3: { open: "09:00", close: "19:00" }, // Wednesday
-        4: { open: "10:00", close: "20:00" }, // Thursday
-        5: { open: "09:00", close: "18:30" }, // Friday
-        6: null, // Saturday Closed
-        0: null, // Sunday Closed
-      };
-
       const now = new Date();
-      const isToday = date.toDateString() === now.toDateString();
+
+      // Normalize dates to compare only year, month, and day
+      const normalizeDate = (d) =>
+        new Date(d.getFullYear(), d.getMonth(), d.getDate());
+
+      const isToday =
+        normalizeDate(date).getTime() === normalizeDate(now).getTime();
       const currentTime = isToday ? now.getHours() * 60 + now.getMinutes() : 0;
 
       const dayOfWeek = date.getDay();
@@ -99,65 +104,78 @@ const BookAppointment = () => {
         return; // Closed day, no available slots
       }
 
-      const formattedDate = date.toISOString();
+      // Create start and end of the selected date in ISO format
+      const startOfDay = new Date(date);
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date(date);
+      endOfDay.setHours(23, 59, 59, 999);
+
       const q = query(
         collection(db, "customers"),
-        where("selectedDate", "==", formattedDate)
+        where("selectedDate", ">=", startOfDay.toISOString()),
+        where("selectedDate", "<=", endOfDay.toISOString())
       );
       const querySnapshot = await getDocs(q);
-      const data = querySnapshot.docs.map((doc) => doc.data());
-
-      const duration = selectedVariant
-        ? parseInt(selectedVariant)
-        : appointmentType.durations[0];
+      const existingAppointments = querySnapshot.docs
+        .map((doc) => doc.data())
+        .sort((a, b) => a.startTime.localeCompare(b.startTime));
 
       const [openHours, openMinutes] = hours.open.split(":").map(Number);
       const [closeHours, closeMinutes] = hours.close.split(":").map(Number);
       const openingTime = openHours * 60 + openMinutes;
       const closingTime = closeHours * 60 + closeMinutes;
 
-      const allTimeSlots = [];
-      for (let time = openingTime; time < closingTime; time += 30) {
-        if (isToday && time <= currentTime) continue; // Skip past times on the same day
+      const generateTimeSlots = () => {
+        const slots = [];
+        let currentTime = openingTime;
 
-        const hours = Math.floor(time / 60);
-        const minutes = time % 60;
-        allTimeSlots.push(
-          `${hours < 10 ? "0" : ""}${hours}:${
-            minutes < 10 ? "0" : ""
-          }${minutes}`
-        );
-      }
+        const addSlot = (time) => {
+          if (
+            time >= openingTime &&
+            time < closingTime &&
+            (!isToday || time > currentTime)
+          ) {
+            slots.push(formatTime(time));
+          }
+        };
 
-      const isSlotAvailable = (slot, duration) => {
-        const [startHours, startMinutes] = slot.split(":").map(Number);
-        const startTime = startHours * 60 + startMinutes;
-        const endTime = startTime + duration;
-
-        if (endTime > closingTime) return false;
-
-        return !data.some((item) => {
-          const [itemStartHours, itemStartMinutes] = item.startTime
+        existingAppointments.forEach((appointment) => {
+          const [appStartHours, appStartMinutes] = appointment.startTime
             .split(":")
             .map(Number);
-          const [itemEndHours, itemEndMinutes] = item.endTime
-            .split(":")
-            .map(Number);
+          const appStartTime = appStartHours * 60 + appStartMinutes;
 
-          const itemStartTime = itemStartHours * 60 + itemStartMinutes;
-          const itemEndTime = itemEndHours * 60 + itemEndMinutes;
+          // Add slots before this appointment
+          while (currentTime < appStartTime) {
+            addSlot(currentTime);
+            currentTime += 15; // Increment by 15 minutes
+          }
 
-          return (
-            (startTime >= itemStartTime && startTime < itemEndTime) ||
-            (endTime > itemStartTime && endTime <= itemEndTime) ||
-            (startTime <= itemStartTime && endTime >= itemEndTime)
-          );
+          // Move current time to the end of this appointment
+          currentTime = appStartTime + appointment.totalDuration;
+
+          // Round up to the next 15-minute interval
+          currentTime = Math.ceil(currentTime / 15) * 15;
         });
+
+        // Fill in any remaining slots after the last appointment
+        while (currentTime < closingTime) {
+          addSlot(currentTime);
+          currentTime += 15; // Increment by 15 minutes
+        }
+
+        return slots;
       };
 
-      const availableTimeSlots = allTimeSlots.filter((slot) =>
-        isSlotAvailable(slot, duration)
-      );
+      const formatTime = (minutes) => {
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        return `${hours.toString().padStart(2, "0")}:${mins
+          .toString()
+          .padStart(2, "0")}`;
+      };
+
+      const availableTimeSlots = generateTimeSlots();
 
       setTimeSlot(availableTimeSlots);
       if (availableTimeSlots.length > 0) {
@@ -190,21 +208,24 @@ const BookAppointment = () => {
     form.setValue("variant", "");
     form.setValue("duration", selectedType.durations[0]);
   };
+
   const handleVariantChange = (e) => {
     const selectedDuration = parseInt(e.target.value);
     setSelectedVariant(selectedDuration);
     form.setValue("variant", e.target.value);
     form.setValue("duration", selectedDuration);
   };
+
   const [modalIsOpen, setIsOpen] = useState(false);
 
   const handleSubmit = async (data) => {
     try {
       const startTime = data.timeSlot;
       const duration = data.duration;
+      const extraTime = appointmentType.extraTime[0]; // Get extraTime
       const [startHours, startMinutes] = startTime.split(":").map(Number);
 
-      let endMinutes = startMinutes + duration;
+      let endMinutes = startMinutes + duration + extraTime; // Include extraTime
       let endHours = startHours;
 
       if (endMinutes >= 60) {
@@ -215,9 +236,9 @@ const BookAppointment = () => {
       const endTime = new Date(selectedDate);
       endTime.setHours(endHours, endMinutes, 0, 0);
 
-      const formattedEndTime = `${endTime.getHours()}:${
-        endMinutes < 10 ? "0" : ""
-      }${endMinutes}`;
+      const formattedEndTime = `${endHours
+        .toString()
+        .padStart(2, "0")}:${endMinutes.toString().padStart(2, "0")}`;
       const formattedSelectedDate = formatDate(data.selectedDate);
 
       const q = query(
@@ -231,12 +252,13 @@ const BookAppointment = () => {
         ...data,
         startTime,
         endTime: formattedEndTime,
-        duration,
+        duration, // This is the visible duration
+        totalDuration: duration + extraTime, // This is the actual total duration
         selectedDate: data.selectedDate.toISOString(),
-        appointmentType: data.appointmentType || appointmentTypes[0].type, // Ensure default if empty
+        appointmentType: data.appointmentType || appointmentTypes[0].type,
         variant: selectedVariant,
         createdAt: new Date().toISOString(),
-        isSubscribedToNewsletter: isSubscribed, // Add this field
+        isSubscribedToNewsletter: isSubscribed,
       });
       console.log("Appointment booked with ID:", docRef.id);
 
@@ -266,8 +288,6 @@ const BookAppointment = () => {
         console.error("Error sending email:", emailResult);
       }
 
-
-
       const whatsappData = await fetch("/api/whatsapp", {
         method: "POST",
         headers: {
@@ -283,7 +303,7 @@ const BookAppointment = () => {
       console.log("Whatsapp data:", whatsappData);
       const whatsappResult = await whatsappData.json();
       console.log("Whatsapp response:", whatsappResult);
-	  console.log("Whatsapp response:", whatsappResult.body);
+      console.log("Whatsapp response:", whatsappResult.body);
 
       openModal();
     } catch (error) {
@@ -296,15 +316,13 @@ const BookAppointment = () => {
 
   const isPastDay = (day) => {
     const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const dayOfWeek = day.getDay();
 
     // Check if the day is Saturday or Sunday
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
 
-    return (
-      day < new Date(now.getFullYear(), now.getMonth(), now.getDate()) ||
-      isWeekend
-    );
+    return day < today || isWeekend;
   };
 
   return (
@@ -355,21 +373,41 @@ const BookAppointment = () => {
                     Seleziona orario
                   </FormLabel>
                   <FormControl>
-                    <div className="grid grid-cols-3 gap-2 rounded-lg border p-5">
-                      {timeSlot.map((time, index) => (
-                        <h2
-                          key={index}
-                          onClick={() => {
-                            setSelectedTimeSlot(time);
-                            field.onChange(time);
-                          }}
-                          className={`cursor-pointer rounded-full border p-2 text-center hover:bg-primary hover:text-white ${
-                            time === selectedTimeSlot && "bg-primary text-white"
-                          }`}
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-3 gap-2 rounded-lg border p-5">
+                        {(showAllTimeSlots
+                          ? timeSlot
+                          : timeSlot.slice(0, initialVisibleSlots)
+                        ).map((time, index) => (
+                          <h2
+                            key={index}
+                            onClick={() => {
+                              setSelectedTimeSlot(time);
+                              field.onChange(time);
+                            }}
+                            className={`cursor-pointer rounded-full border p-2 text-center hover:bg-primary hover:text-white ${
+                              time === selectedTimeSlot &&
+                              "bg-primary text-white"
+                            }`}
+                          >
+                            {time}
+                          </h2>
+                        ))}
+                      </div>
+                      {timeSlot.length > initialVisibleSlots && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full"
+                          onClick={() => setShowAllTimeSlots(!showAllTimeSlots)}
                         >
-                          {time}
-                        </h2>
-                      ))}
+                          {showAllTimeSlots
+                            ? "Show Less"
+                            : `Show More (${
+                                timeSlot.length - initialVisibleSlots
+                              } more)`}
+                        </Button>
+                      )}
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -412,39 +450,9 @@ const BookAppointment = () => {
                     <FormLabel>Durata del trattamento</FormLabel>
                     <FormControl>
                       <select
-                        className=" flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:shadow disabled:cursor-not-allowed disabled:opacity-50"
-                        {...field}
-                        onChange={handleVariantChange}
-                      >
-                        <option value="">Select Duration</option>
-                        {appointmentType.durations.map((duration, index) => (
-                          <option key={index} value={duration}>
-                            {duration} minuti
-                          </option>
-                        ))}
-                      </select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-            {/* Variant Selection */}
-            {appointmentType.durations.length > 1 && (
-              <FormField
-                control={form.control}
-                name="variant"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Durata del trattamento</FormLabel>
-                    <FormControl>
-                      <select
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:shadow disabled:cursor-not-allowed disabled:opacity-50"
                         {...field}
-                        onChange={(e) => {
-                          setSelectedVariant(e.target.value);
-                          field.onChange(e);
-                        }}
+                        onChange={handleVariantChange}
                       >
                         <option value="">Select Duration</option>
                         {appointmentType.durations.map((duration, index) => (
