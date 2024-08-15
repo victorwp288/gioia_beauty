@@ -521,7 +521,9 @@ function ServicesContainer() {
         <Link
           className="underline text-zinc-400 w-fit cursor-pointer text-center  text-sm font-semibold"
           target="_blank"
-          href={"https://maps.app.goo.gl/Vg7QqpUBStAnfnzV7"}
+          href={
+            "https://drive.google.com/file/d/1j1GXO8ZgGS3AV9_80Xjvj2bwqVT8GU_F/view?usp=sharing"
+          }
         >
           SCOPRI IL LISTINO PREZZI →
         </Link>
