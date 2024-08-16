@@ -2,13 +2,14 @@ import Link from "next/link";
 import Image from "next/image";
 import rituale from "@/images/rituale.jpg";
 import downArrow from "@/images/down-arrow.svg";
+import { reception4 } from "@/components/ImagesExports";
 
 function HeroSection() {
   return (
     <div className=" relative  h-screen bg-cover bg-center  md:mt-10 md:h-[95vh]">
       <Image
         className="h-full w-full object-cover"
-        src={rituale}
+        src={reception4}
         alt="duration of the service"
       />
       <div className="absolute inset-0 flex items-center">

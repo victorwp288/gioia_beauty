@@ -496,21 +496,23 @@ const BookAppointment = () => {
               )}
             />
             {/* Phone Number */}
-            <Controller
-              name="number"
-              control={form.control}
-              render={({ field: { onChange, value } }) => (
-                <PhoneInput
-                  country={"it"}
-                  value={value}
-                  onChange={(phone, country, e, formattedValue) => {
-                    onChange(formattedValue); // This will include the "+"
-                  }}
-                  inputClass="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:shadow disabled:cursor-not-allowed disabled:opacity-50"
-                  buttonClass="h-10 border border-input bg-background"
-                />
-              )}
-            />
+            <div>
+              <FormLabel>Numero di telefono</FormLabel>
+              <Controller
+                name="number"
+                control={form.control}
+                render={({ field: { onChange, value } }) => (
+                  <PhoneInput
+                    country={"it"}
+                    value={value}
+                    onChange={(phone, country, e, formattedValue) => {
+                      onChange(formattedValue); // This will include the "+"
+                    }}
+                  />
+                )}
+              />
+            </div>
+
             {/* Email */}
             <FormField
               control={form.control}
