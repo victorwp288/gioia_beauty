@@ -203,22 +203,6 @@ export function Dashy() {
     setAppointmentToDelete(null);
   };
 
-  const testApi = async () => {
-    try {
-      const response = await fetch("/api/reminder", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await response.json();
-      console.log("API response:", data);
-    } catch (error) {
-      console.error("Error calling API:", error);
-    }
-  };
-
   const handleAddAppointment = async () => {
     try {
       const docRef = await addDoc(collection(db, "customers"), {
@@ -439,7 +423,9 @@ export function Dashy() {
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={handleAddAppointment}>Add Appointment</Button>
+            <Button onClick={handleAddAppointment}>
+              Aggiungi appuntamento
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -454,13 +440,10 @@ export function Dashy() {
               variant="outline"
               onClick={() => setIsDeleteModalOpen(false)}
             >
-              Cancel
+              Annulla
             </Button>
             <Button variant="destructive" onClick={handleConfirmDelete}>
-              Delete
-            </Button>
-            <Button variant="destructive" onClick={testApi}>
-              test
+              Cancella appuntamento
             </Button>
           </DialogFooter>
         </DialogContent>
