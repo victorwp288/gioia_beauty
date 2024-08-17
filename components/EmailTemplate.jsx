@@ -19,7 +19,7 @@ export const EmailTemplate = ({ name, startTime, endTime, duration, date }) => (
     </p>
 
     <p>
-      <i>Non è possibile rispondere a questa email.</i>{" "}
+      <i>Non è possibile rispondere a questa mail.</i>{" "}
     </p>
   </div>
 );

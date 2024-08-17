@@ -22,7 +22,7 @@ export const CancelEmailTemplate = ({
     </p>
     <p>Ci scusiamo per l’incovenienza.</p>
     <p>
-      <i>Non è possibile rispondere a questa mail</i>
+      <i>Non è possibile rispondere a questa mail.</i>
     </p>
   </div>
 );

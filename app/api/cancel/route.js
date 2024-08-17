@@ -20,7 +20,7 @@ export async function POST(request) {
     const { data, error } = await resend.emails.send({
       from: "Gioia Beauty <noreply@gioiabeauty.net>",
       to: [email],
-      subject: "Booking Canceled! :(",
+      subject: "Cancellazione appuntamento",
       react: CancelEmailTemplate({ name, startTime, endTime, duration, date }),
     });
 
