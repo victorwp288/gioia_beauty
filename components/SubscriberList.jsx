@@ -28,7 +28,7 @@ const SubscriberList = () => {
     <div className="space-y-4">
       <Button onClick={copyAllEmails}>Copia le email</Button>
       <div className="bg-gray-100 p-4 rounded-md">
-        <h3 className="font-semibold mb-2">Subscriber Emails:</h3>
+        <h3 className="font-semibold mb-2">Emails degli iscritti</h3>
         <ul className="list-disc pl-5">
           {subscribers.map((email, index) => (
             <li key={index}>{email}</li>
