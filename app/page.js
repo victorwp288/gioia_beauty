@@ -12,22 +12,22 @@ export default function Home() {
       <Cookiesbanner />
 
       <HeroSection />
-      <div id="about-us" className="scroll-mt-10 bg-white">
+      <div id="about-us" className="scroll-mt-16 bg-white">
         <AboutUs />
       </div>
-      <div id="technologies" className="scroll-mt-10 bg-[#97a6af]">
+      <div id="technologies" className="scroll-mt-16 bg-[#97a6af]">
         <Technologies />
       </div>
 
-      <div id="services" className="scroll-mt-10">
+      <div id="services" className="scroll-mt-16">
         <ServicesContainer />
       </div>
 
-      <div className="scroll-mt-10" id="booking-section">
+      <div className="scroll-mt-16" id="booking-section">
         <BookAppointment />
       </div>
 
-      <div className="scroll-mt-10" id="newletter-section">
+      <div className="scroll-mt-16" id="newletter-section">
         <NewsletterSignup />
       </div>
     </main>
