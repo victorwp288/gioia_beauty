@@ -9,18 +9,20 @@ export const CancelEmailTemplate = ({
   date,
 }) => (
   <div>
-    <h1>Dear, {name}!</h1>
-    <p>Your appointment is unfortunately canceled for {date}</p>
+    <h1>Gentile {name},</h1>
+    <p>Il tuo appuntamento per il {date} è stato cancellato.</p>
     <p>
-      <strong>Start Time:</strong> {startTime}
+      <strong>Inizio appuntamento:</strong> {startTime}
     </p>
     <p>
-      <strong>End Time:</strong> {endTime}
+      <strong>Fine appuntamento:</strong> {endTime}
     </p>
     <p>
-      <strong>Duration:</strong> {duration} minutes
+      <strong>Durata:</strong> {duration} minuti
     </p>
-    <p>We are sorry for the inconvenience!</p>
-    <p>This email cant be responded to!</p>
+    <p>Ci scusiamo per l’incovenienza.</p>
+    <p>
+      <i>Non è possibile rispondere a questa mail</i>
+    </p>
   </div>
 );

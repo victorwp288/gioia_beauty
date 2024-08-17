@@ -239,7 +239,7 @@ export function Dashy() {
     <div className="w-full">
       <div className="flex flex-col gap-6 p-1 lg:p-6">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
+          <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <CardTitle>
               Gli appuntamenti di oggi - {formatDate(selectedDate)}
             </CardTitle>
