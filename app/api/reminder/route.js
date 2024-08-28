@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+/*import { NextResponse } from "next/server";
 import { db } from "@/utils/firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import twilio from "twilio";
@@ -115,3 +115,4 @@ export async function GET() {
     );
   }
 }
+*/
