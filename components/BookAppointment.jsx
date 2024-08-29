@@ -41,7 +41,9 @@ const formSchema = z.object({
   number: z.string().min(1, "Phone number is required"),
   email: z.string().email("Invalid email address"),
   timeSlot: z.string().min(1, "Time slot is required"),
-  selectedDate: z.date().min(new Date(), "Date is required"),
+  selectedDate: z
+    .date()
+    .min(new Date(new Date().setHours(0, 0, 0, 0)), "Date is required"), // Allow selecting today starting from 00:00
   appointmentType: z.string().min(1, "Appointment type is required"),
   variant: z.string().optional(),
   duration: z.number().min(1, "Duration is required"),
@@ -288,22 +290,22 @@ const BookAppointment = () => {
         console.error("Error sending email:", emailResult);
       }
 
-    //  const whatsappData = await fetch("/api/whatsapp", {
-    //    method: "POST",
-    //    headers: {
-    //      "Content-Type": "application/json",
-    //    },
-    //    body: JSON.stringify({
-    //      number: data.number,
-    //      name: data.name,
-    //      time: data.timeSlot,
-    //      date: formattedSelectedDate,
-    //    }),
-    //  });
-    //  console.log("Whatsapp data:", whatsappData);
-    //  const whatsappResult = await whatsappData.json();
-    //  console.log("Whatsapp response:", whatsappResult);
-    //  console.log("Whatsapp response:", whatsappResult.body);
+      //  const whatsappData = await fetch("/api/whatsapp", {
+      //    method: "POST",
+      //    headers: {
+      //      "Content-Type": "application/json",
+      //    },
+      //    body: JSON.stringify({
+      //      number: data.number,
+      //      name: data.name,
+      //      time: data.timeSlot,
+      //      date: formattedSelectedDate,
+      //    }),
+      //  });
+      //  console.log("Whatsapp data:", whatsappData);
+      //  const whatsappResult = await whatsappData.json();
+      //  console.log("Whatsapp response:", whatsappResult);
+      //  console.log("Whatsapp response:", whatsappResult.body);
 
       openModal();
     } catch (error) {
