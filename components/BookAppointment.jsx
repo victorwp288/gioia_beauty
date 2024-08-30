@@ -135,10 +135,26 @@ const BookAppointment = () => {
           if (
             time >= openingTime &&
             time < closingTime &&
-            (!isToday || time > currentTime)
+            (!isToday || time > currentTime) &&
+            !doesSlotOverlap(time)
           ) {
             slots.push(formatTime(time));
           }
+        };
+
+        const doesSlotOverlap = (time) => {
+          // Calculate end time of the slot
+          const slotEndTime = time + form.getValues("duration");
+          return existingAppointments.some((appointment) => {
+            const [appStartHours, appStartMinutes] = appointment.startTime
+              .split(":")
+              .map(Number);
+            const appStartTime = appStartHours * 60 + appStartMinutes;
+            const appEndTime = appStartTime + appointment.totalDuration;
+
+            // Check if the slot overlaps with the existing appointment
+            return time < appEndTime && slotEndTime > appStartTime;
+          });
         };
 
         existingAppointments.forEach((appointment) => {
