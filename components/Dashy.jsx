@@ -304,7 +304,7 @@ export function Dashy() {
                   <TableHead>Contatto</TableHead>
                   <TableHead>Note</TableHead>
                   <TableHead>Cancella</TableHead>
-                  <TableHead>Edita</TableHead> {/* Added Edit Column */}
+                  <TableHead>Edita</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -505,7 +505,7 @@ export function Dashy() {
           <DialogHeader>
             <DialogTitle>Conferma cancellazione</DialogTitle>
           </DialogHeader>
-          <p>Sei sicuro di voler cancellare l′appuntamento?</p>
+          <p>Sei sicuro di voler cancellare l&apos;appuntamento?</p>
           <DialogFooter>
             <Button
               variant="outline"
