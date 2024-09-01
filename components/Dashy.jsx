@@ -6,6 +6,7 @@ import {
   deleteDoc,
   doc,
   addDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card";
@@ -17,7 +18,7 @@ import {
   TableBody,
   Table,
 } from "@/components/ui/table";
-import { X, Plus } from "lucide-react";
+import { X, Plus, Edit } from "lucide-react"; // Import Edit icon
 import { toast } from "react-toastify";
 import { AppointmentCalendar } from "./AppointmentCalendar";
 import { Button } from "@/components/ui/button";
@@ -48,6 +49,9 @@ export function Dashy() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [appointmentToDelete, setAppointmentToDelete] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false); // Track edit mode
+  const [appointmentToEdit, setAppointmentToEdit] = useState(null); // Track the appointment being edited
+
   const [newAppointment, setNewAppointment] = useState({
     name: "",
     email: "",
@@ -62,8 +66,7 @@ export function Dashy() {
 
   useEffect(() => {
     fetchAppointments();
-    // Set initial values when the modal opens
-    if (isAddModalOpen) {
+    if (isAddModalOpen && !isEditMode) {
       const now = new Date();
       const currentTime = now.toTimeString().slice(0, 5); // HH:MM format
       const formattedDate = now.toISOString().split("T")[0]; // YYYY-MM-DD format
@@ -115,7 +118,6 @@ export function Dashy() {
     const { name, value } = e.target;
     setNewAppointment((prev) => ({ ...prev, [name]: value }));
 
-    // Recalculate end time if start time or duration changes
     if (name === "startTime" || name === "duration") {
       const endTime = calculateEndTime(
         name === "startTime" ? value : newAppointment.startTime,
@@ -168,6 +170,13 @@ export function Dashy() {
     setIsDeleteModalOpen(true);
   };
 
+  const handleEditClick = (appointment) => {
+    setAppointmentToEdit(appointment);
+    setNewAppointment(appointment); // Populate form with existing appointment data
+    setIsEditMode(true); // Set to edit mode
+    setIsAddModalOpen(true); // Open the modal
+  };
+
   const handleConfirmDelete = async () => {
     if (appointmentToDelete) {
       try {
@@ -203,16 +212,16 @@ export function Dashy() {
     setAppointmentToDelete(null);
   };
 
-  const handleAddAppointment = async () => {
+  const handleAddOrEditAppointment = async () => {
     try {
       const startTime = newAppointment.startTime;
       const duration = parseInt(newAppointment.duration, 10);
       const extraTime = appointmentTypes.find(
         (type) => type.type === newAppointment.appointmentType
       ).extraTime[0];
-      
+
       const [startHours, startMinutes] = startTime.split(":").map(Number);
-      
+
       let totalMinutes = startHours * 60 + startMinutes + duration + extraTime;
       let endHours = Math.floor(totalMinutes / 60) % 24;
       let endMinutes = totalMinutes % 60;
@@ -228,14 +237,28 @@ export function Dashy() {
         createdAt: new Date().toISOString(),
       };
 
-      const docRef = await addDoc(collection(db, "customers"), appointmentData);
-      console.log("Appointment added with ID:", docRef.id);
+      if (isEditMode && appointmentToEdit) {
+        await updateDoc(
+          doc(db, "customers", appointmentToEdit.id),
+          appointmentData
+        );
+        toast.success("Appointment updated successfully");
+      } else {
+        const docRef = await addDoc(
+          collection(db, "customers"),
+          appointmentData
+        );
+        console.log("Appointment added with ID:", docRef.id);
+        toast.success("Appointment added successfully");
+      }
+
       setIsAddModalOpen(false);
+      setIsEditMode(false);
+      setAppointmentToEdit(null);
       await fetchAppointments();
-      toast.success("Appointment added successfully");
     } catch (error) {
-      console.error("Error adding appointment:", error);
-      toast.error("Failed to add appointment. Please try again.");
+      console.error("Error adding/editing appointment:", error);
+      toast.error("Failed to add/edit appointment. Please try again.");
     }
   };
 
@@ -248,7 +271,21 @@ export function Dashy() {
               Gli appuntamenti di oggi - {formatDate(selectedDate)}
             </CardTitle>
             <Button
-              onClick={() => setIsAddModalOpen(true)}
+              onClick={() => {
+                setIsAddModalOpen(true);
+                setIsEditMode(false); // Ensure not in edit mode
+                setNewAppointment({
+                  name: "",
+                  email: "",
+                  number: "",
+                  appointmentType: "",
+                  startTime: "",
+                  endTime: "",
+                  duration: "",
+                  selectedDate: "",
+                  note: "",
+                });
+              }}
               className="flex items-center gap-2"
             >
               <Plus className="h-4 w-4" />
@@ -267,6 +304,7 @@ export function Dashy() {
                   <TableHead>Contatto</TableHead>
                   <TableHead>Note</TableHead>
                   <TableHead>Cancella</TableHead>
+                  <TableHead>Edita</TableHead> {/* Added Edit Column */}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -300,6 +338,14 @@ export function Dashy() {
                         <X size={20} className="text-red-500" />
                       </button>
                     </TableCell>
+                    <TableCell>
+                      <button
+                        onClick={() => handleEditClick(appointment)}
+                        className="p-2 hover:bg-blue-100 rounded-full"
+                      >
+                        <Edit size={20} className="text-blue-500" />
+                      </button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -316,9 +362,14 @@ export function Dashy() {
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Aggiungi nuovo appuntamento</DialogTitle>
+            <DialogTitle>
+              {isEditMode
+                ? "Edita appuntamento"
+                : "Aggiungi nuovo appuntamento"}
+            </DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
+            {/* All input fields are the same */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">
                 Nome del cliente
@@ -443,8 +494,8 @@ export function Dashy() {
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={handleAddAppointment}>
-              Aggiungi appuntamento
+            <Button onClick={handleAddOrEditAppointment}>
+              {isEditMode ? "Salva modifiche" : "Aggiungi appuntamento"}
             </Button>
           </DialogFooter>
         </DialogContent>
