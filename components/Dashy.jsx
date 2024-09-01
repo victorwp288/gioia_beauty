@@ -205,13 +205,36 @@ export function Dashy() {
 
   const handleAddAppointment = async () => {
     try {
-      const docRef = await addDoc(collection(db, "customers"), {
+      const startTime = newAppointment.startTime;
+      const duration = newAppointment.duration;
+      const extraTime = appointmentTypes.find(
+        (type) => type.type === newAppointment.appointmentType
+      ).extraTime[0]; // Get extraTime
+      const [startHours, startMinutes] = startTime.split(":").map(Number);
+
+      let endMinutes = startMinutes + duration + extraTime; // Include extraTime
+      let endHours = startHours;
+
+      if (endMinutes >= 60) {
+        endHours += Math.floor(endMinutes / 60);
+        endMinutes = endMinutes % 60;
+      }
+
+      const endTime = `${endHours.toString().padStart(2, "0")}:${endMinutes
+        .toString()
+        .padStart(2, "0")}`;
+
+      const appointmentData = {
         ...newAppointment,
+        endTime,
+        totalDuration: duration + extraTime, // This is the actual total duration
         createdAt: new Date().toISOString(),
-      });
+      };
+
+      const docRef = await addDoc(collection(db, "customers"), appointmentData);
       console.log("Appointment added with ID:", docRef.id);
       setIsAddModalOpen(false);
-      fetchAppointments();
+      await fetchAppointments(); // Ensure appointments are fetched again
       toast.success("Appointment added successfully");
     } catch (error) {
       console.error("Error adding appointment:", error);
