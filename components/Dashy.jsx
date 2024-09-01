@@ -59,7 +59,6 @@ export function Dashy() {
     selectedDate: "",
     note: "",
   });
-  const [isEndTimeManuallyAdjusted, setIsEndTimeManuallyAdjusted] = useState(false);
 
   useEffect(() => {
     fetchAppointments();
@@ -116,18 +115,13 @@ export function Dashy() {
     const { name, value } = e.target;
     setNewAppointment((prev) => ({ ...prev, [name]: value }));
 
-    // Recalculate end time if start time or duration changes and end time is not manually adjusted
-    if ((name === "startTime" || name === "duration") && !isEndTimeManuallyAdjusted) {
+    // Recalculate end time if start time or duration changes
+    if (name === "startTime" || name === "duration") {
       const endTime = calculateEndTime(
         name === "startTime" ? value : newAppointment.startTime,
         name === "duration" ? value : newAppointment.duration
       );
       setNewAppointment((prev) => ({ ...prev, endTime }));
-    }
-
-    // If end time is manually adjusted, set the flag
-    if (name === "endTime") {
-      setIsEndTimeManuallyAdjusted(true);
     }
   };
 
@@ -143,7 +137,6 @@ export function Dashy() {
       duration: duration,
       endTime: endTime,
     }));
-    setIsEndTimeManuallyAdjusted(false); // Reset manual adjustment flag
   };
 
   const calculateEndTime = (startTime, durationMinutes) => {
@@ -213,37 +206,32 @@ export function Dashy() {
   const handleAddAppointment = async () => {
     try {
       const startTime = newAppointment.startTime;
-      const duration = newAppointment.duration;
+      const duration = parseInt(newAppointment.duration, 10);
       const extraTime = appointmentTypes.find(
         (type) => type.type === newAppointment.appointmentType
-      ).extraTime[0]; // Get extraTime
+      ).extraTime[0];
+      
       const [startHours, startMinutes] = startTime.split(":").map(Number);
+      
+      let totalMinutes = startHours * 60 + startMinutes + duration + extraTime;
+      let endHours = Math.floor(totalMinutes / 60) % 24;
+      let endMinutes = totalMinutes % 60;
 
-      let endMinutes = startMinutes + duration + extraTime; // Include extraTime
-      let endHours = startHours;
-
-      if (endMinutes >= 60) {
-        endHours += Math.floor(endMinutes / 60);
-        endMinutes = endMinutes % 60;
-      }
-
-      const endTime = isEndTimeManuallyAdjusted
-        ? newAppointment.endTime
-        : `${endHours.toString().padStart(2, "0")}:${endMinutes
-            .toString()
-            .padStart(2, "0")}`;
+      const endTime = `${endHours.toString().padStart(2, "0")}:${endMinutes
+        .toString()
+        .padStart(2, "0")}`;
 
       const appointmentData = {
         ...newAppointment,
         endTime,
-        totalDuration: duration + extraTime, // This is the actual total duration
+        totalDuration: duration + extraTime,
         createdAt: new Date().toISOString(),
       };
 
       const docRef = await addDoc(collection(db, "customers"), appointmentData);
       console.log("Appointment added with ID:", docRef.id);
       setIsAddModalOpen(false);
-      await fetchAppointments(); // Ensure appointments are fetched again
+      await fetchAppointments();
       toast.success("Appointment added successfully");
     } catch (error) {
       console.error("Error adding appointment:", error);
