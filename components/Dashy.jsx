@@ -59,6 +59,7 @@ export function Dashy() {
     selectedDate: "",
     note: "",
   });
+  const [isEndTimeManuallyAdjusted, setIsEndTimeManuallyAdjusted] = useState(false);
 
   useEffect(() => {
     fetchAppointments();
@@ -115,13 +116,18 @@ export function Dashy() {
     const { name, value } = e.target;
     setNewAppointment((prev) => ({ ...prev, [name]: value }));
 
-    // Recalculate end time if start time or duration changes
-    if (name === "startTime" || name === "duration") {
+    // Recalculate end time if start time or duration changes and end time is not manually adjusted
+    if ((name === "startTime" || name === "duration") && !isEndTimeManuallyAdjusted) {
       const endTime = calculateEndTime(
         name === "startTime" ? value : newAppointment.startTime,
         name === "duration" ? value : newAppointment.duration
       );
       setNewAppointment((prev) => ({ ...prev, endTime }));
+    }
+
+    // If end time is manually adjusted, set the flag
+    if (name === "endTime") {
+      setIsEndTimeManuallyAdjusted(true);
     }
   };
 
@@ -137,6 +143,7 @@ export function Dashy() {
       duration: duration,
       endTime: endTime,
     }));
+    setIsEndTimeManuallyAdjusted(false); // Reset manual adjustment flag
   };
 
   const calculateEndTime = (startTime, durationMinutes) => {
@@ -220,9 +227,11 @@ export function Dashy() {
         endMinutes = endMinutes % 60;
       }
 
-      const endTime = `${endHours.toString().padStart(2, "0")}:${endMinutes
-        .toString()
-        .padStart(2, "0")}`;
+      const endTime = isEndTimeManuallyAdjusted
+        ? newAppointment.endTime
+        : `${endHours.toString().padStart(2, "0")}:${endMinutes
+            .toString()
+            .padStart(2, "0")}`;
 
       const appointmentData = {
         ...newAppointment,
