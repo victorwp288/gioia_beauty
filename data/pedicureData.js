@@ -1,29 +1,14 @@
 const pedicure = [
   {
-    title: "Pedicure",
-    description:
-      "Trattamento delle unghie e della pelle dei piedi. È possibile scegliere una pedicure classica oppure abbinarla alle seguenti applicazioni:",
+    title: "Pedicure classica",
+    description: "Trattamento delle unghie e della pelle dei piedi.",
     duration: 40,
-    subcategories: [
-      {
-        title: "APPLICAZIONE SMALTO CLASSICO",
-        duration: 50,
-      },
-      {
-        title: "APPLICAZIONE DI SMALTO SEMIPERMANENTE",
-        duration: 20,
-      },
-      {
-        title: "COPERTURA GEL DELLE UNGHIE NATURALI / RICOSTRUZIONE GEL",
-        duration: 20,
-      },
-    ],
   },
   {
     title: "Pedicure SPA",
     description:
       "Trattamento rilassante e rigenerante per la pelle dei tuoi piedi, con lo scopo di idratare in profondità la pelle e rendere i piedi più morbidi e leggeri.",
-    duration: 40,
+    duration: 60,
   },
   {
     title: "Pedicure completa con cheratolitico",
