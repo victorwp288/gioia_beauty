@@ -392,26 +392,33 @@ const BookAppointment = () => {
                   </FormLabel>
                   <FormControl>
                     <div className="space-y-4">
-                      <div className="grid grid-cols-3 gap-2 rounded-lg border p-5">
-                        {(showAllTimeSlots
-                          ? timeSlot
-                          : timeSlot.slice(0, initialVisibleSlots)
-                        ).map((time, index) => (
-                          <h2
-                            key={index}
-                            onClick={() => {
-                              setSelectedTimeSlot(time);
-                              field.onChange(time);
-                            }}
-                            className={`cursor-pointer rounded-full border p-2 text-center hover:bg-primary hover:text-white ${
-                              time === selectedTimeSlot &&
-                              "bg-primary text-white"
-                            }`}
-                          >
-                            {time}
-                          </h2>
-                        ))}
-                      </div>
+                      {timeSlot.length > 0 ? (
+                        <div className="grid grid-cols-3 gap-2 rounded-lg border p-5">
+                          {(showAllTimeSlots
+                            ? timeSlot
+                            : timeSlot.slice(0, initialVisibleSlots)
+                          ).map((time, index) => (
+                            <h2
+                              key={index}
+                              onClick={() => {
+                                setSelectedTimeSlot(time);
+                                field.onChange(time);
+                              }}
+                              className={`cursor-pointer rounded-full border p-2 text-center hover:bg-primary hover:text-white ${
+                                time === selectedTimeSlot &&
+                                "bg-primary text-white"
+                              }`}
+                            >
+                              {time}
+                            </h2>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="rounded-lg border p-5 text-center text-black">
+                          Nessun appuntamento disponibile per oggi
+                        </div>
+                      )}
+
                       {timeSlot.length > initialVisibleSlots && (
                         <Button
                           type="button"
@@ -432,6 +439,7 @@ const BookAppointment = () => {
                 </FormItem>
               )}
             />
+
             {/* Appointment Type */}
             <FormField
               control={form.control}
