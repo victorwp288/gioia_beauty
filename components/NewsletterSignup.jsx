@@ -43,7 +43,7 @@ const NewsletterSignup = () => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
+            placeholder="Inserisci la tua mail"
             required
             className="bg-primary placeholder-white text-white"
           />
