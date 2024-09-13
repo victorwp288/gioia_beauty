@@ -305,6 +305,11 @@ export function Dashy() {
   return (
     <div className="w-full">
       <div className="flex flex-col gap-6 p-1 lg:p-6">
+        <AppointmentCalendar
+          appointments={appointments}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+        />
         {/* Appointments Card */}
         <Card>
           <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -425,12 +430,6 @@ export function Dashy() {
             </Table>
           </CardContent>
         </Card>
-
-        <AppointmentCalendar
-          appointments={appointments}
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
-        />
       </div>
 
       {/* Add/Edit Appointment Dialog */}
