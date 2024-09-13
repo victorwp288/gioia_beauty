@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
@@ -23,6 +23,7 @@ import "react-phone-input-2/lib/style.css";
 import appointmentTypesData from "@/data/appointmentTypes.json";
 import BookingConfirmation from "./BookingConfirmation";
 
+// Constants and utility functions
 const appointmentTypes = appointmentTypesData;
 
 const formSchema = z.object({
@@ -34,7 +35,10 @@ const formSchema = z.object({
   timeSlot: z.string().min(1, "Time slot is required"),
   selectedDate: z
     .date()
-    .min(new Date(new Date().setHours(0, 0, 0, 0)), "Date is required"),
+    .min(
+      new Date(new Date().setHours(0, 0, 0, 0) + 86400000),
+      "Cannot book today or past dates"
+    ), // Disallow booking today
   appointmentType: z.string().min(1, "Appointment type is required"),
   variant: z.string().optional(),
   duration: z.number().min(1, "Duration is required"),
@@ -57,18 +61,29 @@ const formatDate = (date) => {
   return `${day}/${month}/${year}`;
 };
 
-const isPastDay = (day) => {
+const isDisabledDay = (day) => {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const dayOfWeek = day.getDay();
   const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-  return day < today || isWeekend;
+  return day <= today || isWeekend; // Disable today and past dates
+};
+
+// New function to get the next available date
+const getNextAvailableDate = () => {
+  let date = new Date();
+  date.setDate(date.getDate() + 1); // Start from tomorrow
+
+  while (isDisabledDay(date)) {
+    date.setDate(date.getDate() + 1);
+  }
+  return date;
 };
 
 const BookAppointment = () => {
   const [timeSlots, setTimeSlots] = useState([]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState();
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(getNextAvailableDate());
   const [appointmentType, setAppointmentType] = useState(appointmentTypes[0]);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [showAllTimeSlots, setShowAllTimeSlots] = useState(false);
@@ -79,13 +94,13 @@ const BookAppointment = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      date: new Date(),
+      date: selectedDate,
       note: "",
       name: "",
       number: "",
       email: "",
       timeSlot: "",
-      selectedDate: new Date(),
+      selectedDate: selectedDate,
       appointmentType: appointmentTypes[0].type,
       variant: "",
       duration: appointmentTypes[0].durations[0],
@@ -143,18 +158,28 @@ const BookAppointment = () => {
         setSelectedTimeSlot(firstAvailableTimeSlot);
         form.setValue("timeSlot", firstAvailableTimeSlot);
       } else {
-        setSelectedTimeSlot(null);
-        form.setValue("timeSlot", "");
+        // If no time slots are available on this date, find the next date
+        const nextDate = getNextAvailableDateFrom(date);
+        setSelectedDate(nextDate);
+        form.setValue("date", nextDate);
+        form.setValue("selectedDate", nextDate);
       }
     },
     [appointmentsCache, appointmentType, form]
   );
 
-  const generateTimeSlots = (date, existingAppointments, hours) => {
-    const now = new Date();
-    const isToday = date.toDateString() === now.toDateString();
-    const currentTime = isToday ? now.getHours() * 60 + now.getMinutes() : 0;
+  // Function to get the next available date from a given date
+  const getNextAvailableDateFrom = (startDate) => {
+    let date = new Date(startDate);
+    date.setDate(date.getDate() + 1);
 
+    while (isDisabledDay(date)) {
+      date.setDate(date.getDate() + 1);
+    }
+    return date;
+  };
+
+  const generateTimeSlots = (date, existingAppointments, hours) => {
     const [openHours, openMinutes] = hours.open.split(":").map(Number);
     const [closeHours, closeMinutes] = hours.close.split(":").map(Number);
     const openingTime = openHours * 60 + openMinutes;
@@ -166,10 +191,8 @@ const BookAppointment = () => {
     const duration = form.getValues("duration") || appointmentType.durations[0];
 
     while (time + duration <= closingTime) {
-      if (!isToday || time > currentTime) {
-        if (!doesSlotOverlap(time, existingAppointments, duration)) {
-          slots.push(formatTime(time));
-        }
+      if (!doesSlotOverlap(time, existingAppointments, duration)) {
+        slots.push(formatTime(time));
       }
       time += 15; // Increment by 15 minutes
     }
@@ -320,7 +343,7 @@ const BookAppointment = () => {
                         setSelectedDate(date);
                         form.setValue("selectedDate", date);
                       }}
-                      disabled={isPastDay}
+                      disabled={isDisabledDay}
                       className="w-fit rounded-md border"
                     />
                   </FormControl>
@@ -368,10 +391,10 @@ const BookAppointment = () => {
                           onClick={() => setShowAllTimeSlots(!showAllTimeSlots)}
                         >
                           {showAllTimeSlots
-                            ? "Show Less"
-                            : `Show More (${
+                            ? "Mostra meno"
+                            : `Mostra più (${
                                 timeSlots.length - initialVisibleSlots
-                              } more)`}
+                              } altri)`}
                         </Button>
                       )}
                     </div>
@@ -420,7 +443,7 @@ const BookAppointment = () => {
                         {...field}
                         onChange={handleVariantChange}
                       >
-                        <option value="">Select Duration</option>
+                        <option value="">Seleziona durata</option>
                         {appointmentType.durations.map((duration, index) => (
                           <option key={index} value={duration}>
                             {duration} minuti
