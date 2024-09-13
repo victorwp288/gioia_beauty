@@ -45,14 +45,10 @@ import appointmentTypes from "@/data/appointmentTypes.json";
 
 export function Dashy() {
   const [appointments, setAppointments] = useState([]);
-  const [newsletterSubscribers, setNewsletterSubscribers] = useState([]); // State for subscribers
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isDeleteSubscriberModalOpen, setIsDeleteSubscriberModalOpen] =
-    useState(false); // State for subscriber delete modal
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [appointmentToDelete, setAppointmentToDelete] = useState(null);
-  const [subscriberToDelete, setSubscriberToDelete] = useState(null); // State for subscriber to delete
   const [isEditMode, setIsEditMode] = useState(false); // Track edit mode
   const [appointmentToEdit, setAppointmentToEdit] = useState(null); // Track the appointment being edited
 
@@ -70,7 +66,6 @@ export function Dashy() {
 
   useEffect(() => {
     fetchAppointments();
-    fetchNewsletterSubscribers(); // Fetch subscribers on component mount
     if (isAddModalOpen && !isEditMode) {
       const now = new Date();
       const currentTime = now.toTimeString().slice(0, 5); // HH:MM format
@@ -110,17 +105,6 @@ export function Dashy() {
     });
 
     setAppointments(appointmentsData);
-  };
-
-  const fetchNewsletterSubscribers = async () => {
-    const querySnapshot = await getDocs(
-      collection(db, "newsletter_subscribers")
-    );
-    const subscribersData = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setNewsletterSubscribers(subscribersData);
   };
 
   const formatDate = (date) => {
@@ -278,39 +262,9 @@ export function Dashy() {
     }
   };
 
-  const handleDeleteSubscriber = (subscriber) => {
-    setSubscriberToDelete(subscriber);
-    setIsDeleteSubscriberModalOpen(true);
-  };
-
-  const handleConfirmDeleteSubscriber = async () => {
-    if (subscriberToDelete) {
-      try {
-        await deleteDoc(
-          doc(db, "newsletter_subscribers", subscriberToDelete.id)
-        );
-        setNewsletterSubscribers(
-          newsletterSubscribers.filter((s) => s.id !== subscriberToDelete.id)
-        );
-        toast.success("Subscriber deleted successfully");
-      } catch (error) {
-        console.error("Error deleting subscriber:", error);
-        toast.error("Failed to delete subscriber. Please try again.");
-      }
-    }
-    setIsDeleteSubscriberModalOpen(false);
-    setSubscriberToDelete(null);
-  };
-
   return (
     <div className="w-full">
       <div className="flex flex-col gap-6 p-1 lg:p-6">
-        <AppointmentCalendar
-          appointments={appointments}
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
-        />
-        {/* Appointments Card */}
         <Card>
           <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <CardTitle>
@@ -398,41 +352,13 @@ export function Dashy() {
             </Table>
           </CardContent>
         </Card>
-
-        {/* Newsletter Subscribers Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Newsletter Subscribers</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Cancella</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {newsletterSubscribers.map((subscriber) => (
-                  <TableRow key={subscriber.id}>
-                    <TableCell>{subscriber.email}</TableCell>
-                    <TableCell>
-                      <button
-                        onClick={() => handleDeleteSubscriber(subscriber)}
-                        className="p-2 hover:bg-red-100 rounded-full"
-                      >
-                        <X size={20} className="text-red-500" />
-                      </button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+        <AppointmentCalendar
+          appointments={appointments}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+        />
       </div>
 
-      {/* Add/Edit Appointment Dialog */}
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
         <DialogContent>
           <DialogHeader>
@@ -444,7 +370,128 @@ export function Dashy() {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             {/* All input fields are the same */}
-            {/* ... existing input fields ... */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="text-right">
+                Nome del cliente
+              </Label>
+              <Input
+                id="name"
+                name="name"
+                value={newAppointment.name}
+                onChange={handleInputChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="email" className="text-right">
+                Email
+              </Label>
+              <Input
+                id="email"
+                name="email"
+                value={newAppointment.email}
+                onChange={handleInputChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="number" className="text-right">
+                Numero di telefono
+              </Label>
+              <div className="col-span-3">
+                <PhoneInput
+                  country={"it"}
+                  value={newAppointment.number}
+                  onChange={handlePhoneChange}
+                  inputClass="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:shadow disabled:cursor-not-allowed disabled:opacity-50"
+                  buttonClass="h-10 border border-input bg-background"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="appointmentType" className="text-right">
+                Tipo di appuntamento
+              </Label>
+              <Select
+                value={newAppointment.appointmentType}
+                onValueChange={handleAppointmentTypeChange}
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Select appointment type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {appointmentTypes.map((type) => (
+                    <SelectItem key={type.id} value={type.type}>
+                      {type.type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="startTime" className="text-right">
+                Inizio appuntamento
+              </Label>
+              <Input
+                id="startTime"
+                name="startTime"
+                type="time"
+                value={newAppointment.startTime}
+                onChange={handleInputChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="endTime" className="text-right">
+                Fine appuntamento
+              </Label>
+              <Input
+                id="endTime"
+                name="endTime"
+                type="time"
+                value={newAppointment.endTime}
+                onChange={handleInputChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="duration" className="text-right">
+                Durata (min)
+              </Label>
+              <Input
+                id="duration"
+                name="duration"
+                type="number"
+                value={newAppointment.duration}
+                onChange={handleInputChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="selectedDate" className="text-right">
+                Data
+              </Label>
+              <Input
+                id="selectedDate"
+                name="selectedDate"
+                type="date"
+                value={newAppointment.selectedDate}
+                onChange={handleInputChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="note" className="text-right">
+                Note
+              </Label>
+              <Input
+                id="note"
+                name="note"
+                value={newAppointment.note}
+                onChange={handleInputChange}
+                className="col-span-3"
+              />
+            </div>
           </div>
           <DialogFooter>
             <Button onClick={handleAddOrEditAppointment}>
@@ -453,8 +500,6 @@ export function Dashy() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* Delete Appointment Dialog */}
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent>
           <DialogHeader>
@@ -470,33 +515,6 @@ export function Dashy() {
             </Button>
             <Button variant="destructive" onClick={handleConfirmDelete}>
               Cancella appuntamento
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Delete Subscriber Dialog */}
-      <Dialog
-        open={isDeleteSubscriberModalOpen}
-        onOpenChange={setIsDeleteSubscriberModalOpen}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Conferma cancellazione</DialogTitle>
-          </DialogHeader>
-          <p>Sei sicuro di voler cancellare questo iscritto alla newsletter?</p>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsDeleteSubscriberModalOpen(false)}
-            >
-              Annulla
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleConfirmDeleteSubscriber}
-            >
-              Cancella iscritto
             </Button>
           </DialogFooter>
         </DialogContent>
