@@ -2,244 +2,232 @@
   { "id": 1, "type": "Manicure", "durations": [30], "extraTime": [5] },
   {
     "id": 2,
-    "type": "Trattamento delle unghie delle mani con tecnica dry manicure",
-    "durations": [10],
+    "type": "Applicazione smalto classico",
+    "durations": [45],
     "extraTime": [5]
   },
   {
     "id": 3,
-    "type": "Applicazione smalto classico",
-    "durations": [30, 50],
+    "type": "Applicazione di smalto semipermanente",
+    "durations": [60],
     "extraTime": [5]
   },
   {
     "id": 4,
-    "type": "Applicazione di smalto semipermanente",
-    "durations": [60, 20],
+    "type": "Applicazione di smalto semipermanente rinforzato",
+    "durations": [90],
     "extraTime": [5]
   },
   {
     "id": 5,
-    "type": "Applicazione di smalto semipermanente rinforzato",
-    "durations": [60],
+    "type": "Copertura gel delle unghie naturali",
+    "durations": [90],
     "extraTime": [5]
   },
   {
     "id": 6,
-    "type": "Copertura gel delle unghie naturali / ricostruzione gel",
-    "durations": [60, 20],
-    "extraTime": [5]
-  },
-  {
-    "id": 7,
     "type": "Manicure Giapponese",
-    "durations": [40],
+    "durations": [45],
     "extraTime": [5]
   },
-  { "id": 8, "type": "Manicure SPA", "durations": [50], "extraTime": [5] },
-  { "id": 9, "type": "Pedicure", "durations": [40], "extraTime": [5] },
-  { "id": 10, "type": "Pedicure SPA", "durations": [40], "extraTime": [15] },
+  { "id": 7, "type": "Manicure SPA", "durations": [50], "extraTime": [5] },
+  { "id": 8, "type": "Pedicure", "durations": [40], "extraTime": [5] },
+  { "id": 9, "type": "Pedicure SPA", "durations": [60], "extraTime": [15] },
   {
-    "id": 11,
+    "id": 10,
     "type": "Pedicure completa con cheratolitico",
     "durations": [60],
     "extraTime": [30]
   },
-  { "id": 12, "type": "Maschera piedi", "durations": [10], "extraTime": [5] },
   {
-    "id": 13,
+    "id": 11,
     "type": "Laminazione ciglia",
     "durations": [60],
     "extraTime": [5]
   },
   {
-    "id": 14,
+    "id": 12,
     "type": "Laminazione sopracciglia",
     "durations": [60],
     "extraTime": [5]
   },
   {
-    "id": 15,
+    "id": 13,
     "type": "Architettura sopracciglia",
     "durations": [40],
     "extraTime": [5]
   },
   {
-    "id": 16,
+    "id": 14,
     "type": "Combinazione laminazione ciglia e sopracciglia",
     "durations": [70],
     "extraTime": [5]
   },
   {
-    "id": 17,
+    "id": 15,
     "type": "Epilazione con filo arabo delle sopracciglia",
     "durations": [15],
     "extraTime": [5]
   },
   {
-    "id": 18,
+    "id": 16,
     "type": "Grow up sopracciglia",
     "durations": [30],
     "extraTime": [5]
   },
   {
-    "id": 19,
+    "id": 17,
     "type": "Nanoblading grow brows",
     "durations": [180],
     "extraTime": [25]
   },
   {
-    "id": 20,
+    "id": 18,
     "type": "Massaggio viso personalizzato",
     "durations": [30],
     "extraTime": [5]
   },
   {
-    "id": 21,
+    "id": 19,
     "type": "Massaggio corpo personalizzato",
-    "durations": [30, 50],
+    "durations": [30, 60],
     "extraTime": [5]
   },
   {
-    "id": 22,
+    "id": 20,
     "type": "Massaggio corpo al cioccolato",
     "durations": [45],
     "extraTime": [5]
   },
   {
-    "id": 23,
+    "id": 21,
     "type": "Pressoterapia",
     "durations": [30, 45],
     "extraTime": [5]
   },
-  { "id": 24, "type": "Baffetti", "durations": [15], "extraTime": [5] },
-  { "id": 25, "type": "Sopracciglia", "durations": [15], "extraTime": [5] },
+  { "id": 22, "type": "Baffetti", "durations": [15], "extraTime": [5] },
+  { "id": 23, "type": "Sopracciglia", "durations": [15], "extraTime": [5] },
   {
-    "id": 26,
+    "id": 24,
     "type": "Baffetti e sopracciglia",
     "durations": [10],
     "extraTime": [10]
   },
-  { "id": 27, "type": "Ascelle", "durations": [25], "extraTime": [5] },
-  { "id": 28, "type": "Braccia", "durations": [15], "extraTime": [5] },
-  { "id": 29, "type": "Inguine parziale", "durations": [20], "extraTime": [5] },
-  { "id": 30, "type": "Inguine totale", "durations": [15], "extraTime": [5] },
-  { "id": 31, "type": "Glutei", "durations": [30], "extraTime": [5] },
-  { "id": 32, "type": "Mezza gamba", "durations": [45], "extraTime": [5] },
-  { "id": 33, "type": "Gamba intera", "durations": [30], "extraTime": [5] },
-  { "id": 34, "type": "Petto", "durations": [30], "extraTime": [5] },
-  { "id": 35, "type": "Schiena", "durations": [60], "extraTime": [5] },
+  { "id": 25, "type": "Ascelle", "durations": [25], "extraTime": [5] },
+  { "id": 26, "type": "Braccia", "durations": [15], "extraTime": [5] },
+  { "id": 27, "type": "Inguine parziale", "durations": [20], "extraTime": [5] },
+  { "id": 28, "type": "Inguine totale", "durations": [15], "extraTime": [5] },
+  { "id": 29, "type": "Glutei", "durations": [30], "extraTime": [5] },
+  { "id": 30, "type": "Mezza gamba", "durations": [45], "extraTime": [5] },
+  { "id": 31, "type": "Gamba intera", "durations": [30], "extraTime": [5] },
+  { "id": 32, "type": "Petto", "durations": [30], "extraTime": [5] },
+  { "id": 33, "type": "Schiena", "durations": [60], "extraTime": [5] },
   {
-    "id": 36,
+    "id": 34,
     "type": "Gamba intera uomo",
     "durations": [35],
     "extraTime": [5]
   },
   {
-    "id": 37,
+    "id": 35,
     "type": "Rituale Coccole di cotone",
     "durations": [50, 60, 90],
     "extraTime": [5]
   },
   {
-    "id": 38,
+    "id": 36,
     "type": "Rituale India",
     "durations": [50, 60, 90],
     "extraTime": [5]
   },
   {
-    "id": 39,
+    "id": 37,
     "type": "Rituale Himalaya",
     "durations": [50, 60, 90],
     "extraTime": [5]
   },
   {
-    "id": 40,
+    "id": 38,
     "type": "Rituale Marrakech",
     "durations": [50, 60, 90],
     "extraTime": [5]
   },
   {
-    "id": 41,
+    "id": 39,
     "type": "Rituale Cute",
     "durations": [50, 60, 90],
     "extraTime": [5]
   },
   {
-    "id": 42,
+    "id": 40,
     "type": "Scrub corpo aromatico",
     "durations": [30, 60],
     "extraTime": [5]
   },
   {
-    "id": 43,
+    "id": 41,
     "type": "Seduta di Bagno Turco",
     "durations": [60],
     "extraTime": [5]
   },
   {
-    "id": 44,
+    "id": 42,
     "type": "Applicazione trucco giorno / sera / cerimonia",
     "durations": [60],
     "extraTime": [5]
   },
   {
-    "id": 45,
+    "id": 43,
     "type": "Applicazione trucco sposa e acconciatura",
     "durations": [140],
     "extraTime": [5]
   },
   {
-    "id": 46,
+    "id": 44,
     "type": "Prova trucco sposa",
     "durations": [120],
     "extraTime": [5]
   },
   {
-    "id": 47,
+    "id": 45,
     "type": "Corso individuale di make-up base",
     "durations": [20],
     "extraTime": [5]
   },
-  { "id": 48, "type": "Pulizia del viso", "durations": [90], "extraTime": [5] },
+  { "id": 46, "type": "Pulizia del viso", "durations": [90], "extraTime": [5] },
   {
-    "id": 49,
+    "id": 47,
     "type": "Pulizia del viso con spatola ad ultrasuoni",
     "durations": [60],
     "extraTime": [5]
   },
   {
-    "id": 50,
+    "id": 48,
     "type": "Pulizia del viso ultrasuoni e mandelico",
     "durations": [60],
     "extraTime": [5]
   },
+
   {
-    "id": 51,
-    "type": "Elettroporatore viso",
-    "durations": [10],
-    "extraTime": [5]
-  },
-  {
-    "id": 52,
+    "id": 49,
     "type": "Trattamento viso Eterna",
     "durations": [90],
     "extraTime": [5]
   },
   {
-    "id": 53,
+    "id": 50,
     "type": "Trattamento viso Fast Beauty",
     "durations": [30],
     "extraTime": [5]
   },
   {
-    "id": 54,
+    "id": 51,
     "type": "Ossigeno dermo infusione",
     "durations": [60],
     "extraTime": [5]
   },
   {
-    "id": 55,
+    "id": 52,
     "type": "Trattamenti viso specifici",
     "durations": [60],
     "extraTime": [5]

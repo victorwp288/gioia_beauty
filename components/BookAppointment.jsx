@@ -333,7 +333,7 @@ const BookAppointment = () => {
               name="date"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Seleziona data</FormLabel>
+                  <FormLabel>Seleziona data*</FormLabel>
                   <FormControl>
                     <Calendar
                       mode="single"
@@ -359,7 +359,7 @@ const BookAppointment = () => {
                 <FormItem className="mt-3 md:mt-0">
                   <FormLabel className="mb-3 flex items-center gap-2">
                     <Clock className="h-5 w-5 text-primary" />
-                    Seleziona orario
+                    Seleziona orario*
                   </FormLabel>
                   <FormControl>
                     <div className="space-y-4">
@@ -403,13 +403,14 @@ const BookAppointment = () => {
                 </FormItem>
               )}
             />
+
             {/* Appointment Type */}
             <FormField
               control={form.control}
               name="appointmentType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Trattamento</FormLabel>
+                  <FormLabel>Trattamento*</FormLabel>
                   <FormControl>
                     <select
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:shadow disabled:cursor-not-allowed disabled:opacity-50"
@@ -476,7 +477,7 @@ const BookAppointment = () => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nome e Cognome</FormLabel>
+                  <FormLabel>Nome e Cognome*</FormLabel>
                   <FormControl>
                     <Input type="text" {...field} />
                   </FormControl>
@@ -486,7 +487,7 @@ const BookAppointment = () => {
             />
             {/* Phone Number */}
             <div>
-              <FormLabel>Numero di telefono</FormLabel>
+              <FormLabel>Numero di telefono*</FormLabel>
               <Controller
                 name="number"
                 control={form.control}
@@ -507,7 +508,7 @@ const BookAppointment = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Email (opzionale)</FormLabel>
                   <FormControl>
                     <Input type="email" {...field} />
                   </FormControl>

@@ -7,7 +7,7 @@ const manicure = [
     subcategories: [
       {
         title: "APPLICAZIONE SMALTO CLASSICO",
-        duration: 10,
+        duration: 15,
       },
       {
         title: "APPLICAZIONE DI SMALTO SEMIPERMANENTE",
@@ -19,7 +19,7 @@ const manicure = [
       },
       {
         title: "COPERTURA GEL DELLE UNGHIE NATURALI",
-        duration: 60,
+        duration: 90,
       },
     ],
   },
@@ -28,7 +28,7 @@ const manicure = [
     title: "Manicure Giapponese",
     description:
       "Trattamento naturale che fortifica e nutre in profondità le unghie, che appariranno subito lucide con un effetto shine dalla durata che varia dalle due alle tre settimane.",
-    duration: 40,
+    duration: 45,
   },
   {
     title: "Manicure SPA",
