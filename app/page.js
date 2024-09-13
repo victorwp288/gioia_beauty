@@ -12,7 +12,7 @@ export default function Home() {
       <Cookiesbanner />
 
       <HeroSection />
-      <div id="about-us" className="scroll-mt-16 bg-white">
+      <div id="about-us" className="scroll-mt-16 bg-white overflow-x-hidden">
         <AboutUs />
       </div>
       <div id="technologies" className="scroll-mt-16 bg-[#97a6af]">
