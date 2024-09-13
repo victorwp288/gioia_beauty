@@ -5,7 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarDays, Clock } from "lucide-react";
+import { Clock } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -15,24 +15,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  collection,
-  addDoc,
-  query,
-  where,
-  getDocs,
-  Timestamp,
-} from "firebase/firestore";
-import { ToastContainer, toast } from "react-toastify";
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
-import appointmentTypes from "@/data/appointmentTypes.json";
-
+import appointmentTypesData from "@/data/appointmentTypes.json";
 import BookingConfirmation from "./BookingConfirmation";
 
-const toasty = () => toast("Appointment Booked!");
+// Constants and utility functions
+const appointmentTypes = appointmentTypesData;
 
 const formSchema = z.object({
   date: z.date(),
@@ -43,178 +35,195 @@ const formSchema = z.object({
   timeSlot: z.string().min(1, "Time slot is required"),
   selectedDate: z
     .date()
-    .min(new Date(new Date().setHours(0, 0, 0, 0)), "Date is required"), // Allow selecting today starting from 00:00
+    .min(
+      new Date(new Date().setHours(0, 0, 0, 0) + 86400000),
+      "Cannot book today or past dates"
+    ), // Disallow booking today
   appointmentType: z.string().min(1, "Appointment type is required"),
   variant: z.string().optional(),
   duration: z.number().min(1, "Duration is required"),
 });
 
+const openCloseHours = {
+  1: { open: "09:00", close: "19:00" }, // Monday
+  2: { open: "10:00", close: "20:00" }, // Tuesday
+  3: { open: "09:00", close: "19:00" }, // Wednesday
+  4: { open: "10:00", close: "20:00" }, // Thursday
+  5: { open: "09:00", close: "18:30" }, // Friday
+  6: null, // Saturday Closed
+  0: null, // Sunday Closed
+};
+
+const formatDate = (date) => {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};
+
+const isDisabledDay = (day) => {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const dayOfWeek = day.getDay();
+  const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+  return day <= today || isWeekend; // Disable today and past dates
+};
+
+// New function to get the next available date
+const getNextAvailableDate = () => {
+  let date = new Date();
+  date.setDate(date.getDate() + 1); // Start from tomorrow
+
+  while (isDisabledDay(date)) {
+    date.setDate(date.getDate() + 1);
+  }
+  return date;
+};
+
 const BookAppointment = () => {
-  const [timeSlot, setTimeSlot] = useState([]);
+  const [timeSlots, setTimeSlots] = useState([]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState();
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(getNextAvailableDate());
   const [appointmentType, setAppointmentType] = useState(appointmentTypes[0]);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [showAllTimeSlots, setShowAllTimeSlots] = useState(false);
-  const initialVisibleSlots = 12; // You can adjust this number
+  const initialVisibleSlots = 12; // Adjust as needed
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [appointmentsCache, setAppointmentsCache] = useState({});
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      date: new Date(),
+      date: selectedDate,
       note: "",
       name: "",
       number: "",
       email: "",
       timeSlot: "",
-      selectedDate: new Date(),
+      selectedDate: selectedDate,
       appointmentType: appointmentTypes[0].type,
       variant: "",
       duration: appointmentTypes[0].durations[0],
     },
   });
 
-  const openCloseHours = {
-    1: { open: "09:00", close: "19:00" }, // Monday
-    2: { open: "10:00", close: "20:00" }, // Tuesday
-    3: { open: "09:00", close: "19:00" }, // Wednesday
-    4: { open: "10:00", close: "20:00" }, // Thursday
-    5: { open: "09:00", close: "18:30" }, // Friday
-    6: null, // Saturday Closed
-    0: null, // Sunday Closed
-  };
-
+  // Fetch time slots only when necessary
   const fetchTimeSlots = useCallback(
     async (date) => {
       if (!date) return;
-
-      const now = new Date();
-
-      // Normalize dates to compare only year, month, and day
-      const normalizeDate = (d) =>
-        new Date(d.getFullYear(), d.getMonth(), d.getDate());
-
-      const isToday =
-        normalizeDate(date).getTime() === normalizeDate(now).getTime();
-      const currentTime = isToday ? now.getHours() * 60 + now.getMinutes() : 0;
 
       const dayOfWeek = date.getDay();
       const hours = openCloseHours[dayOfWeek];
 
       if (!hours) {
-        setTimeSlot([]);
+        setTimeSlots([]);
         return; // Closed day, no available slots
       }
 
-      // Create start and end of the selected date in ISO format
-      const startOfDay = new Date(date);
-      startOfDay.setHours(0, 0, 0, 0);
-      const endOfDay = new Date(date);
-      endOfDay.setHours(23, 59, 59, 999);
+      const dateKey = date.toDateString();
+      let existingAppointments = appointmentsCache[dateKey];
 
-      const q = query(
-        collection(db, "customers"),
-        where("selectedDate", ">=", startOfDay.toISOString()),
-        where("selectedDate", "<=", endOfDay.toISOString())
+      if (!existingAppointments) {
+        const startOfDay = new Date(date);
+        startOfDay.setHours(0, 0, 0, 0);
+        const endOfDay = new Date(date);
+        endOfDay.setHours(23, 59, 59, 999);
+
+        const q = query(
+          collection(db, "customers"),
+          where("selectedDate", ">=", startOfDay.toISOString()),
+          where("selectedDate", "<=", endOfDay.toISOString())
+        );
+        const querySnapshot = await getDocs(q);
+        existingAppointments = querySnapshot.docs
+          .map((doc) => doc.data())
+          .sort((a, b) => a.startTime.localeCompare(b.startTime));
+
+        // Cache the appointments to avoid redundant fetches
+        setAppointmentsCache((prevCache) => ({
+          ...prevCache,
+          [dateKey]: existingAppointments,
+        }));
+      }
+
+      const availableTimeSlots = generateTimeSlots(
+        date,
+        existingAppointments,
+        hours
       );
-      const querySnapshot = await getDocs(q);
-      const existingAppointments = querySnapshot.docs
-        .map((doc) => doc.data())
-        .sort((a, b) => a.startTime.localeCompare(b.startTime));
 
-      const [openHours, openMinutes] = hours.open.split(":").map(Number);
-      const [closeHours, closeMinutes] = hours.close.split(":").map(Number);
-      const openingTime = openHours * 60 + openMinutes;
-      const closingTime = closeHours * 60 + closeMinutes;
-
-      const generateTimeSlots = () => {
-        const slots = [];
-        let currentTime = openingTime;
-
-        const addSlot = (time) => {
-          if (
-            time >= openingTime &&
-            time < closingTime &&
-            (!isToday || time > currentTime) &&
-            !doesSlotOverlap(time)
-          ) {
-            slots.push(formatTime(time));
-          }
-        };
-
-        const doesSlotOverlap = (time) => {
-          // Calculate end time of the slot
-          const slotEndTime = time + form.getValues("duration");
-          return existingAppointments.some((appointment) => {
-            const [appStartHours, appStartMinutes] = appointment.startTime
-              .split(":")
-              .map(Number);
-            const appStartTime = appStartHours * 60 + appStartMinutes;
-            const appEndTime = appStartTime + appointment.totalDuration;
-
-            // Check if the slot overlaps with the existing appointment
-            return time < appEndTime && slotEndTime > appStartTime;
-          });
-        };
-
-        existingAppointments.forEach((appointment) => {
-          const [appStartHours, appStartMinutes] = appointment.startTime
-            .split(":")
-            .map(Number);
-          const appStartTime = appStartHours * 60 + appStartMinutes;
-
-          // Add slots before this appointment
-          while (currentTime < appStartTime) {
-            addSlot(currentTime);
-            currentTime += 15; // Increment by 15 minutes
-          }
-
-          // Move current time to the end of this appointment
-          currentTime = appStartTime + appointment.totalDuration;
-
-          // Round up to the next 15-minute interval
-          currentTime = Math.ceil(currentTime / 15) * 15;
-        });
-
-        // Fill in any remaining slots after the last appointment
-        while (currentTime < closingTime) {
-          addSlot(currentTime);
-          currentTime += 15; // Increment by 15 minutes
-        }
-
-        return slots;
-      };
-
-      const formatTime = (minutes) => {
-        const hours = Math.floor(minutes / 60);
-        const mins = minutes % 60;
-        return `${hours.toString().padStart(2, "0")}:${mins
-          .toString()
-          .padStart(2, "0")}`;
-      };
-
-      const availableTimeSlots = generateTimeSlots();
-
-      setTimeSlot(availableTimeSlots);
+      setTimeSlots(availableTimeSlots);
       if (availableTimeSlots.length > 0) {
         const firstAvailableTimeSlot = availableTimeSlots[0];
         setSelectedTimeSlot(firstAvailableTimeSlot);
         form.setValue("timeSlot", firstAvailableTimeSlot);
+      } else {
+        // If no time slots are available on this date, find the next date
+        const nextDate = getNextAvailableDateFrom(date);
+        setSelectedDate(nextDate);
+        form.setValue("date", nextDate);
+        form.setValue("selectedDate", nextDate);
       }
     },
-    [selectedVariant, appointmentType, form]
+    [appointmentsCache, appointmentType, form]
   );
+
+  // Function to get the next available date from a given date
+  const getNextAvailableDateFrom = (startDate) => {
+    let date = new Date(startDate);
+    date.setDate(date.getDate() + 1);
+
+    while (isDisabledDay(date)) {
+      date.setDate(date.getDate() + 1);
+    }
+    return date;
+  };
+
+  const generateTimeSlots = (date, existingAppointments, hours) => {
+    const [openHours, openMinutes] = hours.open.split(":").map(Number);
+    const [closeHours, closeMinutes] = hours.close.split(":").map(Number);
+    const openingTime = openHours * 60 + openMinutes;
+    const closingTime = closeHours * 60 + closeMinutes;
+
+    const slots = [];
+    let time = openingTime;
+
+    const duration = form.getValues("duration") || appointmentType.durations[0];
+
+    while (time + duration <= closingTime) {
+      if (!doesSlotOverlap(time, existingAppointments, duration)) {
+        slots.push(formatTime(time));
+      }
+      time += 15; // Increment by 15 minutes
+    }
+
+    return slots;
+  };
+
+  const doesSlotOverlap = (time, existingAppointments, duration) => {
+    const slotEndTime = time + duration;
+    return existingAppointments.some((appointment) => {
+      const [appStartHours, appStartMinutes] = appointment.startTime
+        .split(":")
+        .map(Number);
+      const appStartTime = appStartHours * 60 + appStartMinutes;
+      const appEndTime = appStartTime + appointment.totalDuration;
+
+      return time < appEndTime && slotEndTime > appStartTime;
+    });
+  };
+
+  const formatTime = (minutes) => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours.toString().padStart(2, "0")}:${mins
+      .toString()
+      .padStart(2, "0")}`;
+  };
 
   useEffect(() => {
     fetchTimeSlots(selectedDate);
   }, [selectedDate, appointmentType, selectedVariant, fetchTimeSlots]);
-
-  const formatDate = (date) => {
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
 
   const handleAppointmentTypeChange = (e) => {
     const selectedType = appointmentTypes.find(
@@ -234,25 +243,20 @@ const BookAppointment = () => {
     form.setValue("duration", selectedDuration);
   };
 
-  const [modalIsOpen, setIsOpen] = useState(false);
-
   const handleSubmit = async (data) => {
     try {
       const startTime = data.timeSlot;
       const duration = data.duration;
-      const extraTime = appointmentType.extraTime[0]; // Get extraTime
+      const extraTime = appointmentType.extraTime[0];
       const [startHours, startMinutes] = startTime.split(":").map(Number);
 
-      let endMinutes = startMinutes + duration + extraTime; // Include extraTime
+      let endMinutes = startMinutes + duration + extraTime;
       let endHours = startHours;
 
       if (endMinutes >= 60) {
         endHours += Math.floor(endMinutes / 60);
         endMinutes = endMinutes % 60;
       }
-
-      const endTime = new Date(selectedDate);
-      endTime.setHours(endHours, endMinutes, 0, 0);
 
       const formattedEndTime = `${endHours
         .toString()
@@ -266,30 +270,27 @@ const BookAppointment = () => {
       const querySnapshot = await getDocs(q);
       const isSubscribed = !querySnapshot.empty;
 
-      const docRef = await addDoc(collection(db, "customers"), {
+      await addDoc(collection(db, "customers"), {
         ...data,
         startTime,
         endTime: formattedEndTime,
-        duration, // This is the visible duration
-        totalDuration: duration + extraTime, // This is the actual total duration
+        duration,
+        totalDuration: duration + extraTime,
         selectedDate: data.selectedDate.toISOString(),
         appointmentType: data.appointmentType || appointmentTypes[0].type,
         variant: selectedVariant,
         createdAt: new Date().toISOString(),
         isSubscribedToNewsletter: isSubscribed,
       });
-      console.log("Appointment booked with ID:", docRef.id);
 
       const emailData = {
         email: data.email,
         name: data.name,
-        startTime: startTime,
+        startTime,
         endTime: formattedEndTime,
-        duration: duration,
+        duration,
         date: formattedSelectedDate,
       };
-
-      console.log("Email data:", emailData);
 
       const emailResponse = await fetch("/api/send", {
         method: "POST",
@@ -299,29 +300,10 @@ const BookAppointment = () => {
         body: JSON.stringify(emailData),
       });
 
-      const emailResult = await emailResponse.json();
-      console.log("Email response:", emailResult);
-
       if (!emailResponse.ok) {
+        const emailResult = await emailResponse.json();
         console.error("Error sending email:", emailResult);
       }
-
-      //  const whatsappData = await fetch("/api/whatsapp", {
-      //    method: "POST",
-      //    headers: {
-      //      "Content-Type": "application/json",
-      //    },
-      //    body: JSON.stringify({
-      //      number: data.number,
-      //      name: data.name,
-      //      time: data.timeSlot,
-      //      date: formattedSelectedDate,
-      //    }),
-      //  });
-      //  console.log("Whatsapp data:", whatsappData);
-      //  const whatsappResult = await whatsappData.json();
-      //  console.log("Whatsapp response:", whatsappResult);
-      //  console.log("Whatsapp response:", whatsappResult.body);
 
       openModal();
     } catch (error) {
@@ -332,19 +314,8 @@ const BookAppointment = () => {
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
-  const isPastDay = (day) => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const dayOfWeek = day.getDay();
-
-    // Check if the day is Saturday or Sunday
-    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-
-    return day < today || isWeekend;
-  };
-
   return (
-    <div className=" m-auto mt-12 w-[90vw] space-y-4  md:w-[70vw]">
+    <div className="m-auto mt-12 w-[90vw] space-y-4 md:w-[70vw]">
       <div className="flex flex-col gap-2 py-1 md:gap-4 md:py-4">
         <h4 className="text-xs font-extrabold text-primary ">
           CONCEDITI UN MOMENTO DI RELAX
@@ -355,7 +326,7 @@ const BookAppointment = () => {
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 items-end">
+          <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2">
             {/* Calendar */}
             <FormField
               control={form.control}
@@ -372,7 +343,7 @@ const BookAppointment = () => {
                         setSelectedDate(date);
                         form.setValue("selectedDate", date);
                       }}
-                      disabled={isPastDay}
+                      disabled={isDisabledDay}
                       className="w-fit rounded-md border"
                     />
                   </FormControl>
@@ -392,34 +363,27 @@ const BookAppointment = () => {
                   </FormLabel>
                   <FormControl>
                     <div className="space-y-4">
-                      {timeSlot.length > 0 ? (
-                        <div className="grid grid-cols-3 gap-2 rounded-lg border p-5">
-                          {(showAllTimeSlots
-                            ? timeSlot
-                            : timeSlot.slice(0, initialVisibleSlots)
-                          ).map((time, index) => (
-                            <h2
-                              key={index}
-                              onClick={() => {
-                                setSelectedTimeSlot(time);
-                                field.onChange(time);
-                              }}
-                              className={`cursor-pointer rounded-full border p-2 text-center hover:bg-primary hover:text-white ${
-                                time === selectedTimeSlot &&
-                                "bg-primary text-white"
-                              }`}
-                            >
-                              {time}
-                            </h2>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="rounded-lg border p-5 text-center text-black">
-                          Nessun appuntamento disponibile per oggi
-                        </div>
-                      )}
-
-                      {timeSlot.length > initialVisibleSlots && (
+                      <div className="grid grid-cols-3 gap-2 rounded-lg border p-5">
+                        {(showAllTimeSlots
+                          ? timeSlots
+                          : timeSlots.slice(0, initialVisibleSlots)
+                        ).map((time, index) => (
+                          <h2
+                            key={index}
+                            onClick={() => {
+                              setSelectedTimeSlot(time);
+                              field.onChange(time);
+                            }}
+                            className={`cursor-pointer rounded-full border p-2 text-center hover:bg-primary hover:text-white ${
+                              time === selectedTimeSlot &&
+                              "bg-primary text-white"
+                            }`}
+                          >
+                            {time}
+                          </h2>
+                        ))}
+                      </div>
+                      {timeSlots.length > initialVisibleSlots && (
                         <Button
                           type="button"
                           variant="outline"
@@ -427,10 +391,10 @@ const BookAppointment = () => {
                           onClick={() => setShowAllTimeSlots(!showAllTimeSlots)}
                         >
                           {showAllTimeSlots
-                            ? "Mostra di meno"
-                            : `Mostra di più (${
-                                timeSlot.length - initialVisibleSlots
-                              } more)`}
+                            ? "Mostra meno"
+                            : `Mostra più (${
+                                timeSlots.length - initialVisibleSlots
+                              } altri)`}
                         </Button>
                       )}
                     </div>
@@ -449,7 +413,7 @@ const BookAppointment = () => {
                   <FormLabel>Trattamento*</FormLabel>
                   <FormControl>
                     <select
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:shadow disabled:cursor-not-allowed disabled:opacity-50"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:shadow disabled:cursor-not-allowed disabled:opacity-50"
                       {...field}
                       onChange={handleAppointmentTypeChange}
                     >
@@ -476,11 +440,11 @@ const BookAppointment = () => {
                     <FormLabel>Durata del trattamento</FormLabel>
                     <FormControl>
                       <select
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:shadow disabled:cursor-not-allowed disabled:opacity-50"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:shadow disabled:cursor-not-allowed disabled:opacity-50"
                         {...field}
                         onChange={handleVariantChange}
                       >
-                        <option value="">Select Duration</option>
+                        <option value="">Seleziona durata</option>
                         {appointmentType.durations.map((duration, index) => (
                           <option key={index} value={duration}>
                             {duration} minuti
@@ -532,13 +496,12 @@ const BookAppointment = () => {
                     country={"it"}
                     value={value}
                     onChange={(phone, country, e, formattedValue) => {
-                      onChange(formattedValue); // This will include the "+"
+                      onChange(formattedValue); // Includes the "+"
                     }}
                   />
                 )}
               />
             </div>
-
             {/* Email */}
             <FormField
               control={form.control}
