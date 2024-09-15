@@ -61,29 +61,11 @@ const formatDate = (date) => {
   return `${day}/${month}/${year}`;
 };
 
-const isDisabledDay = (day) => {
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const dayOfWeek = day.getDay();
-  const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-  return day <= today || isWeekend; // Disable today and past dates
-};
-
-// New function to get the next available date
-const getNextAvailableDate = () => {
-  let date = new Date();
-  date.setDate(date.getDate() + 1); // Start from tomorrow
-
-  while (isDisabledDay(date)) {
-    date.setDate(date.getDate() + 1);
-  }
-  return date;
-};
-
 const BookAppointment = () => {
   const [timeSlots, setTimeSlots] = useState([]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState();
-  const [selectedDate, setSelectedDate] = useState(getNextAvailableDate());
+  const [vacationPeriods, setVacationPeriods] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null); // Initialize as null
   const [appointmentType, setAppointmentType] = useState(appointmentTypes[0]);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [showAllTimeSlots, setShowAllTimeSlots] = useState(false);
@@ -94,18 +76,83 @@ const BookAppointment = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      date: selectedDate,
+      date: null, // Initialize as null
       note: "",
       name: "",
       number: "",
       email: "",
       timeSlot: "",
-      selectedDate: selectedDate,
+      selectedDate: null, // Initialize as null
       appointmentType: appointmentTypes[0].type,
       variant: "",
       duration: appointmentTypes[0].durations[0],
     },
   });
+
+  // Fetch vacation periods from Firestore
+  useEffect(() => {
+    const fetchVacationPeriods = async () => {
+      const querySnapshot = await getDocs(collection(db, "vacations"));
+      const vacationsData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      // Convert dates from strings to Date objects
+      const formattedVacations = vacationsData.map((vacation) => ({
+        ...vacation,
+        startDate: new Date(vacation.startDate),
+        endDate: new Date(vacation.endDate),
+      }));
+      setVacationPeriods(formattedVacations);
+    };
+
+    fetchVacationPeriods();
+  }, []);
+
+  // Function to check if a day should be disabled
+  const isDisabledDay = (day) => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const dayOfWeek = day.getDay();
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+    // Check if day is in any vacation period
+    const isInVacation = vacationPeriods.some((vacation) => {
+      // Normalize dates to ignore time
+      const vacationStart = new Date(
+        vacation.startDate.getFullYear(),
+        vacation.startDate.getMonth(),
+        vacation.startDate.getDate()
+      );
+      const vacationEnd = new Date(
+        vacation.endDate.getFullYear(),
+        vacation.endDate.getMonth(),
+        vacation.endDate.getDate()
+      );
+      return day >= vacationStart && day <= vacationEnd;
+    });
+
+    return day <= today || isWeekend || isInVacation; // Disable today, past dates, weekends, and vacation days
+  };
+
+  // Function to get the next available date
+  const getNextAvailableDate = () => {
+    let date = new Date();
+    date.setDate(date.getDate() + 1); // Start from tomorrow
+
+    while (isDisabledDay(date)) {
+      date.setDate(date.getDate() + 1);
+    }
+    return date;
+  };
+
+  // Initialize selectedDate after vacation periods are fetched
+  useEffect(() => {
+    const nextDate = getNextAvailableDate();
+    setSelectedDate(nextDate);
+    form.setValue("date", nextDate);
+    form.setValue("selectedDate", nextDate);
+  }, [vacationPeriods]);
 
   // Fetch time slots only when necessary
   const fetchTimeSlots = useCallback(

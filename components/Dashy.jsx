@@ -52,6 +52,10 @@ export function Dashy() {
   const [isEditMode, setIsEditMode] = useState(false); // Track edit mode
   const [appointmentToEdit, setAppointmentToEdit] = useState(null); // Track the appointment being edited
 
+  const [isVacationModalOpen, setIsVacationModalOpen] = useState(false);
+  const [vacationStartDate, setVacationStartDate] = useState(null);
+  const [vacationEndDate, setVacationEndDate] = useState(null);
+
   const [newAppointment, setNewAppointment] = useState({
     name: "",
     email: "",
@@ -262,8 +266,92 @@ export function Dashy() {
     }
   };
 
+  const handleSetVacationPeriod = async () => {
+    if (!vacationStartDate || !vacationEndDate) {
+      toast.error("Please select both start and end dates.");
+      return;
+    }
+
+    const startDate = new Date(vacationStartDate);
+    const endDate = new Date(vacationEndDate);
+
+    if (endDate < startDate) {
+      toast.error("End date must be after start date.");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "vacations"), {
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+        createdAt: new Date().toISOString(),
+      });
+      toast.success("Vacation period set successfully.");
+      setIsVacationModalOpen(false);
+    } catch (error) {
+      console.error("Error setting vacation period:", error);
+      toast.error("Failed to set vacation period. Please try again.");
+    }
+  };
+
   return (
     <div className="w-full">
+      <Button
+        onClick={() => {
+          setIsVacationModalOpen(true);
+          setVacationStartDate(null);
+          setVacationEndDate(null);
+        }}
+        className="flex items-center gap-2"
+      >
+        <Plus className="h-4 w-4" />
+        Set Vacation Period
+      </Button>
+      <Dialog open={isVacationModalOpen} onOpenChange={setIsVacationModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Set Vacation Period</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="vacationStartDate" className="text-right">
+                Start Date
+              </Label>
+              <Input
+                id="vacationStartDate"
+                name="vacationStartDate"
+                type="date"
+                value={vacationStartDate || ""}
+                onChange={(e) => setVacationStartDate(e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="vacationEndDate" className="text-right">
+                End Date
+              </Label>
+              <Input
+                id="vacationEndDate"
+                name="vacationEndDate"
+                type="date"
+                value={vacationEndDate || ""}
+                onChange={(e) => setVacationEndDate(e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsVacationModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleSetVacationPeriod}>Set Vacation</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <div className="flex flex-col gap-6 p-1 lg:p-6">
         <Card>
           <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
