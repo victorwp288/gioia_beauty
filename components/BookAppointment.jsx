@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
@@ -15,7 +15,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import {
+  runTransaction,
+  doc,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -71,7 +78,8 @@ const BookAppointment = () => {
   const [showAllTimeSlots, setShowAllTimeSlots] = useState(false);
   const initialVisibleSlots = 12; // Adjust as needed
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [appointmentsCache, setAppointmentsCache] = useState({});
+
+  const appointmentsCache = useRef({});
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -187,10 +195,7 @@ const BookAppointment = () => {
           .sort((a, b) => a.startTime.localeCompare(b.startTime));
 
         // Cache the appointments to avoid redundant fetches
-        setAppointmentsCache((prevCache) => ({
-          ...prevCache,
-          [dateKey]: existingAppointments,
-        }));
+        appointmentsCache.current[dateKey] = existingAppointments;
       }
 
       const availableTimeSlots = generateTimeSlots(
@@ -212,7 +217,7 @@ const BookAppointment = () => {
         form.setValue("selectedDate", nextDate);
       }
     },
-    [appointmentsCache, appointmentType, form]
+    [appointmentType, form]
   );
 
   // Function to get the next available date from a given date
@@ -270,7 +275,7 @@ const BookAppointment = () => {
 
   useEffect(() => {
     fetchTimeSlots(selectedDate);
-  }, [selectedDate, appointmentType, selectedVariant, fetchTimeSlots]);
+  }, [selectedDate, appointmentType, selectedVariant]);
 
   const handleAppointmentTypeChange = (e) => {
     const selectedType = appointmentTypes.find(
@@ -308,35 +313,53 @@ const BookAppointment = () => {
       const formattedEndTime = `${endHours
         .toString()
         .padStart(2, "0")}:${endMinutes.toString().padStart(2, "0")}`;
-      const formattedSelectedDate = formatDate(data.selectedDate);
 
-      const q = query(
-        collection(db, "newsletter_subscribers"),
-        where("email", "==", data.email)
-      );
-      const querySnapshot = await getDocs(q);
-      const isSubscribed = !querySnapshot.empty;
+      const selectedDateString = data.selectedDate.toISOString();
 
-      await addDoc(collection(db, "customers"), {
-        ...data,
-        startTime,
-        endTime: formattedEndTime,
-        duration,
-        totalDuration: duration + extraTime,
-        selectedDate: data.selectedDate.toISOString(),
-        appointmentType: data.appointmentType || appointmentTypes[0].type,
-        variant: selectedVariant,
-        createdAt: new Date().toISOString(),
-        isSubscribedToNewsletter: isSubscribed,
+      // Server-side validation using Firestore transaction
+      await runTransaction(db, async (transaction) => {
+        const appointmentsRef = collection(db, "customers");
+
+        // Query for overlapping appointments
+        const q = query(
+          appointmentsRef,
+          where("selectedDate", "==", selectedDateString),
+          where("startTime", "<", formattedEndTime),
+          where("endTime", ">", startTime)
+        );
+
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          throw new Error(
+            "Il time slot selezionato non è più disponibile. Per favore, seleziona un altro orario."
+          );
+        }
+
+        // Proceed to add the new appointment
+        const newAppointmentRef = doc(appointmentsRef);
+
+        transaction.set(newAppointmentRef, {
+          ...data,
+          startTime,
+          endTime: formattedEndTime,
+          duration,
+          totalDuration: duration + extraTime,
+          selectedDate: selectedDateString,
+          appointmentType: data.appointmentType || appointmentTypes[0].type,
+          variant: selectedVariant,
+          createdAt: new Date().toISOString(),
+        });
       });
 
+      // Send confirmation email
       const emailData = {
         email: data.email,
         name: data.name,
         startTime,
         endTime: formattedEndTime,
         duration,
-        date: formattedSelectedDate,
+        date: formatDate(data.selectedDate),
       };
 
       const emailResponse = await fetch("/api/send", {
@@ -352,9 +375,11 @@ const BookAppointment = () => {
         console.error("Error sending email:", emailResult);
       }
 
+      // Open the confirmation modal
       openModal();
     } catch (error) {
       console.error("Error booking appointment:", error);
+      alert(error.message);
     }
   };
 
