@@ -13,6 +13,23 @@ export const metadata = {
   },
   description:
     "Scopri Gioia Beauty, il nuovo centro estetico a Roveleto di Cadeo",
+  openGraph: {
+    title: "Scopri Gioia Beauty - Il Tuo Centro Estetico di Fiducia",
+    description:
+      "Gioia Beauty offre servizi estetici di alta qualità a Roveleto di Cadeo. Prenota oggi per un'esperienza di trattamento personalizzato",
+    url: "https://www.gioiabeauty.net/",
+    images: [
+      {
+        url: "https://www.gioiabeauty.net/ogimage.png",
+        width: 1200,
+        height: 630,
+        alt: "An example OG image",
+      },
+    ],
+    siteName: "Gioia Beauty",
+    locale: "it_IT",
+    type: "website",
+  },
 };
 
 export const bricolage = Bricolage_Grotesque({
