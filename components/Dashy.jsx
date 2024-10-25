@@ -593,7 +593,10 @@ export function Dashy() {
           <DialogHeader>
             <DialogTitle>Conferma cancellazione</DialogTitle>
           </DialogHeader>
-          <p>Sei sicuro di voler cancellare l&apos;appuntamento?</p>
+          <p>
+            Sei sicuro di voler cancellare l&apos;appuntamento di{" "}
+            <strong>{appointmentToDelete?.name}</strong> ?
+          </p>
           <DialogFooter>
             <Button
               variant="outline"
