@@ -7,6 +7,7 @@ export const EmailTemplate = ({
   endTime,
   duration,
   date,
+  appointmentType,
   isAdmin,
 }) => (
   <div>
@@ -15,6 +16,9 @@ export const EmailTemplate = ({
         <h1>Nuova Prenotazione</h1>
         <p>
           {name} ha prenotato un appuntamento per il giorno {date}.
+        </p>
+        <p>
+          <strong>Tipo di appuntamento:</strong> {appointmentType}
         </p>
         <p>
           <strong>Inizio appuntamento:</strong> {startTime}

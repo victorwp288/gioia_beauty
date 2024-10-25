@@ -5,7 +5,8 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request) {
   try {
-    const { email, name, startTime, endTime, duration, date } =
+    // Estrarre anche appointmentType dal corpo della richiesta
+    const { email, name, startTime, endTime, duration, date, appointmentType } =
       await request.json();
 
     console.log("Received data:", {
@@ -15,15 +16,23 @@ export async function POST(request) {
       endTime,
       duration,
       date,
+      appointmentType,
     });
 
-    // Send email to the customer
+    // Invia l'email al cliente
     const { data: customerData, error: customerError } =
       await resend.emails.send({
         from: "Gioia Beauty <noreply@gioiabeauty.net>",
         to: [email],
         subject: "Ricevuta di prenotazione",
-        react: EmailTemplate({ name, startTime, endTime, duration, date }),
+        react: EmailTemplate({
+          name,
+          startTime,
+          endTime,
+          duration,
+          date,
+          appointmentType,
+        }),
       });
 
     if (customerError) {
@@ -33,7 +42,7 @@ export async function POST(request) {
       });
     }
 
-    // Send email to the admin (yourself)
+    // Invia l'email all'amministratore
     const { data: adminData, error: adminError } = await resend.emails.send({
       from: "Gioia Beauty <noreply@gioiabeauty.net>",
       to: ["gioiabeautyy@gmail.com"],
@@ -44,6 +53,7 @@ export async function POST(request) {
         endTime,
         duration,
         date,
+        appointmentType,
         isAdmin: true,
       }),
     });
