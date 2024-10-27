@@ -45,7 +45,7 @@ const NewsletterSignup = () => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Inserisci la tua mail"
             required
-            className="bg-primary placeholder-white text-white"
+            className="bg-primary !placeholder-white text-white"
           />
           <Button
             className="text-primary inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:shadow disabled:pointer-events-none disabled:opacity-50 bg-white hover:bg-gray-100 h-10 px-4 py-2 mt-3"

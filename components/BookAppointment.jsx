@@ -571,6 +571,21 @@ const BookAppointment = () => {
                     onChange={(phone, country, e, formattedValue) => {
                       onChange(formattedValue); // Includes the "+"
                     }}
+                    inputStyle={{
+                      height: "2.5rem",
+                      width: "100%",
+                      borderRadius: "0.375rem",
+                      borderColor: "#e2e8f1",
+                      backgroundColor: "#ffffff",
+                      paddingLeft: "3rem",
+                      paddingRight: "0.75rem",
+                      fontSize: "0.875rem",
+                    }}
+                    buttonStyle={{
+                      height: "2.5rem",
+                      borderColor: "#e2e8f1",
+                      backgroundColor: "#ffffff",
+                    }}
                   />
                 )}
               />
