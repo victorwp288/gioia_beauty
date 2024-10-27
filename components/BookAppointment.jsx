@@ -359,6 +359,7 @@ const BookAppointment = () => {
         startTime,
         endTime: formattedEndTime,
         duration,
+        appointmentType: data.appointmentType,
         date: formatDate(data.selectedDate),
       };
 
