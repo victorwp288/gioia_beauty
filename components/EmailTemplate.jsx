@@ -38,6 +38,9 @@ export const EmailTemplate = ({
           confermato per il giorno {date}.
         </p>
         <p>
+          <strong>Tipo di appuntamento:</strong> {appointmentType}
+        </p>
+        <p>
           <strong>Inizio appuntamento:</strong> {startTime}
         </p>
         <p>
