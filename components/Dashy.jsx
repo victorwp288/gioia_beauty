@@ -1,3 +1,5 @@
+// components/Dashy.jsx
+
 "use client";
 import React, { useEffect, useState } from "react";
 import {
@@ -81,34 +83,39 @@ export function Dashy() {
         selectedDate: formattedDate,
       }));
     }
-  }, [isAddModalOpen]);
+  }, [isAddModalOpen, isEditMode]);
 
   const fetchAppointments = async () => {
-    const querySnapshot = await getDocs(collection(db, "customers"));
-    let appointmentsData = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    try {
+      const querySnapshot = await getDocs(collection(db, "customers"));
+      let appointmentsData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-    appointmentsData = appointmentsData.sort((a, b) => {
-      const dateA = new Date(a.selectedDate);
-      const dateB = new Date(b.selectedDate);
+      appointmentsData = appointmentsData.sort((a, b) => {
+        const dateA = new Date(a.selectedDate);
+        const dateB = new Date(b.selectedDate);
 
-      if (dateA < dateB) return -1;
-      if (dateA > dateB) return 1;
+        if (dateA < dateB) return -1;
+        if (dateA > dateB) return 1;
 
-      const timeA = a.startTime.split(":").map(Number);
-      const timeB = b.startTime.split(":").map(Number);
+        const timeA = a.startTime.split(":").map(Number);
+        const timeB = b.startTime.split(":").map(Number);
 
-      if (timeA[0] < timeB[0]) return -1;
-      if (timeA[0] > timeB[0]) return 1;
-      if (timeA[1] < timeB[1]) return -1;
-      if (timeA[1] > timeB[1]) return 1;
+        if (timeA[0] < timeB[0]) return -1;
+        if (timeA[0] > timeB[0]) return 1;
+        if (timeA[1] < timeB[1]) return -1;
+        if (timeA[1] > timeB[1]) return 1;
 
-      return 0;
-    });
+        return 0;
+      });
 
-    setAppointments(appointmentsData);
+      setAppointments(appointmentsData);
+    } catch (error) {
+      console.error("Error fetching appointments:", error);
+      toast.error("Failed to fetch appointments. Please try again.");
+    }
   };
 
   const formatDate = (date) => {
@@ -220,9 +227,16 @@ export function Dashy() {
     try {
       const startTime = newAppointment.startTime;
       const duration = parseInt(newAppointment.duration, 10);
-      const extraTime = appointmentTypes.find(
+      const selectedType = appointmentTypes.find(
         (type) => type.type === newAppointment.appointmentType
-      ).extraTime[0];
+      );
+
+      if (!selectedType) {
+        toast.error("Please select a valid appointment type.");
+        return;
+      }
+
+      const extraTime = selectedType.extraTime[0];
 
       const [startHours, startMinutes] = startTime.split(":").map(Number);
 
@@ -230,9 +244,9 @@ export function Dashy() {
       let endHours = Math.floor(totalMinutes / 60) % 24;
       let endMinutes = totalMinutes % 60;
 
-      const endTime = `${endHours.toString().padStart(2, "0")}:${endMinutes
-        .toString()
-        .padStart(2, "0")}`;
+      const endTime = `${String(endHours).padStart(2, "0")}:${String(
+        endMinutes
+      ).padStart(2, "0")}`;
 
       const appointmentData = {
         ...newAppointment,
@@ -295,64 +309,72 @@ export function Dashy() {
   };
 
   return (
-    <div className="w-full">
-      <Button
-        onClick={() => {
-          setIsVacationModalOpen(true);
-          setVacationStartDate(null);
-          setVacationEndDate(null);
-        }}
-        className="flex items-center gap-2"
-      >
-        <Plus className="h-4 w-4" />
-        Set Vacation Period
-      </Button>
-      <Dialog open={isVacationModalOpen} onOpenChange={setIsVacationModalOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Set Vacation Period</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="vacationStartDate" className="text-right">
-                Start Date
-              </Label>
-              <Input
-                id="vacationStartDate"
-                name="vacationStartDate"
-                type="date"
-                value={vacationStartDate || ""}
-                onChange={(e) => setVacationStartDate(e.target.value)}
-                className="col-span-3"
-              />
+    <div className="w-full flex flex-col gap-5">
+      {/* Vacation Period Button and Dialog */}
+      <div className="mb-6">
+        <Button
+          onClick={() => {
+            setIsVacationModalOpen(true);
+            setVacationStartDate(null);
+            setVacationEndDate(null);
+          }}
+          className="flex items-center gap-2"
+        >
+          <Plus className="h-4 w-4" />
+          Imposta break
+        </Button>
+        <Dialog
+          open={isVacationModalOpen}
+          onOpenChange={setIsVacationModalOpen}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Imposta break</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="vacationStartDate" className="text-right">
+                  Start Date
+                </Label>
+                <Input
+                  id="vacationStartDate"
+                  name="vacationStartDate"
+                  type="date"
+                  value={vacationStartDate || ""}
+                  onChange={(e) => setVacationStartDate(e.target.value)}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="vacationEndDate" className="text-right">
+                  End Date
+                </Label>
+                <Input
+                  id="vacationEndDate"
+                  name="vacationEndDate"
+                  type="date"
+                  value={vacationEndDate || ""}
+                  onChange={(e) => setVacationEndDate(e.target.value)}
+                  className="col-span-3"
+                />
+              </div>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="vacationEndDate" className="text-right">
-                End Date
-              </Label>
-              <Input
-                id="vacationEndDate"
-                name="vacationEndDate"
-                type="date"
-                value={vacationEndDate || ""}
-                onChange={(e) => setVacationEndDate(e.target.value)}
-                className="col-span-3"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsVacationModalOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button onClick={handleSetVacationPeriod}>Set Vacation</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setIsVacationModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button onClick={handleSetVacationPeriod}>Set Vacation</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
 
-      <div className="flex flex-col gap-6 p-1 lg:p-6">
+      {/* Main Content */}
+      <div className="flex flex-col gap-6 p-1 ">
+        {/* Appointments Card */}
         <Card>
           <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <CardTitle>
@@ -401,7 +423,7 @@ export function Dashy() {
                     <TableCell>{appointment.appointmentType}</TableCell>
                     <TableCell>{appointment.startTime}</TableCell>
                     <TableCell>{appointment.endTime}</TableCell>
-                    <TableCell>{appointment.duration} minutes</TableCell>
+                    <TableCell>{appointment.duration} minuti</TableCell>
                     <TableCell>
                       <div className="font-medium">{appointment.name}</div>
                       <div className="text-gray-500 dark:text-gray-400 text-sm">
@@ -440,6 +462,10 @@ export function Dashy() {
             </Table>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Appointment Calendar */}
+      <div className="mb-6">
         <AppointmentCalendar
           appointments={appointments}
           selectedDate={selectedDate}
@@ -447,6 +473,7 @@ export function Dashy() {
         />
       </div>
 
+      {/* Add/Edit Appointment Dialog */}
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
         <DialogContent>
           <DialogHeader>
@@ -540,6 +567,7 @@ export function Dashy() {
                 value={newAppointment.endTime}
                 onChange={handleInputChange}
                 className="col-span-3"
+                readOnly // Make endTime read-only since it's calculated
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -588,6 +616,8 @@ export function Dashy() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation Dialog */}
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent>
           <DialogHeader>
@@ -595,7 +625,7 @@ export function Dashy() {
           </DialogHeader>
           <p>
             Sei sicuro di voler cancellare l&apos;appuntamento di{" "}
-            <strong>{appointmentToDelete?.name}</strong> ?
+            <strong>{appointmentToDelete?.name}</strong>?
           </p>
           <DialogFooter>
             <Button

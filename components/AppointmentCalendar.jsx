@@ -1,7 +1,7 @@
+// components/AppointmentCalendar.jsx
+
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 export function AppointmentCalendar({
   appointments,
@@ -15,7 +15,7 @@ export function AppointmentCalendar({
   );
 
   const formatDate = (date) => {
-    return new Date(date).toLocaleDateString("en-US", {
+    return new Date(date).toLocaleDateString("it-IT", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -23,57 +23,25 @@ export function AppointmentCalendar({
   };
 
   const handleDateSelect = (date) => {
-    // Only update the selectedDate if a valid date is provided
     if (date) {
       setSelectedDate(date);
     }
   };
 
   return (
-    <div className="flex h-full w-full max-w-6xl flex-col gap-6 md:flex-row md:gap-8">
-      <div className="flex-1 rounded-lg border bg-background">
-        <div className="flex items-center justify-between border-b p-4">
-          <div className="text-lg font-medium">
-            {selectedDate.toLocaleString("default", {
-              month: "long",
-              year: "numeric",
-            })}
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() =>
-                setSelectedDate(
-                  new Date(selectedDate.setMonth(selectedDate.getMonth() - 1))
-                )
-              }
-            >
-              <ChevronLeftIcon className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() =>
-                setSelectedDate(
-                  new Date(selectedDate.setMonth(selectedDate.getMonth() + 1))
-                )
-              }
-            >
-              <ChevronRightIcon className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-        <div className="p-4">
-          <Calendar
-            mode="single"
-            selected={selectedDate}
-            onSelect={handleDateSelect}
-            initialFocus
-          />
-        </div>
+    <div className="flex gap-6 w-full">
+      {/* Calendar Component */}
+      <div className="rounded-lg border bg-background p-4 h-full">
+        <Calendar
+          mode="single"
+          selected={selectedDate}
+          onSelect={handleDateSelect}
+          initialFocus
+        />
       </div>
-      <div className="flex-1 rounded-lg border bg-background p-6">
+
+      {/* Appointments List */}
+      <div className="rounded-lg border bg-background p-6">
         <h2 className="text-lg font-medium">
           Appuntamenti per {formatDate(selectedDate)}
         </h2>

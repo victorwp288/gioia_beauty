@@ -7,7 +7,7 @@ const DashboardPage = () => {
     <div className="w-[95vw] m-auto py-16">
       <Dashy />
 
-      <section className="w-[91vw] mt-6 m-auto">
+      <section className=" mt-6 m-auto">
         <h2 className="text-2xl font-semibold mb-4">Iscrizioni newsletter</h2>
         <SubscriberList />
       </section>
