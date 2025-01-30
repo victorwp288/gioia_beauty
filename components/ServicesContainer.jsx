@@ -22,6 +22,7 @@ import ceretta from "@/data/cerettaData";
 import rituali from "@/data/ritualiData";
 import makeup from "@/data/makeupData";
 import trattamentiViso from "@/data/trattamentiVisoData";
+import trattamentiCorpo from "@/data/trattamentiCorpoData";
 import bagnoTurco from "@/data/bagnoTurcoData";
 import Link from "next/link";
 
@@ -506,6 +507,68 @@ function ServicesContainer() {
             </div>
           </Accordion>
         </div>
+
+        <div className="min-w-full snap-center">
+          <Accordion
+            className="w-full flex-shrink-0 md:w-auto"
+            title="Trattamenti corpo"
+            description="Protocolli termali a base di alghe e attivi di Bretagna ad alta
+efficacia cosmetologica indicati per rimodellare, tonificare e
+trattare tutti gli inestetismi del corpo. Permettono una
+detossinazione profonda e un riequilibrio delle funzioni
+metaboliche, in totale relax."
+            image={viso}
+            imagePosition="right"
+          >
+            <div className="grid grid-cols-1 gap-8 px-6 py-8 md:grid-cols-2 md:px-12 md:py-12">
+              {trattamentiCorpo.map((service, index) => (
+                <div className="flex flex-col gap-2" key={index}>
+                  <h3 className="font-serif text-[1.3rem] font-bold">
+                    {service.title}
+                  </h3>
+                  <div className="flex items-center gap-1">
+                    <Image
+                      src={clock}
+                      width={18}
+                      height={18}
+                      alt="duration of the service"
+                    />
+                    {service.duration && (
+                      <p className="text-sm font-normal text-gray-500">
+                        {service.duration}m
+                      </p>
+                    )}
+                  </div>
+                  <p className="text-sm font-light">{service.description}</p>
+                  {service.subcategories && (
+                    <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+                      {service.subcategories.map((subcategory, subIndex) => (
+                        <div className="flex flex-col gap-2" key={subIndex}>
+                          <div className="flex items-center gap-1">
+                            <Image
+                              src={tick}
+                              width={18}
+                              height={18}
+                              alt="subcategory indicator"
+                            />
+                            {subcategory.duration && (
+                              <p className="text-sm font-normal text-gray-500">
+                                {subcategory.duration}m
+                              </p>
+                            )}
+                          </div>
+                          <h4 className="w-[85%] text-xs font-medium text-gray-600">
+                            {subcategory.title}
+                          </h4>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </Accordion>
+        </div>
       </div>
       <div className=" flex justify-center p-2 lg:hidden">
         {[...Array(7).keys()].map((_, index) => (
@@ -522,7 +585,7 @@ function ServicesContainer() {
           className="underline text-zinc-400 w-fit cursor-pointer text-center  text-sm font-semibold"
           target="_blank"
           href={
-            "https://drive.google.com/file/d/1j1GXO8ZgGS3AV9_80Xjvj2bwqVT8GU_F/view?usp=sharing"
+            "https://drive.google.com/file/d/1syZzcDt0su9ZMX1wDMI0s_iwZW8IJo6a/view?usp=sharing"
           }
         >
           SCOPRI IL LISTINO PREZZI →
