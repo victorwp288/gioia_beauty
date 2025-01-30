@@ -194,7 +194,7 @@
     "durations": [20],
     "extraTime": [5]
   },
-  { "id": 46, "type": "Pulizia del viso", "durations": [90], "extraTime": [5] },
+
   {
     "id": 47,
     "type": "Pulizia del viso con spatola ad ultrasuoni",
@@ -231,5 +231,89 @@
     "type": "Trattamenti viso specifici",
     "durations": [60],
     "extraTime": [5]
+  },
+  {
+    "id": 53,
+    "type": "Thalassa alga gigante",
+    "durations": [75],
+    "extraTime": [15]
+  },
+  {
+    "id": 53,
+    "type": "Trattamento minerale al limo di salina",
+    "durations": [60],
+    "extraTime": [15]
+  },
+  {
+    "id": 53,
+    "type": "Salagione",
+    "durations": [60],
+    "extraTime": [15]
+  },
+  {
+    "id": 53,
+    "type": "Trattamento artico gambe",
+    "durations": [60],
+    "extraTime": [15]
+  },
+  {
+    "id": 53,
+    "type": "Snellente localizzato cacao e calco termico",
+    "durations": [75],
+    "extraTime": [15]
+  },
+  {
+    "id": 53,
+    "type": "Bendaggio specifico",
+    "durations": [60],
+    "extraTime": [15]
+  },
+  {
+    "id": 53,
+    "type": "Trattamento artico gambe",
+    "durations": [60],
+    "extraTime": [15]
+  },
+  {
+    "id": 53,
+    "type": "Calcoterapia decongestionante-rassodante",
+    "durations": [60],
+    "extraTime": [15]
+  },
+  {
+    "id": 53,
+    "type": "Massaggio con Pindasweda",
+    "durations": [30, 50],
+    "extraTime": [15]
+  },
+  {
+    "id": 53,
+    "type": "Scrub al tè verde",
+    "durations": [50, 90],
+    "extraTime": [15]
+  },
+  {
+    "id": 53,
+    "type": "Body brushing mineralizzante",
+    "durations": [50, 90],
+    "extraTime": [15]
+  },
+  {
+    "id": 53,
+    "type": "Savonage hammam",
+    "durations": [50, 90],
+    "extraTime": [15]
+  },
+  {
+    "id": 53,
+    "type": "Scrub drenante al sale integrale",
+    "durations": [50, 90],
+    "extraTime": [15]
+  },
+  {
+    "id": 53,
+    "type": "Pedicure berbero",
+    "durations": [75],
+    "extraTime": [10]
   }
 ]
