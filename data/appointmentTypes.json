@@ -31,7 +31,7 @@
     "extraTime": [5]
   },
   { "id": 7, "type": "Manicure SPA", "durations": [50], "extraTime": [5] },
-  { "id": 8, "type": "Pedicure", "durations": [40], "extraTime": [5] },
+  { "id": 8, "type": "Pedicure", "durations": [60], "extraTime": [5] },
   { "id": 9, "type": "Pedicure SPA", "durations": [60], "extraTime": [15] },
   {
     "id": 10,
@@ -116,10 +116,10 @@
   { "id": 25, "type": "Ascelle", "durations": [25], "extraTime": [5] },
   { "id": 26, "type": "Braccia", "durations": [15], "extraTime": [5] },
   { "id": 27, "type": "Inguine parziale", "durations": [20], "extraTime": [5] },
-  { "id": 28, "type": "Inguine totale", "durations": [15], "extraTime": [5] },
+  { "id": 28, "type": "Inguine totale", "durations": [30], "extraTime": [5] },
   { "id": 29, "type": "Glutei", "durations": [30], "extraTime": [5] },
   { "id": 30, "type": "Mezza gamba", "durations": [45], "extraTime": [5] },
-  { "id": 31, "type": "Gamba intera", "durations": [30], "extraTime": [5] },
+  { "id": 31, "type": "Gamba intera", "durations": [60], "extraTime": [5] },
   { "id": 32, "type": "Petto", "durations": [30], "extraTime": [5] },
   { "id": 33, "type": "Schiena", "durations": [60], "extraTime": [5] },
   {
@@ -235,7 +235,7 @@
   {
     "id": 53,
     "type": "Thalassa alga gigante",
-    "durations": [75],
+    "durations": [90],
     "extraTime": [15]
   },
   {

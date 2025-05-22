@@ -3,7 +3,7 @@ const trattamentiCorpo = [
     title: "Thalassa alga gigante",
     description:
       "Protocollo a base di alghe brune e attivi marini concentrati che migliorano cellulite, stasi venosa e linfatica, edema, adipe, ritenzione e allentato metabolismo.",
-    duration: 75,
+    duration: 90,
   },
   {
     title: "Trattamento minerale al limo di salina",

@@ -2,7 +2,7 @@ const pedicure = [
   {
     title: "Pedicure classica",
     description: "Trattamento delle unghie e della pelle dei piedi.",
-    duration: 40,
+    duration: 60,
   },
   {
     title: "Pedicure SPA",
