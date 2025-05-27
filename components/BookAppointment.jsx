@@ -494,21 +494,24 @@ const BookAppointment = () => {
                   </FormItem>
                 ) : (
                   <div className="mt-3 p-4 rounded-lg bg-red-100 border border-red-300 text-red-700 text-base font-semibold text-center shadow-sm">
-                    <span className="flex gap-2 align-middle justify-center">
+                    <span className=" flex flex-col items-center gap-2">
+                      <p>Grazie per l&apos;interesse </p>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
+                        width="20"
+                        height="20"
                         fill="currentColor"
-                        class="bi bi-x-circle"
+                        class="bi bi-heart-fill"
                         viewBox="0 0 16 16"
                       >
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        <path
+                          fill-rule="evenodd"
+                          d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+                        />
                       </svg>
                       <p>
-                        Non ci sono più appuntamenti disponibili per questa
-                        data.
+                        al momento non ci sono più appuntamenti disponibili per
+                        questa data
                       </p>
                     </span>
                   </div>

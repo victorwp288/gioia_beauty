@@ -29,9 +29,9 @@ export function AppointmentCalendar({
   };
 
   return (
-    <div className="flex gap-6 w-full">
+    <div className="flex-col gap-6 h-fit w-full">
       {/* Calendar Component */}
-      <div className="rounded-lg border bg-background p-4 h-full">
+      <div className="rounded-lg border bg-background p-4 w-fit h-full">
         <Calendar
           mode="single"
           selected={selectedDate}
@@ -41,10 +41,7 @@ export function AppointmentCalendar({
       </div>
 
       {/* Appointments List */}
-      <div className="rounded-lg border bg-background p-6">
-        <h2 className="text-lg font-medium">
-          Appuntamenti per {formatDate(selectedDate)}
-        </h2>
+      <div className="rounded-lg border bg-background p-6 h-fit overflow-y-auto">
         <div className="mt-4 grid gap-4">
           {filteredAppointments.map((appointment) => (
             <div key={appointment.id} className="flex items-start gap-4">
