@@ -78,6 +78,8 @@ const BookAppointment = () => {
   const [showAllTimeSlots, setShowAllTimeSlots] = useState(false);
   const initialVisibleSlots = 12; // Adjust as needed
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [fullyBooked, setFullyBooked] = useState(false);
+  const [nextAvailableDate, setNextAvailableDate] = useState(null);
 
   const appointmentsCache = useRef({});
 
@@ -118,33 +120,35 @@ const BookAppointment = () => {
   }, []);
 
   // Function to check if a day should be disabled
-  const isDisabledDay = (day) => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const dayOfWeek = day.getDay();
-    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+  const isDisabledDay = useCallback(
+    (day) => {
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const dayOfWeek = day.getDay();
+      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
 
-    // Check if day is in any vacation period
-    const isInVacation = vacationPeriods.some((vacation) => {
-      // Normalize dates to ignore time
-      const vacationStart = new Date(
-        vacation.startDate.getFullYear(),
-        vacation.startDate.getMonth(),
-        vacation.startDate.getDate()
-      );
-      const vacationEnd = new Date(
-        vacation.endDate.getFullYear(),
-        vacation.endDate.getMonth(),
-        vacation.endDate.getDate()
-      );
-      return day >= vacationStart && day <= vacationEnd;
-    });
+      // Check if day is in any vacation period
+      const isInVacation = vacationPeriods.some((vacation) => {
+        // Normalize dates to ignore time
+        const vacationStart = new Date(
+          vacation.startDate.getFullYear(),
+          vacation.startDate.getMonth(),
+          vacation.startDate.getDate()
+        );
+        const vacationEnd = new Date(
+          vacation.endDate.getFullYear(),
+          vacation.endDate.getMonth(),
+          vacation.endDate.getDate()
+        );
+        return day >= vacationStart && day <= vacationEnd;
+      });
 
-    return day <= today || isWeekend || isInVacation; // Disable today, past dates, weekends, and vacation days
-  };
+      return day <= today || isWeekend || isInVacation; // Disable today, past dates, weekends, and vacation days
+    },
+    [vacationPeriods]
+  );
 
-  // Function to get the next available date
-  const getNextAvailableDate = () => {
+  const getNextAvailableDate = useCallback(() => {
     let date = new Date();
     date.setDate(date.getDate() + 1); // Start from tomorrow
 
@@ -152,7 +156,7 @@ const BookAppointment = () => {
       date.setDate(date.getDate() + 1);
     }
     return date;
-  };
+  }, [isDisabledDay]);
 
   // Initialize selectedDate after vacation periods are fetched
   useEffect(() => {
@@ -160,18 +164,60 @@ const BookAppointment = () => {
     setSelectedDate(nextDate);
     form.setValue("date", nextDate);
     form.setValue("selectedDate", nextDate);
-  }, [vacationPeriods]);
+  }, [vacationPeriods, form, getNextAvailableDate]);
+
+  // Generate time slots function moved above fetchTimeSlots
+  const generateTimeSlots = useCallback(
+    (date, existingAppointments, hours) => {
+      const [openHours, openMinutes] = hours.open.split(":").map(Number);
+      const [closeHours, closeMinutes] = hours.close.split(":").map(Number);
+      const openingTime = openHours * 60 + openMinutes;
+      const closingTime = closeHours * 60 + closeMinutes;
+
+      const slots = [];
+      let time = openingTime;
+
+      const duration =
+        form.getValues("duration") || appointmentType.durations[0];
+
+      while (time + duration <= closingTime) {
+        if (!doesSlotOverlap(time, existingAppointments, duration)) {
+          slots.push(formatTime(time));
+        }
+        time += 15; // Increment by 15 minutes
+      }
+
+      return slots;
+    },
+    [form, appointmentType]
+  );
+
+  const getNextAvailableDateFrom = useCallback(
+    (startDate) => {
+      let date = new Date(startDate);
+      date.setDate(date.getDate() + 1);
+
+      while (isDisabledDay(date)) {
+        date.setDate(date.getDate() + 1);
+      }
+      return date;
+    },
+    [isDisabledDay]
+  );
 
   // Fetch time slots only when necessary
   const fetchTimeSlots = useCallback(
     async (date) => {
       if (!date) return;
-
+      setFullyBooked(false);
+      setNextAvailableDate(null);
       const dayOfWeek = date.getDay();
       const hours = openCloseHours[dayOfWeek];
 
       if (!hours) {
         setTimeSlots([]);
+        setFullyBooked(true);
+        setNextAvailableDate(getNextAvailableDateFrom(date));
         return; // Closed day, no available slots
       }
 
@@ -210,47 +256,14 @@ const BookAppointment = () => {
         setSelectedTimeSlot(firstAvailableTimeSlot);
         form.setValue("timeSlot", firstAvailableTimeSlot);
       } else {
-        // If no time slots are available on this date, find the next date
-        const nextDate = getNextAvailableDateFrom(date);
-        setSelectedDate(nextDate);
-        form.setValue("date", nextDate);
-        form.setValue("selectedDate", nextDate);
+        setFullyBooked(true);
+        setNextAvailableDate(getNextAvailableDateFrom(date));
+        setSelectedTimeSlot(null);
+        form.setValue("timeSlot", "");
       }
     },
-    [appointmentType, form]
+    [form, generateTimeSlots, getNextAvailableDateFrom]
   );
-
-  // Function to get the next available date from a given date
-  const getNextAvailableDateFrom = (startDate) => {
-    let date = new Date(startDate);
-    date.setDate(date.getDate() + 1);
-
-    while (isDisabledDay(date)) {
-      date.setDate(date.getDate() + 1);
-    }
-    return date;
-  };
-
-  const generateTimeSlots = (date, existingAppointments, hours) => {
-    const [openHours, openMinutes] = hours.open.split(":").map(Number);
-    const [closeHours, closeMinutes] = hours.close.split(":").map(Number);
-    const openingTime = openHours * 60 + openMinutes;
-    const closingTime = closeHours * 60 + closeMinutes;
-
-    const slots = [];
-    let time = openingTime;
-
-    const duration = form.getValues("duration") || appointmentType.durations[0];
-
-    while (time + duration <= closingTime) {
-      if (!doesSlotOverlap(time, existingAppointments, duration)) {
-        slots.push(formatTime(time));
-      }
-      time += 15; // Increment by 15 minutes
-    }
-
-    return slots;
-  };
 
   const doesSlotOverlap = (time, existingAppointments, duration) => {
     const slotEndTime = time + duration;
@@ -275,7 +288,7 @@ const BookAppointment = () => {
 
   useEffect(() => {
     fetchTimeSlots(selectedDate);
-  }, [selectedDate, appointmentType, selectedVariant]);
+  }, [selectedDate, appointmentType, selectedVariant, fetchTimeSlots]);
 
   const handleAppointmentTypeChange = (e) => {
     const selectedType = appointmentTypes.find(
@@ -417,10 +430,20 @@ const BookAppointment = () => {
                         form.setValue("selectedDate", date);
                       }}
                       disabled={isDisabledDay}
-                      className="w-fit rounded-md border"
+                      className={`w-fit rounded-md border ${
+                        fullyBooked && "opacity-60 grayscale"
+                      }`}
                     />
                   </FormControl>
                   <FormMessage />
+                  {fullyBooked && (
+                    <div className="mt-2 text-sm text-gray-500">
+                      Questo giorno è già completamente prenotato.
+                      <br />
+                      Il primo giorno disponibile è{" "}
+                      {nextAvailableDate ? formatDate(nextAvailableDate) : "-"}.
+                    </div>
+                  )}
                 </FormItem>
               )}
             />
