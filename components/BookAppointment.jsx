@@ -78,6 +78,8 @@ const BookAppointment = () => {
   const [showAllTimeSlots, setShowAllTimeSlots] = useState(false);
   const initialVisibleSlots = 12; // Adjust as needed
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [fullyBooked, setFullyBooked] = useState(false);
+  const [nextAvailableDate, setNextAvailableDate] = useState(null);
 
   const appointmentsCache = useRef({});
 
@@ -118,33 +120,35 @@ const BookAppointment = () => {
   }, []);
 
   // Function to check if a day should be disabled
-  const isDisabledDay = (day) => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const dayOfWeek = day.getDay();
-    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+  const isDisabledDay = useCallback(
+    (day) => {
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const dayOfWeek = day.getDay();
+      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
 
-    // Check if day is in any vacation period
-    const isInVacation = vacationPeriods.some((vacation) => {
-      // Normalize dates to ignore time
-      const vacationStart = new Date(
-        vacation.startDate.getFullYear(),
-        vacation.startDate.getMonth(),
-        vacation.startDate.getDate()
-      );
-      const vacationEnd = new Date(
-        vacation.endDate.getFullYear(),
-        vacation.endDate.getMonth(),
-        vacation.endDate.getDate()
-      );
-      return day >= vacationStart && day <= vacationEnd;
-    });
+      // Check if day is in any vacation period
+      const isInVacation = vacationPeriods.some((vacation) => {
+        // Normalize dates to ignore time
+        const vacationStart = new Date(
+          vacation.startDate.getFullYear(),
+          vacation.startDate.getMonth(),
+          vacation.startDate.getDate()
+        );
+        const vacationEnd = new Date(
+          vacation.endDate.getFullYear(),
+          vacation.endDate.getMonth(),
+          vacation.endDate.getDate()
+        );
+        return day >= vacationStart && day <= vacationEnd;
+      });
 
-    return day <= today || isWeekend || isInVacation; // Disable today, past dates, weekends, and vacation days
-  };
+      return day <= today || isWeekend || isInVacation; // Disable today, past dates, weekends, and vacation days
+    },
+    [vacationPeriods]
+  );
 
-  // Function to get the next available date
-  const getNextAvailableDate = () => {
+  const getNextAvailableDate = useCallback(() => {
     let date = new Date();
     date.setDate(date.getDate() + 1); // Start from tomorrow
 
@@ -152,7 +156,7 @@ const BookAppointment = () => {
       date.setDate(date.getDate() + 1);
     }
     return date;
-  };
+  }, [isDisabledDay]);
 
   // Initialize selectedDate after vacation periods are fetched
   useEffect(() => {
@@ -160,18 +164,60 @@ const BookAppointment = () => {
     setSelectedDate(nextDate);
     form.setValue("date", nextDate);
     form.setValue("selectedDate", nextDate);
-  }, [vacationPeriods]);
+  }, [vacationPeriods, form, getNextAvailableDate]);
+
+  // Generate time slots function moved above fetchTimeSlots
+  const generateTimeSlots = useCallback(
+    (date, existingAppointments, hours) => {
+      const [openHours, openMinutes] = hours.open.split(":").map(Number);
+      const [closeHours, closeMinutes] = hours.close.split(":").map(Number);
+      const openingTime = openHours * 60 + openMinutes;
+      const closingTime = closeHours * 60 + closeMinutes;
+
+      const slots = [];
+      let time = openingTime;
+
+      const duration =
+        form.getValues("duration") || appointmentType.durations[0];
+
+      while (time + duration <= closingTime) {
+        if (!doesSlotOverlap(time, existingAppointments, duration)) {
+          slots.push(formatTime(time));
+        }
+        time += 15; // Increment by 15 minutes
+      }
+
+      return slots;
+    },
+    [form, appointmentType]
+  );
+
+  const getNextAvailableDateFrom = useCallback(
+    (startDate) => {
+      let date = new Date(startDate);
+      date.setDate(date.getDate() + 1);
+
+      while (isDisabledDay(date)) {
+        date.setDate(date.getDate() + 1);
+      }
+      return date;
+    },
+    [isDisabledDay]
+  );
 
   // Fetch time slots only when necessary
   const fetchTimeSlots = useCallback(
     async (date) => {
       if (!date) return;
-
+      setFullyBooked(false);
+      setNextAvailableDate(null);
       const dayOfWeek = date.getDay();
       const hours = openCloseHours[dayOfWeek];
 
       if (!hours) {
         setTimeSlots([]);
+        setFullyBooked(true);
+        setNextAvailableDate(getNextAvailableDateFrom(date));
         return; // Closed day, no available slots
       }
 
@@ -210,47 +256,14 @@ const BookAppointment = () => {
         setSelectedTimeSlot(firstAvailableTimeSlot);
         form.setValue("timeSlot", firstAvailableTimeSlot);
       } else {
-        // If no time slots are available on this date, find the next date
-        const nextDate = getNextAvailableDateFrom(date);
-        setSelectedDate(nextDate);
-        form.setValue("date", nextDate);
-        form.setValue("selectedDate", nextDate);
+        setFullyBooked(true);
+        setNextAvailableDate(getNextAvailableDateFrom(date));
+        setSelectedTimeSlot(null);
+        form.setValue("timeSlot", "");
       }
     },
-    [appointmentType, form]
+    [form, generateTimeSlots, getNextAvailableDateFrom]
   );
-
-  // Function to get the next available date from a given date
-  const getNextAvailableDateFrom = (startDate) => {
-    let date = new Date(startDate);
-    date.setDate(date.getDate() + 1);
-
-    while (isDisabledDay(date)) {
-      date.setDate(date.getDate() + 1);
-    }
-    return date;
-  };
-
-  const generateTimeSlots = (date, existingAppointments, hours) => {
-    const [openHours, openMinutes] = hours.open.split(":").map(Number);
-    const [closeHours, closeMinutes] = hours.close.split(":").map(Number);
-    const openingTime = openHours * 60 + openMinutes;
-    const closingTime = closeHours * 60 + closeMinutes;
-
-    const slots = [];
-    let time = openingTime;
-
-    const duration = form.getValues("duration") || appointmentType.durations[0];
-
-    while (time + duration <= closingTime) {
-      if (!doesSlotOverlap(time, existingAppointments, duration)) {
-        slots.push(formatTime(time));
-      }
-      time += 15; // Increment by 15 minutes
-    }
-
-    return slots;
-  };
 
   const doesSlotOverlap = (time, existingAppointments, duration) => {
     const slotEndTime = time + duration;
@@ -275,7 +288,7 @@ const BookAppointment = () => {
 
   useEffect(() => {
     fetchTimeSlots(selectedDate);
-  }, [selectedDate, appointmentType, selectedVariant]);
+  }, [selectedDate, appointmentType, selectedVariant, fetchTimeSlots]);
 
   const handleAppointmentTypeChange = (e) => {
     const selectedType = appointmentTypes.find(
@@ -417,7 +430,9 @@ const BookAppointment = () => {
                         form.setValue("selectedDate", date);
                       }}
                       disabled={isDisabledDay}
-                      className="w-fit rounded-md border"
+                      className={`w-fit rounded-md border ${
+                        fullyBooked && "opacity-60 grayscale"
+                      }`}
                     />
                   </FormControl>
                   <FormMessage />
@@ -428,53 +443,77 @@ const BookAppointment = () => {
             <FormField
               control={form.control}
               name="timeSlot"
-              render={({ field }) => (
-                <FormItem className="mt-3 md:mt-0">
-                  <FormLabel className="mb-3 flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-primary" />
-                    Seleziona orario*
-                  </FormLabel>
-                  <FormControl>
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-3 gap-2 rounded-lg border p-5">
-                        {(showAllTimeSlots
-                          ? timeSlots
-                          : timeSlots.slice(0, initialVisibleSlots)
-                        ).map((time, index) => (
-                          <h2
-                            key={index}
-                            onClick={() => {
-                              setSelectedTimeSlot(time);
-                              field.onChange(time);
-                            }}
-                            className={`cursor-pointer rounded-full border p-2 text-center hover:bg-primary hover:text-white ${
-                              time === selectedTimeSlot &&
-                              "bg-primary text-white"
-                            }`}
+              render={({ field }) =>
+                !fullyBooked ? (
+                  <FormItem className="mt-3 md:mt-0">
+                    <FormLabel className="mb-3 flex items-center gap-2">
+                      <Clock className="h-5 w-5 text-primary" />
+                      Seleziona orario*
+                    </FormLabel>
+                    <FormControl>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-3 gap-2 rounded-lg border p-5">
+                          {(showAllTimeSlots
+                            ? timeSlots
+                            : timeSlots.slice(0, initialVisibleSlots)
+                          ).map((time, index) => (
+                            <h2
+                              key={index}
+                              onClick={() => {
+                                setSelectedTimeSlot(time);
+                                field.onChange(time);
+                              }}
+                              className={`cursor-pointer rounded-full border p-2 text-center hover:bg-primary hover:text-white ${
+                                time === selectedTimeSlot &&
+                                "bg-primary text-white"
+                              }`}
+                            >
+                              {time}
+                            </h2>
+                          ))}
+                        </div>
+                        {timeSlots.length > initialVisibleSlots && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="w-full"
+                            onClick={() =>
+                              setShowAllTimeSlots(!showAllTimeSlots)
+                            }
                           >
-                            {time}
-                          </h2>
-                        ))}
+                            {showAllTimeSlots
+                              ? "Mostra meno"
+                              : `Mostra più (${
+                                  timeSlots.length - initialVisibleSlots
+                                } altri)`}
+                          </Button>
+                        )}
                       </div>
-                      {timeSlots.length > initialVisibleSlots && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="w-full"
-                          onClick={() => setShowAllTimeSlots(!showAllTimeSlots)}
-                        >
-                          {showAllTimeSlots
-                            ? "Mostra meno"
-                            : `Mostra più (${
-                                timeSlots.length - initialVisibleSlots
-                              } altri)`}
-                        </Button>
-                      )}
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                ) : (
+                  <div className="mt-3 p-4 rounded-lg bg-red-100 border border-red-300 text-red-700 text-base font-semibold text-center shadow-sm">
+                    <span className="flex gap-2 align-middle justify-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        fill="currentColor"
+                        class="bi bi-x-circle"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                      </svg>
+                      <p>
+                        Non ci sono più appuntamenti disponibili per questa
+                        data.
+                      </p>
+                    </span>
+                  </div>
+                )
+              }
             />
 
             {/* Appointment Type */}
