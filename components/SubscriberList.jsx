@@ -56,7 +56,6 @@ const SubscriberList = ({ onClose }) => {
         </Button>
       </div>
       <div className="bg-gray-100 dark:bg-zinc-800 p-4 rounded-md">
-        <h3 className="font-semibold mb-2">Emails degli iscritti</h3>
         <ul className="list-none">
           {subscribers.map((subscriber) => (
             <li

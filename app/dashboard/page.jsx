@@ -318,10 +318,38 @@ export default function Dashboard() {
 
   return (
     <div className="w-full h-full flex flex-col gap-4 overflow-hidden bg-background dark:bg-zinc-900 p-4">
-      {/* Top bar with dark mode toggle */}
-      <div className="mb-2 flex-shrink-0 flex gap-2 items-center justify-between">
+      {/* Top bar with break, newsletter, and dark mode toggle */}
+      <div className="mb-2 flex gap-2 items-center justify-end">
+        <Button
+          onClick={() => {
+            setIsVacationModalOpen(true);
+            setVacationStartDate(null);
+            setVacationEndDate(null);
+          }}
+          className="flex items-center gap-2"
+        >
+          <Plus className="h-4 w-4" />
+          Imposta break
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={() => setIsSubscriberModalOpen(true)}
+          className="flex items-center gap-2 dark:bg-gray-600"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            className="bi bi-envelope-fill"
+            viewBox="0 0 16 16"
+          >
+            <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z" />
+          </svg>
+          Iscritti newsletter
+        </Button>
         {/* Dark mode toggle */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ml-2">
           <span className="text-xs text-zinc-600 dark:text-zinc-300">
             Dark mode
           </span>
@@ -340,43 +368,12 @@ export default function Dashboard() {
           </button>
         </div>
       </div>
-      {/* Vacation Period Button and Dialog */}
-      <div className="mb-2 flex-shrink-0 flex gap-2">
-        <Button
-          onClick={() => {
-            setIsVacationModalOpen(true);
-            setVacationStartDate(null);
-            setVacationEndDate(null);
-          }}
-          className="flex items-center gap-2"
-        >
-          <Plus className="h-4 w-4" />
-          Imposta break
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={() => setIsSubscriberModalOpen(true)}
-          className="flex items-center gap-2"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-envelope-fill"
-            viewBox="0 0 16 16"
-          >
-            <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z" />
-          </svg>
-          Iscritti newsletter
-        </Button>
-      </div>
       {/* Newsletter Subscriber List Dialog */}
       <Dialog
         open={isSubscriberModalOpen}
         onOpenChange={setIsSubscriberModalOpen}
       >
-        <DialogContent className="max-w-lg w-full p-0">
+        <DialogContent className="max-w-lg w-full p-0 dark:border-none dark:bg-zinc-900">
           <div className="p-4">
             <DialogHeader>
               <DialogTitle>Iscrizioni newsletter</DialogTitle>
@@ -390,9 +387,14 @@ export default function Dashboard() {
         {/* Appointments Card (Scrollable) */}
         <Card className="flex-1 min-w-0 flex flex-col bg-white dark:bg-zinc-800 rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-700/60">
           <CardHeader className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between bg-zinc-50 dark:bg-zinc-900/80 border-b border-zinc-200 dark:border-zinc-700/60 p-4">
-            <CardTitle className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
-              Appuntamenti - {formatDate(selectedDate)}
-            </CardTitle>
+            <div className="flex flex-col gap-1">
+              <h1 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
+                Appuntamenti di oggi
+              </h1>
+              <span className="text-s text-zinc-500 dark:text-zinc-400 font-normal">
+                {formatDate(selectedDate)}
+              </span>
+            </div>
             <Button
               onClick={() => {
                 setIsAddModalOpen(true);
@@ -472,9 +474,9 @@ export default function Dashboard() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleEditClick(appointment)}
-                          className="w-full bg-gray-600 text-white hover:bg-gray-700 border-none"
+                          className="w-full bg-white hover:bg-gray-100 border border-zinc-200 dark:border-none dark:bg-gray-600 dark:hover:bg-gray-700"
                         >
-                          View
+                          Modifica
                         </Button>
                       </TableCell>
                     </TableRow>
