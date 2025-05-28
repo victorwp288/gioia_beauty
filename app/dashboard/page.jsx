@@ -43,7 +43,12 @@ import "react-phone-input-2/lib/style.css";
 
 import appointmentTypes from "@/data/appointmentTypes.json";
 import SubscriberList from "@/components/SubscriberList";
+import { useRouter } from "next/navigation";
+import { auth } from "@/utils/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+
 export default function Dashboard() {
+  const router = useRouter();
   const [appointments, setAppointments] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -70,6 +75,15 @@ export default function Dashboard() {
 
   const [isSubscriberModalOpen, setIsSubscriberModalOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        router.replace("/login");
+      }
+    });
+    return () => unsubscribe();
+  }, [router]);
 
   useEffect(() => {
     fetchAppointments();
