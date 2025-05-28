@@ -31,17 +31,19 @@ export function AppointmentCalendar({
   return (
     <div className="flex flex-col gap-2 h-full w-full">
       {/* Calendar Component */}
-      <div className="rounded-lg border bg-background p-4 w-full h-fit">
+      <div className="rounded-lg border border-zinc-200 dark:border-zinc-700/70 bg-zinc-800 p-4 w-full h-fit">
         <Calendar
           mode="single"
           selected={selectedDate}
           onSelect={handleDateSelect}
           initialFocus
+          className="w-full"
+          tableClassName="w-full table-fixed"
         />
       </div>
 
       {/* Appointments List */}
-      <div className="rounded-lg border bg-background p-6 max-h-[calc(100vh-220px)] overflow-y-auto w-full">
+      <div className="rounded-lg border border-zinc-200 dark:border-zinc-700/70 bg-zinc-800 p-6 max-h-[calc(100vh-220px)] overflow-y-auto w-full">
         <div className="mt-4 grid gap-4">
           {filteredAppointments.map((appointment) => (
             <div key={appointment.id} className="flex items-start gap-4">

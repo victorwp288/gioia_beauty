@@ -317,7 +317,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="w-full flex flex-col gap-4 overflow-hidden bg-background dark:bg-zinc-900 p-4">
+    <div className="w-full h-full flex flex-col gap-4 overflow-hidden bg-background dark:bg-zinc-900 p-4">
       {/* Top bar with dark mode toggle */}
       <div className="mb-2 flex-shrink-0 flex gap-2 items-center justify-between">
         {/* Dark mode toggle */}
@@ -472,7 +472,7 @@ export default function Dashboard() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleEditClick(appointment)}
-                          className="w-full"
+                          className="w-full bg-gray-600 text-white hover:bg-gray-700 border-none"
                         >
                           View
                         </Button>
