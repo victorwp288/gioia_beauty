@@ -4,9 +4,9 @@ import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
-import { X } from "lucide-react"; // Import the X icon
+import { Copy, X as LucideX } from "lucide-react";
 
-const SubscriberList = () => {
+const SubscriberList = ({ onClose }) => {
   const [subscribers, setSubscribers] = useState([]);
 
   useEffect(() => {
@@ -32,6 +32,11 @@ const SubscriberList = () => {
     toast.success("All emails copied to clipboard!");
   };
 
+  const copyEmail = (email) => {
+    navigator.clipboard.writeText(email);
+    toast.success("Email copiata!");
+  };
+
   const handleDeleteSubscriber = async (subscriberId) => {
     try {
       await deleteDoc(doc(db, "newsletter_subscribers", subscriberId));
@@ -44,22 +49,35 @@ const SubscriberList = () => {
   };
 
   return (
-    <div className="space-y-4">
-      <Button onClick={copyAllEmails}>Copia le email</Button>
-      <div className="bg-gray-100 p-4 rounded-md">
-        <h3 className="font-semibold mb-2">Emails degli iscritti</h3>
+    <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+      <div className="flex items-center justify-between mt-8 mb-2 gap-2">
+        <Button onClick={copyAllEmails} size="sm" variant="secondary">
+          Copia tutte le email
+        </Button>
+      </div>
+      <div className="bg-gray-100 dark:bg-zinc-800 p-4 rounded-md">
         <ul className="list-none">
           {subscribers.map((subscriber) => (
             <li
               key={subscriber.id}
-              className="flex items-center justify-between py-2 border-b border-gray-200"
+              className="flex items-center justify-between py-2 border-b border-gray-200 dark:border-zinc-700"
             >
-              <span>{subscriber.email}</span>
+              <span className="flex items-center gap-2">
+                {subscriber.email}
+                <button
+                  onClick={() => copyEmail(subscriber.email)}
+                  className="p-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                  aria-label="Copia questa email"
+                >
+                  <Copy size={16} />
+                </button>
+              </span>
               <button
                 onClick={() => handleDeleteSubscriber(subscriber.id)}
-                className="p-2 hover:bg-red-100 rounded-full"
+                className="p-2 hover:bg-red-100 dark:hover:bg-red-900 rounded-full"
+                aria-label="Elimina"
               >
-                <X size={16} className="text-red-500" />
+                <LucideX size={16} className="text-red-500" />
               </button>
             </li>
           ))}
