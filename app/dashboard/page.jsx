@@ -317,16 +317,16 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="w-full h-full flex flex-col gap-4 overflow-hidden bg-background dark:bg-zinc-900 p-4">
+    <div className="w-full min-h-screen flex flex-col gap-4 bg-background dark:bg-zinc-900 p-4 overflow-x-hidden">
       {/* Top bar with break, newsletter, and dark mode toggle */}
-      <div className="mb-2 flex gap-2 items-center justify-end">
+      <div className="mb-2 flex gap-2 items-center justify-end bg-white/80 dark:bg-zinc-800/80 rounded-lg shadow-sm px-3 py-2 sm:px-4 sm:py-2 z-30 relative border border-zinc-200 dark:border-zinc-700/60">
         <Button
           onClick={() => {
             setIsVacationModalOpen(true);
             setVacationStartDate(null);
             setVacationEndDate(null);
           }}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 hidden sm:flex"
         >
           <Plus className="h-4 w-4" />
           Imposta break
@@ -334,7 +334,7 @@ export default function Dashboard() {
         <Button
           variant="secondary"
           onClick={() => setIsSubscriberModalOpen(true)}
-          className="flex items-center gap-2 dark:bg-gray-600"
+          className="flex items-center gap-2 dark:bg-gray-600 hidden sm:flex"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -382,10 +382,10 @@ export default function Dashboard() {
           </div>
         </DialogContent>
       </Dialog>
-      {/* Main Content: Two scrollable sections side by side on desktop, stacked on mobile */}
-      <div className="flex-1 flex flex-col lg:flex-row gap-4 min-h-0">
-        {/* Appointments Card (Scrollable) */}
-        <Card className="flex-1 min-w-0 flex flex-col bg-white dark:bg-zinc-800 rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-700/60">
+
+      <div className="flex-1 flex flex-col-reverse lg:flex-row gap-4 min-h-0">
+        {/* Appointments Card */}
+        <Card className="flex-1 min-w-0 flex flex-col bg-white dark:bg-zinc-800 rounded-lg overflow-x-auto overflow-y-visible border border-zinc-200 dark:border-zinc-700/60 mt-4 lg:mt-0 z-20">
           <CardHeader className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between bg-zinc-50 dark:bg-zinc-900/80 border-b border-zinc-200 dark:border-zinc-700/60 p-4">
             <div className="flex flex-col gap-1">
               <h1 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
@@ -398,7 +398,7 @@ export default function Dashboard() {
             <Button
               onClick={() => {
                 setIsAddModalOpen(true);
-                setIsEditMode(false); // Ensure not in edit mode
+                setIsEditMode(false);
                 setNewAppointment({
                   name: "",
                   email: "",
@@ -488,7 +488,7 @@ export default function Dashboard() {
         </Card>
 
         <div className="w-full lg:w-[350px] flex-shrink-0 flex flex-col items-stretch lg:static relative z-10 h-full">
-          <div className="flex-1 min-h-[350px] h-full">
+          <div className="flex-1 min-h-[350px] h-full lg:sticky lg:top-4">
             <AppointmentCalendar
               appointments={appointments}
               selectedDate={selectedDate}
