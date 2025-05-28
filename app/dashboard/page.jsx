@@ -405,7 +405,7 @@ export default function Dashboard() {
 
       <div className="flex flex-col lg:flex-row gap-4 min-h-0">
         {/* Appointments Card */}
-        <Card className=" bg-white dark:bg-zinc-800 rounded-lg overflow-y-visible border border-zinc-200 dark:border-zinc-700/60 mt-4 lg:mt-0 z-20">
+        <Card className=" bg-white dark:bg-zinc-800 rounded-lg lg:overflow-x-auto overflow-y-visible border border-zinc-200 dark:border-zinc-700/60 mt-4 lg:mt-0 z-20">
           <CardHeader className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between bg-zinc-50 dark:bg-zinc-900/80 border-b border-zinc-200 dark:border-zinc-700/60 p-4">
             <div className="flex flex-col gap-1">
               <h1 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
