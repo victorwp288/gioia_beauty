@@ -91,19 +91,19 @@
     "id": 19,
     "type": "Massaggio corpo personalizzato",
     "durations": [30, 60],
-    "extraTime": [5]
+    "extraTime": [15]
   },
   {
     "id": 20,
     "type": "Massaggio corpo al cioccolato",
     "durations": [45],
-    "extraTime": [5]
+    "extraTime": [15]
   },
   {
     "id": 21,
     "type": "Pressoterapia",
     "durations": [30, 45],
-    "extraTime": [5]
+    "extraTime": [15]
   },
   { "id": 22, "type": "Baffetti", "durations": [15], "extraTime": [5] },
   { "id": 23, "type": "Sopracciglia", "durations": [15], "extraTime": [5] },
@@ -126,49 +126,49 @@
     "id": 34,
     "type": "Gamba intera uomo",
     "durations": [35],
-    "extraTime": [5]
+    "extraTime": [15]
   },
   {
     "id": 35,
     "type": "Rituale Coccole di cotone",
     "durations": [50, 60, 90],
-    "extraTime": [5]
+    "extraTime": [15]
   },
   {
     "id": 36,
     "type": "Rituale India",
     "durations": [50, 60, 90],
-    "extraTime": [5]
+    "extraTime": [15]
   },
   {
     "id": 37,
     "type": "Rituale Himalaya",
     "durations": [50, 60, 90],
-    "extraTime": [5]
+    "extraTime": [15]
   },
   {
     "id": 38,
     "type": "Rituale Marrakech",
     "durations": [50, 60, 90],
-    "extraTime": [5]
+    "extraTime": [15]
   },
   {
     "id": 39,
     "type": "Rituale Cute",
     "durations": [50, 60, 90],
-    "extraTime": [5]
+    "extraTime": [15]
   },
   {
     "id": 40,
     "type": "Scrub corpo aromatico",
     "durations": [30, 60],
-    "extraTime": [5]
+    "extraTime": [15]
   },
   {
     "id": 41,
     "type": "Seduta di Bagno Turco",
     "durations": [60],
-    "extraTime": [5]
+    "extraTime": [15]
   },
   {
     "id": 42,
@@ -199,38 +199,38 @@
     "id": 47,
     "type": "Pulizia del viso con spatola ad ultrasuoni",
     "durations": [60],
-    "extraTime": [5]
+    "extraTime": [15]
   },
   {
     "id": 48,
     "type": "Pulizia del viso ultrasuoni e mandelico",
     "durations": [60],
-    "extraTime": [5]
+    "extraTime": [15]
   },
 
   {
     "id": 49,
     "type": "Trattamento viso Eterna",
     "durations": [90],
-    "extraTime": [5]
+    "extraTime": [15]
   },
   {
     "id": 50,
     "type": "Trattamento viso Fast Beauty",
     "durations": [30],
-    "extraTime": [5]
+    "extraTime": [15]
   },
   {
     "id": 51,
     "type": "Ossigeno dermo infusione",
     "durations": [60],
-    "extraTime": [5]
+    "extraTime": [15]
   },
   {
     "id": 52,
     "type": "Trattamenti viso specifici",
     "durations": [60],
-    "extraTime": [5]
+    "extraTime": [15]
   },
   {
     "id": 53,

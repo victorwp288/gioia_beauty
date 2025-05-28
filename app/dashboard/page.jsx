@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   collection,
   getDocs,
@@ -46,6 +47,7 @@ import SubscriberList from "@/components/SubscriberList";
 import { useRouter } from "next/navigation";
 import { auth } from "@/utils/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import logo from "../../images/logo.png"; // Adjust the path as necessary
 
 export default function Dashboard() {
   const router = useRouter();
@@ -334,54 +336,58 @@ export default function Dashboard() {
     <div className="w-full min-h-screen flex flex-col gap-4 bg-background dark:bg-zinc-900 p-4 overflow-x-hidden">
       {/* Top bar with break, newsletter, and dark mode toggle */}
       <div className="mb-2 flex gap-2 items-center justify-end bg-white/80 dark:bg-zinc-800/80 rounded-lg shadow-sm px-3 py-2 sm:px-4 sm:py-2 z-30 relative border border-zinc-200 dark:border-zinc-700/60">
-        <Button
-          onClick={() => {
-            setIsVacationModalOpen(true);
-            setVacationStartDate(null);
-            setVacationEndDate(null);
-          }}
-          className="flex items-center gap-2 hidden sm:flex"
-        >
-          <Plus className="h-4 w-4" />
-          Imposta break
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={() => setIsSubscriberModalOpen(true)}
-          className="flex items-center gap-2 dark:bg-gray-600 hidden sm:flex"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-envelope-fill"
-            viewBox="0 0 16 16"
+        <Image src={logo} alt="Logo" height={60} />
+        <div className="flex items-center gap-2 ml-auto">
+          <Button
+            onClick={() => {
+              setIsVacationModalOpen(true);
+              setVacationStartDate(null);
+              setVacationEndDate(null);
+            }}
+            className="flex items-center gap-2 hidden sm:flex"
           >
-            <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z" />
-          </svg>
-          Iscritti newsletter
-        </Button>
-        {/* Dark mode toggle */}
-        <div className="flex items-center gap-2 ml-2">
-          <span className="text-xs text-zinc-600 dark:text-zinc-300">
-            Dark mode
-          </span>
-          <button
-            onClick={() => setDarkMode((v) => !v)}
-            className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
-              darkMode ? "bg-zinc-700" : "bg-zinc-300"
-            }`}
-            aria-label="Toggle dark mode"
+            <Plus className="h-4 w-4" />
+            Imposta break
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => setIsSubscriberModalOpen(true)}
+            className="flex items-center gap-2 dark:bg-gray-600 hidden sm:flex"
           >
-            <span
-              className={`w-4 h-4 bg-white dark:bg-zinc-200 rounded-full shadow transform transition-transform duration-300 ${
-                darkMode ? "translate-x-6" : "translate-x-0"
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="bi bi-envelope-fill"
+              viewBox="0 0 16 16"
+            >
+              <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z" />
+            </svg>
+            Iscritti newsletter
+          </Button>
+          {/* Dark mode toggle */}
+          <div className="flex items-center gap-2 ml-2">
+            <span className="text-xs text-zinc-600 dark:text-zinc-300">
+              Dark mode
+            </span>
+            <button
+              onClick={() => setDarkMode((v) => !v)}
+              className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
+                darkMode ? "bg-zinc-700" : "bg-zinc-300"
               }`}
-            />
-          </button>
+              aria-label="Toggle dark mode"
+            >
+              <span
+                className={`w-4 h-4 bg-white dark:bg-zinc-200 rounded-full shadow transform transition-transform duration-300 ${
+                  darkMode ? "translate-x-6" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
         </div>
       </div>
+
       {/* Newsletter Subscriber List Dialog */}
       <Dialog
         open={isSubscriberModalOpen}
