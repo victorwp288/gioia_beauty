@@ -709,6 +709,54 @@ export default function Dashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Vacation/Break Dialog */}
+      <Dialog open={isVacationModalOpen} onOpenChange={setIsVacationModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Imposta periodo di chiusura</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="vacationStartDate" className="text-right">
+                Data inizio
+              </Label>
+              <Input
+                id="vacationStartDate"
+                name="vacationStartDate"
+                type="date"
+                value={vacationStartDate || ""}
+                onChange={(e) => setVacationStartDate(e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="vacationEndDate" className="text-right">
+                Data fine
+              </Label>
+              <Input
+                id="vacationEndDate"
+                name="vacationEndDate"
+                type="date"
+                value={vacationEndDate || ""}
+                onChange={(e) => setVacationEndDate(e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsVacationModalOpen(false)}
+            >
+              Annulla
+            </Button>
+            <Button onClick={handleSetVacationPeriod}>
+              Salva periodo di chiusura
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
