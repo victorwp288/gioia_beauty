@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app'
-import { getAnalytics } from 'firebase/analytics'
-import { getAuth } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -10,22 +10,21 @@ import { getFirestore } from 'firebase/firestore'
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: 'AIzaSyAuWwmKaTpYR4AlGaRo1CXDkUb_XlaOinU',
-  authDomain: 'clinic-418813.firebaseapp.com',
-  projectId: 'clinic-418813',
-  storageBucket: 'clinic-418813.appspot.com',
-  messagingSenderId: '988012998371',
-  appId: '1:988012998371:web:85f7ca36a9154e3c799fd6',
-  measurementId: 'G-5HM2L5RPHD',
-}
+  apiKey: "AIzaSyCpzaeStBX4aG_5wmuSFMeQWi0cuWZNxb0",
+  authDomain: "clinic-90089.firebaseapp.com",
+  projectId: "clinic-90089",
+  storageBucket: "clinic-90089.firebasestorage.app",
+  messagingSenderId: "837534506588",
+  appId: "1:837534506588:web:29e2c3b59d053c64515099",
+};
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig)
-let analytics
-if (typeof window !== 'undefined') {
-  analytics = getAnalytics(app)
+const app = initializeApp(firebaseConfig);
+let analytics;
+if (typeof window !== "undefined") {
+  analytics = getAnalytics(app);
 }
-const auth = getAuth(app)
-const db = getFirestore(app)
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-export { db, auth, analytics }
+export { db, auth, analytics };
